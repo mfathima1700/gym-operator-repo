@@ -1,0 +1,131 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  email         String  @unique
+  name          String
+  password      String
+  createdAt     DateTime @default(now())
+  gender        GenderStatus? // Enum: 'FEMALE', 'MALE', 'NONBINARY'
+  role          UserRole // Enum for roles: 'MEMBER', 'TRAINER', 'OWNER'
+  bookings      Booking[]
+  gym           Gym        @relation(fields: [gymId], references: [id])
+  dateOfBirth   DateTime? // New field for Date of Birth
+  goals         Goal[]    // One-to-many relationship with Goal
+}
+// firstname, last name?
+// username? 
+// goals/notes
+// days attended -> bookings? 
+// gym
+// membership level
+
+// Gym model
+model Gym {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  address       String
+  ownerId       String        @db.ObjectId // Reference to the owner (User)
+  owner         User          @relation(fields: [ownerId], references: [id])
+  memberships   Membership[]
+  classes       Class[]
+  createdAt     DateTime      @default(now())
+}
+
+// Membership model
+model Membership {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String     @db.ObjectId
+  gymId         String     @db.ObjectId
+  startDate     DateTime
+  endDate       DateTime
+  status        MembershipStatus // Enum: 'ACTIVE', 'INACTIVE'
+  user          User       @relation(fields: [userId], references: [id])
+  gym           Gym        @relation(fields: [gymId], references: [id])
+}
+// cost
+
+// Class model
+model Class {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  description   String
+  schedule      DateTime[]
+  gymId         String     @db.ObjectId
+  gym           Gym        @relation(fields: [gymId], references: [id])
+  bookings      Booking[]
+  capacity      Int
+  intensity     IntensityRating // Enum: 'BEGINNER', 'INTERMEDIATE', 'ADVANCED'
+}
+// instructor
+// current members
+// equipment needed string
+// nb. current people - just count this? 
+// recurring? 
+// room string or Room class
+
+
+// Booking model
+model Booking {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String     @db.ObjectId
+  classId       String     @db.ObjectId
+  user          User       @relation(fields: [userId], references: [id])
+  class         Class      @relation(fields: [classId], references: [id])
+  bookingDate   DateTime   @default(now())
+}
+
+// Enums for roles and membership status
+enum UserRole {
+  MEMBER
+  TRAINER
+  OWNER
+}
+
+enum MembershipStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum IntensityRating {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum GenderStatus {
+  MALE
+  FEMALE
+  NONBINARY
+}
+
+model Goal {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId  // Reference to the User model
+  title         String   // Title of the goal (e.g., "Lose 5 kg", "Run a 5k")
+  notes         String?  // Optional details about the goal
+  targetDate    DateTime // Deadline or target date for achieving the goal
+  status        GoalStatus @default(IN_PROGRESS) // Goal status
+  createdAt     DateTime @default(now()) // Automatically set on creation
+  updatedAt     DateTime @updatedAt      // Automatically updated on changes
+}
+
+enum GoalStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
