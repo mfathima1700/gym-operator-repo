@@ -2,7 +2,7 @@
 
 import Title from "@/components/layout/title";
 import Sidebar from "@/components/layout/sidebar";
-import { OwnerAccountCard } from "@/components/create/OwnerAccountCard";
+import { MemberCard } from "@/components/members/MemberCard";
 
 import { useState } from 'react'
 import {  Field, Label, Switch } from '@headlessui/react'
@@ -28,9 +28,9 @@ export default function CreateAccount() {
 
         <main className="px-4 py-16 sm:px-6 lg:flex-auto lg:px-0 lg:py-20">
           <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
-           <Title title="Create Account" />
+           <Title title="Members" />
            <div className="mx-auto">
-           <OwnerAccountCard />
+           <MemberCard />
            </div>
           
           </div>
