@@ -3,6 +3,11 @@
 import * as React from "react"
 import {
   AudioWaveform,
+  House, 
+  CalendarDays,
+Trophy, 
+ChartColumnIncreasing,
+Dumbbell,
   BookOpen,
   Bot,
   Command,
@@ -29,23 +34,13 @@ import {
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
+    name: "Ri",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
     {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
+      name: "Gym Example",
       logo: Command,
       plan: "Free",
     },
@@ -139,20 +134,31 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
+      name: "Home",
       url: "#",
-      icon: Frame,
+      icon: House,
     },
     {
-      name: "Sales & Marketing",
+      name: "Schedule",
       url: "#",
-      icon: PieChart,
+      icon: CalendarDays,
     },
     {
-      name: "Travel",
+      name: "Training Sessions",
       url: "#",
-      icon: Map,
+      icon: Dumbbell,
     },
+    {
+      name: "Goals",
+      url: "#",
+      icon: Trophy,
+    },
+    {
+      name: "Progress",
+      url: "#",
+      icon: ChartColumnIncreasing,
+    },
+
   ],
 }
 
@@ -163,7 +169,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        {/* <NavMain items={data.navMain} /> */}
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
