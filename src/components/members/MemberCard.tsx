@@ -27,7 +27,7 @@ import {
 export function MemberCard() {
   return (
     <Card className="w-[350px]">
-      <CardHeader>
+      <CardHeader className="">
         <div className="space-y-2">
         <CardTitle>Jane Doe</CardTitle>
         <CardDescription>Instructor</CardDescription>
