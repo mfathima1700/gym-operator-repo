@@ -25,15 +25,19 @@ export function OwnerAccountCard() {
         <form>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Gym Name</Label>
               <Input id="name" placeholder="Name of your gym" />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label  htmlFor="name">Gym Owner</Label>
-              <Input disabled id="name" placeholder="Jane Doe" />
+              <Label  htmlFor="name">First Name</Label>
+              <Input id="name" placeholder="Jane" />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="framework">Address</Label>
+              <Label  htmlFor="name">Last Name</Label>
+              <Input id="name" placeholder="Doe" />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="framework">Gym Address</Label>
               <Textarea />
 
             </div>
