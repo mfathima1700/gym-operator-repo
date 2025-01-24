@@ -52,62 +52,32 @@ export default function MemberCards(): JSX.Element {
   return (
     <ul role="list" className="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 xl:gap-x-8">
       {clients.map((client) => (
-        <li key={client.id} className="overflow-hidden rounded-xl border border-gray-200">
-          <div className="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6">
+        <li key={client.id} className="overflow-hidden rounded-xl border border-gray-800">
+          <div className="flex items-center gap-x-4 border-b border-gray-800   p-6">
             <img
               alt={client.name}
               src={client.imageUrl}
-              className="size-12 flex-none rounded-lg bg-white object-cover ring-1 ring-gray-900/10"
+              className="size-12 flex-none rounded-full bg-white object-cover ring-1 ring-gray-900/10"
             />
-            <div className="text-sm/6 font-medium text-gray-900">{client.name}</div>
-            <Menu as="div" className="relative ml-auto">
-              <MenuButton className="-m-2.5 block p-2.5 text-gray-400 hover:text-gray-500">
-                <span className="sr-only">Open options</span>
-                <EllipsisHorizontalIcon aria-hidden="true" className="size-5" />
-              </MenuButton>
-              <MenuItems
-                className="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 ring-1 shadow-lg ring-gray-900/5 focus:outline-none"
-              >
-                <MenuItem>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        active ? 'bg-gray-50' : '',
-                        'block px-3 py-1 text-sm/6 text-gray-900'
-                      )}
-                    >
-                      View<span className="sr-only">, {client.name}</span>
-                    </a>
-                  )}
-                </MenuItem>
-                <MenuItem>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        active ? 'bg-gray-50' : '',
-                        'block px-3 py-1 text-sm/6 text-gray-900'
-                      )}
-                    >
-                      Edit<span className="sr-only">, {client.name}</span>
-                    </a>
-                  )}
-                </MenuItem>
-              </MenuItems>
-            </Menu>
+            <div className="text-sm/6 font-medium text-white">{client.name}</div>
+           
           </div>
-          <dl className="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm/6">
+          <dl className="-my-3 divide-y divide-gray-800 px-6 py-4 text-sm/6">
             <div className="flex justify-between gap-x-4 py-3">
-              <dt className="text-gray-500">Last invoice</dt>
-              <dd className="text-gray-700">
+              <dt className="text-white">Role</dt>
+              <dd className="text-gray-400">
                 <time dateTime={client.lastInvoice.dateTime}>{client.lastInvoice.date}</time>
               </dd>
             </div>
             <div className="flex justify-between gap-x-4 py-3">
-              <dt className="text-gray-500">Amount</dt>
+              <dt className="text-white">Created</dt>
               <dd className="flex items-start gap-x-2">
-                <div className="font-medium text-gray-900">{client.lastInvoice.amount}</div>
+                <div className="font-medium text-gray-400">{client.lastInvoice.amount}</div>
+              </dd>
+            </div>
+            <div className="flex justify-between gap-x-4 py-3">
+              <dt className="text-white">Upcoming Class</dt>
+              <dd className="flex items-start gap-x-2">
                 <div
                   className={classNames(
                     statuses[client.lastInvoice.status],
