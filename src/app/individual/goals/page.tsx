@@ -4,7 +4,7 @@ import CNLayout from "@/components/layout/cn-layout";
 import OldGoalsList from "@/components/goals/OldGoalsList";
 import NewGoalsList from "@/components/goals/NewGoalsList"
 
-export default function Members() {
+export default function Goals() {
   return (
     <>
       <CNLayout>

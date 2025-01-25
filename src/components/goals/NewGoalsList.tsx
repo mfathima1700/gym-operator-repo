@@ -57,11 +57,7 @@ type Comment = {
       <ul role="list" className="divide-y divide-gray-800">
         {comments.map((comment) => (
           <li key={comment.id} className="flex gap-x-4 py-5">
-            <img
-              alt={`${comment.name}'s profile`}
-              src={comment.imageUrl}
-              className="size-12 flex-none rounded-full bg-gray-50"
-            />
+            
             <div className="flex-auto">
               <div className="flex items-baseline justify-between gap-x-4">
                 <p className="text-sm/6 font-semibold text-white">{comment.name}</p>

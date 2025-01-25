@@ -60,11 +60,7 @@ type Person = {
           {people.map((person) => (
             <li key={person.email} className="flex items-center justify-between gap-x-6 py-5 px-4">
               <div className="flex min-w-0 gap-x-4">
-                <img
-                  alt={`${person.name}'s profile`}
-                  src={person.imageUrl}
-                  className="size-12 flex-none rounded-full bg-gray-50"
-                />
+                
                 <div className="min-w-0 flex-auto">
                   <p className="text-sm/6 font-semibold text-white">{person.name}</p>
                   <p className="mt-1 truncate text-xs/5 text-gray-400">{person.email}</p>
