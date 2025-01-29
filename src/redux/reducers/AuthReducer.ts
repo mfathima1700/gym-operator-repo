@@ -1,4 +1,9 @@
-import { SIGN_IN_REQUESTED, SIGN_IN_SUCCESS, SIGN_IN_FAILED } from "../constants/AuthConstants";
+import {
+  SIGN_IN_REQUESTED,
+  SIGN_IN_SUCCESS,
+  SIGN_IN_FAILED,
+  TEST_SUCCESS,
+} from "../constants/AuthConstants";
 
 interface AuthState {
   user: any | null;
@@ -39,5 +44,23 @@ const authReducer = (state = initialState, action: any): AuthState => {
   }
 };
 
-export default authReducer;
 
+
+const initialTestAuthState = {
+  message: "",
+  error: null,
+};
+
+const testAuthReducer = (state = initialTestAuthState, action: any) => {
+  switch (action.type) {
+    case TEST_SUCCESS:
+      return {
+        message: action.payload,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+export { authReducer, testAuthReducer };

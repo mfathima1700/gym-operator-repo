@@ -28,6 +28,7 @@ const initialState: AuthState = {
 
 
 // Async thunk for sign-in
+/*
 export const signInTo = createAsyncThunk(
   'auth/signIn',
   async (provider: string, { rejectWithValue }) => {
@@ -42,7 +43,7 @@ export const signInTo = createAsyncThunk(
 );
 
 export const testAction = () => {
-    console.log("Hi this works")
+    //console.log("Hi this works")
 }
 
 
@@ -99,5 +100,5 @@ const authSlice = createSlice({
 
 // Export actions and reducer
 export const { resetAuthState } = authSlice.actions;
-export default authSlice.reducer;
+export default authSlice.reducer;*/
 
