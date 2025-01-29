@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { SIGN_IN_FAILED, SIGN_IN_REQUESTED, SIGN_IN_SUCCESS } from "../constants/AuthConstants";
-import {signIn, signOut} from "@/auth"
+import {signIn, signOut} from "@/app/api/auth/[...nextauth]/route"//"@/auth"
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
 interface AuthState {
@@ -20,10 +20,10 @@ const initialState: AuthState = {
     revalidatePath("/")
 }*/
 
-export const signOutOf = async () => {
+/*export const signOutOf = async () => {
     await signOut({redirectTo:"/"})
     revalidatePath("/")
-}
+}*/
 
 
 
@@ -41,7 +41,11 @@ export const signInTo = createAsyncThunk(
   }
 );
 
-/*
+export const testAction = () => {
+    console.log("Hi this works")
+}
+
+
 // Async thunk for sign-out
 export const signOutOf = createAsyncThunk(
   'auth/signOut',
@@ -96,4 +100,4 @@ const authSlice = createSlice({
 // Export actions and reducer
 export const { resetAuthState } = authSlice.actions;
 export default authSlice.reducer;
-*/
+
