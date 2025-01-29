@@ -19,9 +19,12 @@ interface CNLayoutProps {
     children: ReactNode // This ensures you can pass any valid React component(s)
   }
 
+  import AuthLayout from "@/app/providers/AuthProvider"
+
 
 export default function CNLayout({ children }: CNLayoutProps) {
   return (
+    <AuthLayout>
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
@@ -55,5 +58,6 @@ export default function CNLayout({ children }: CNLayoutProps) {
         </div>
       </SidebarInset>
     </SidebarProvider>
+    </AuthLayout>
   )
 }

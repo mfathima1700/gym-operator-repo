@@ -2,14 +2,17 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
+import {auth} from "@/auth"
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
-  session,
 }: {
   children: React.ReactNode;
   session?: any;
 }) {
+
+const session = await auth();
+
   return (
     <SessionProvider session={session}>
       {children}
