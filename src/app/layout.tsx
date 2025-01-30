@@ -21,19 +21,21 @@ const geistMono = localFont({
 
 export default function RootLayout({
   children,
+  
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark"  suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
          <Provider store={store}>
+         {/* enableSystem */}
         <ThemeProvider
             attribute="class"
             defaultTheme="dark"
-            enableSystem
+          
             disableTransitionOnChange
           >
         {children}
