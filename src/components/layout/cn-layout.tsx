@@ -16,15 +16,20 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import AuthProvider from "@/app/providers/AuthProvider"
+
 
 interface CNLayoutProps {
     children: ReactNode // This ensures you can pass any valid React component(s)
   }
 
-  import AuthProvider from "@/app/providers/AuthProvider"
+  
 
 
 export default function CNLayout({ children }: CNLayoutProps) {
+ 
+
+
   return (
     <AuthProvider>
     <SidebarProvider>

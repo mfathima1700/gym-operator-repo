@@ -18,9 +18,6 @@ interface AuthState {
 
   export const signInTo = async (provider: string) => {
     try {
-      // Update state to "loading"
-      let state: AuthState = { ...initialState, status: "loading" };
-  
       // Call the signIn function
       const user = await signIn(provider, { redirectTo: "/" });
   
@@ -49,9 +46,6 @@ interface AuthState {
   // Function to handle sign-out
   export const signOutOf = async () => {
     try {
-      // Update state to "loading"
-      let state: AuthState = { ...initialState, status: "loading" };
-  
       // Call the signOut function
       await signOut({ redirectTo: "/" });
   
@@ -89,6 +83,8 @@ interface AuthState {
     payload:"Hi this works"
     }
 }
+
+
     //console.log("Hi this works")
 
     /*export const testAction = () => async (dispatch: AppDispatch) => {
