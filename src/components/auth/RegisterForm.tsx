@@ -24,8 +24,8 @@ export default function RegisterForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)}>
-      <form> 
-      {/* onSubmit={handleSubmit} */}
+      <form onSubmit={handleSubmit} > 
+      {/* */}
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
             <a
@@ -51,10 +51,11 @@ export default function RegisterForm({
               <Input
                 id="email"
                 type="email"
+                name="email"
                 placeholder="m@example.com"
                 required
                 value={userData.email}
-                onChange={(e) => setUserData(e.target.value)}
+                onChange={handleChange}
               />
             </div>
             <div className="grid gap-2">
@@ -62,10 +63,11 @@ export default function RegisterForm({
               <Input
                 id="password"
                 type="password"
+                name="password"
                 placeholder="password"
                 required
                 value={userData.password}
-                onChange={(e) => setUserData(e.target.value)}
+                onChange={handleChange}
               />
             </div>
             <div className="grid gap-2">
@@ -73,6 +75,7 @@ export default function RegisterForm({
               <Input
                 id="passwordtwo"
                 type="password"
+                name="passwordtwo"
                 placeholder="password"
                 required
               />
@@ -87,9 +90,10 @@ export default function RegisterForm({
                 <Input
                   id="code"
                   type="text"
+                  name="gymCode"
                   placeholder="0A7D78F03M"
                   value={userData.gymCode}
-                  onChange={(e) => setUserData(e.target.value)}
+                  onChange={handleChange}
                 />
               </div>
             ) : (

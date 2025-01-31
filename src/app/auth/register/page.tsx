@@ -1,18 +1,24 @@
 "use client";
 
 import RegisterForm from "@/components/auth/RegisterForm"; // Correct import path
-import { GymRole } from "@prisma/client";
+import { GymRole, UserRole } from "@prisma/client";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import   registerUser  from "@/redux/actions/AuthActions";
+import { User } from "lucide-react";
 
 export default function Register() {
+  const dispatch = useDispatch<AppDispatch>()
 
-  const [userData, setUserData] = useState({
+
+  const [userData, setUserData] = useState(() => ({
     email: "",
     password: "",
-    userRole: "USER",
+    userRole: UserRole.USER,
     role: GymRole.MEMBER,
     gymCode: "",
-  });
+  }));
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setUserData((prevState: any) => ({
@@ -23,7 +29,9 @@ export default function Register() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    console.log("register page");
     console.log(userData);
+    //dispatch(registerUser(userData));
   }
 
 
