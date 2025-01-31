@@ -1,7 +1,7 @@
 // app/(auth)/layout.tsx
 "use client";
 
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, getSession  } from "next-auth/react";
 import {auth} from "@/app/api/auth/[...nextauth]/route"//"@/auth"
 import { useEffect, useState } from "react";
 
@@ -9,18 +9,21 @@ export default function AuthProvider({
   children,
 }: {
   children: React.ReactNode;
-  session?: any;
+  //session?: any;
 }) {
 
   const [session, setSession] = useState<any>(null);
-
+  const [loading, setLoading] = useState(true);
+  //const [session, setSession] = useState<any>(null);
 //const session = await auth();
 
 useEffect(() => {
   // Fetch the session on client-side
   const fetchSession = async () => {
-    const sessionData = await auth(); // Fetch session asynchronously
+    const sessionData = await getSession();
+    //const sessionData = await auth(); // Fetch session asynchronously
     setSession(sessionData); // Store session in state
+    setLoading(false);
   };
 
   fetchSession(); // Run the function to fetch the session

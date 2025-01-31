@@ -1,6 +1,9 @@
 export const SIGN_IN_SUCCESS = "SIGN_IN_SUCCESS";
 export const SIGN_IN_FAILED = "SIGN_IN_FAILED";
-export const SIGN_IN_REQUESTED = "SIGN_IN_REQUESTED";
+export const SIGN_IN_LOADING = "SIGN_IN_LOADING";
 export const SIGN_OUT_SUCCESS   = "SIGN_OUT_SUCCESS";
 export const SIGN_OUT_FAILED = "SIGN_OUT_FAILED";
 export const TEST_SUCCESS = "TEST_SUCCESS";
+export const SIGN_UP_SUCCESS = "SIGN_UP_SUCCESS";
+export const SIGN_UP_FAILED = "SIGN_UP_FAILED";
+export const SIGN_UP_LOADING = "SIGN_UP_LOADING";

@@ -23,8 +23,9 @@ datasource db {
 model User {
   id            String          @id @default(auto()) @map("_id") @db.ObjectId
   email         String          @unique
-  name          String
+  name          String?
   password      String
+  hashedPassword String?
   createdAt     DateTime        @default(now())
   gender        GenderStatus?
   role          GymRole
@@ -39,6 +40,9 @@ model User {
   sessions      Session[]
   Authenticator Authenticator[]
   updatedAt     DateTime        @updatedAt
+  userRole      UserRole
+  isTrainer     Boolean @default(false)
+  
 }
 
 model Gym {
@@ -99,7 +103,6 @@ model Booking {
 // Enums for roles and membership status
 enum GymRole {
   MEMBER
-  TRAINER
   OWNER
 }
 

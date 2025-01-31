@@ -1,6 +1,6 @@
 //import { configureStore } from '@reduxjs/toolkit';
 //import authReducer from "@/redux/slices/AuthSlices";
-import {authReducer, testAuthReducer} from "@/redux/reducers/AuthReducer";
+import {signInReducer, signOutReducer, signUpReducer, testAuthReducer} from "@/redux/reducers/AuthReducer";
 import { combineReducers, createStore } from "redux";
 
 //export const store = configureStore({
@@ -11,8 +11,10 @@ import { combineReducers, createStore } from "redux";
 
  const rootReducer = combineReducers({
     
-   authReducer: authReducer,
-   testAuthReducer:testAuthReducer
+  signIn: signInReducer,
+   testAuth:testAuthReducer,
+   signOut:signOutReducer,
+   signUp: signUpReducer
     // Add other reducers here
   });
   

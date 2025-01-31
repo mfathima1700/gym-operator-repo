@@ -1,6 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export default function RoleTabs() {
+
+export default function RoleTabs({userData, setUserData}:{userData:any, setUserData:React.Dispatch<React.SetStateAction<any>>}) {
   return (
     <Tabs defaultValue="account" className="w-full">
       <TabsList className="grid w-full grid-cols-2">
@@ -10,7 +11,9 @@ export default function RoleTabs() {
       <TabsContent value="account">
         
       </TabsContent>
-      <TabsContent value="password"></TabsContent>
+      <TabsContent value="password">
+
+      </TabsContent>
     </Tabs>
   );
 }
