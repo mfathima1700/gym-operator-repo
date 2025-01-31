@@ -5,15 +5,15 @@ import { use } from "react";
 
 export default function RoleTabs({userData, setUserData}:{userData:any, setUserData:React.Dispatch<React.SetStateAction<any>>}) {
 
-  function handleRoleChange(role: GymRole) {
+  function handleRoleChange(newRole: GymRole) {
     setUserData((prevState:any) => ({
       ...prevState,
-      userRole: role,
+      role: newRole,
     }));
   }
   
   return (
-    <Tabs   defaultValue={userData.role ?? GymRole.MEMBER} value={userData.role} className="w-full" 
+    <Tabs value={userData.role} className="w-full" 
     onValueChange={(value) => handleRoleChange(value as GymRole)}>
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger  value={GymRole.OWNER} >Gym Owner</TabsTrigger>
