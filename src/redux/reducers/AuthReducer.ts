@@ -8,16 +8,12 @@ import {
 interface AuthState {
   user: any | null;
   loading: boolean;
-  error: string | null;
+  error: any;
 }
 
-const initialState: AuthState = {
-  user: null,
-  loading: false,
-  error: null,
-};
 
-const signInReducer = (state = initialState, action: any): AuthState => {
+
+const signInReducer = (state = { user: null, loading: false, error: null}, action: any): AuthState => {
   switch (action.type) {
     case SIGN_IN_LOADING:
       return {
@@ -44,14 +40,13 @@ const signInReducer = (state = initialState, action: any): AuthState => {
   }
 };
 
+interface testAuthState{
+  message: string;
+  error: any;
+}
 
 
-const initialTestAuthState = {
-  message: "",
-  error: null,
-};
-
-const testAuthReducer = (state = initialTestAuthState, action: any) => {
+const testAuthReducer = (state = {message: "",error: null}, action: any) : testAuthState => {
   switch (action.type) {
     case TEST_SUCCESS:
       return {
@@ -63,12 +58,12 @@ const testAuthReducer = (state = initialTestAuthState, action: any) => {
   }
 };
 
-interface SignInState {
+interface SignOutState {
   loading: boolean;
-  error: string | null;
+  error: any;
 }
 
-const signOutReducer = (state = initialState, action: any): SignInState => {
+const signOutReducer = (state = {loading: false, error: null}, action: any): SignOutState => {
   switch (action.type) {
     case SIGN_OUT_SUCCESS:
       return {
@@ -90,10 +85,10 @@ const signOutReducer = (state = initialState, action: any): SignInState => {
 interface SignUpState {
   loading: boolean;
   user: any | null;
-  error: string | null;
+  error: any;
 }
 
-const signUpReducer = (state = initialState, action: any): SignUpState => {
+const signUpReducer = (state = { loading: false, user: null, error: null}, action: any): SignUpState => {
   switch (action.type) {
     case SIGN_UP_LOADING:
       return {

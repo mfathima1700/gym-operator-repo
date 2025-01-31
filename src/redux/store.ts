@@ -1,7 +1,8 @@
 //import { configureStore } from '@reduxjs/toolkit';
 //import authReducer from "@/redux/slices/AuthSlices";
 import {signInReducer, signOutReducer, signUpReducer, testAuthReducer} from "@/redux/reducers/AuthReducer";
-import { combineReducers, createStore } from "redux";
+import { combineReducers, createStore, applyMiddleware  } from "redux";
+import promiseMiddleware from "redux-promise";
 
 //export const store = configureStore({
  //   reducer: {
@@ -18,7 +19,7 @@ import { combineReducers, createStore } from "redux";
     // Add other reducers here
   });
   
-  const store = createStore(rootReducer);
+  const store = createStore(rootReducer,  applyMiddleware(promiseMiddleware));
 
   export default store;
 

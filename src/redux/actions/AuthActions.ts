@@ -158,11 +158,15 @@ export default async function registerUser( registerData: RegisterUser) {
       },
     });
 
+    console.log("success");
     return {
       type: SIGN_UP_SUCCESS,
       payload: user,
     };
+
   } catch (error) {
+    
+    console.log(error);
     return {
       type: SIGN_UP_FAILED,
       payload: error,

@@ -5,7 +5,7 @@ import { GymRole, UserRole } from "@prisma/client";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import   registerUser  from "@/redux/actions/AuthActions";
+import registerUser  from "@/redux/actions/AuthActions";
 import { User } from "lucide-react";
 
 export default function Register() {
@@ -27,9 +27,11 @@ export default function Register() {
     }));
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async  function handleSubmit (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    dispatch(registerUser(userData));
+
+      dispatch(registerUser(userData));
+    
   }
 
 
