@@ -1,3 +1,5 @@
+"use server";
+
 import {
   SIGN_IN_FAILED,
   SIGN_IN_LOADING,
@@ -16,6 +18,9 @@ import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { saltAndHashPassword } from "@/lib/bcryptHelper";
 import { GymRole, UserRole } from "@prisma/client";
+
+
+
 interface AuthState {
   user: any | null;
   status: "idle" | "loading" | "succeeded" | "failed";
@@ -70,7 +75,7 @@ export const signOutOf = async () => {
 };
 
 // Function to reset the auth state
-export const resetAuthState = () => {
+/*export const resetAuthState = () => {
   return initialState;
 };
 
@@ -80,7 +85,7 @@ export const testAction = () => {
     type: TEST_SUCCESS,
     payload: "Hi this works",
   };
-};
+};*/
 
 const getUserByEmail = async (email: string) => {
   try {
