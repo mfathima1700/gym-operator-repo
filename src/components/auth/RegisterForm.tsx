@@ -72,8 +72,8 @@ export default function RegisterForm({
               <Label htmlFor="email">Re-type Password</Label>
               <Input
                 id="passwordtwo"
-                type="email"
-                placeholder="m@example.com"
+                type="password"
+                placeholder="password"
                 required
               />
             </div>
@@ -88,7 +88,8 @@ export default function RegisterForm({
                   id="code"
                   type="text"
                   placeholder="0A7D78F03M"
-                  required
+                  value={userData.gymCode}
+                  onChange={(e) => setUserData(e.target.value)}
                 />
               </div>
             ) : (
@@ -106,7 +107,7 @@ export default function RegisterForm({
               Or
             </span>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
+         
             <Button variant="outline" className="w-full">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path
@@ -116,7 +117,7 @@ export default function RegisterForm({
               </svg>
               Sign up with Google
             </Button>
-          </div>
+         
         </div>
       </form>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary  ">

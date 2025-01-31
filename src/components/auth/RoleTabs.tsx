@@ -1,17 +1,27 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { GymRole } from "@prisma/client";
 
 
 export default function RoleTabs({userData, setUserData}:{userData:any, setUserData:React.Dispatch<React.SetStateAction<any>>}) {
+
+  function handleRoleChange(role: GymRole) {
+    setUserData((prevState:any) => ({
+      ...prevState,
+      role,
+    }));
+  }
+  
   return (
-    <Tabs defaultValue="account" className="w-full">
+    <Tabs  defaultValue={userData.role ?? GymRole.MEMBER} value={userData.role} className="w-full" 
+    onValueChange={(value) => handleRoleChange(value as GymRole)}>
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="account">Gym Owner</TabsTrigger>
-        <TabsTrigger value="password">Gym Member</TabsTrigger>
+        <TabsTrigger  value={GymRole.OWNER} >Gym Owner</TabsTrigger>
+        <TabsTrigger value={GymRole.MEMBER}>Gym Member</TabsTrigger>
       </TabsList>
-      <TabsContent value="account">
+      <TabsContent value={GymRole.OWNER}>
         
       </TabsContent>
-      <TabsContent value="password">
+      <TabsContent value={GymRole.MEMBER}>
 
       </TabsContent>
     </Tabs>
