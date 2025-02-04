@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import {  } from "@/redux/actions/AuthActions";
 import { useFormStatus } from "react-dom";
 
-export default function LoginForm({ LoginAction }: { LoginAction: any, }) {
+export default function LoginForm({ LoginAction, setLoginData, loginData, handleChange }: { LoginAction: any, setLoginData: any, loginData: any, handleChange: any }) {
   const { pending } = useFormStatus();
 
   return (
@@ -34,6 +34,8 @@ export default function LoginForm({ LoginAction }: { LoginAction: any, }) {
               placeholder="m@example.com"
               required
               name="email"
+              value={loginData.email}
+              onChange={handleChange}
             />
           </div>
           <div className="grid gap-2">
@@ -43,7 +45,8 @@ export default function LoginForm({ LoginAction }: { LoginAction: any, }) {
                 Forgot your password?
               </Link>
             </div>
-            <Input id="password" type="password" required name="password"  minLength={8}/>
+            <Input id="password" type="password" required name="password"  minLength={8} value={loginData.password}
+                onChange={handleChange}/>
           </div>
           <Button type="submit" className="w-full"  disabled={pending} onClick={LoginAction}>
      

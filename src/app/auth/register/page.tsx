@@ -5,7 +5,7 @@ import { GymRole, UserRole } from "@prisma/client";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import registerUser  from "@/redux/actions/AuthActions";
+import registerUser, { getSession }  from "@/redux/actions/AuthActions";
 import { User } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -47,6 +47,10 @@ export default  function Register() {
     } 
 
   }, [sessionState]);
+
+    useEffect(() => {
+      dispatch(getSession());
+    }, []);
 
   const [userData, setUserData] = useState(() => ({
     email: "",

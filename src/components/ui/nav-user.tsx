@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   BadgeCheck,
@@ -7,13 +7,9 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
-} from "lucide-react"
+} from "lucide-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,31 +18,46 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
-import {testAction} from "@/redux/actions/AuthActions"
-import { AppDispatch } from "@/redux/store"; // Import correct type
+} from "@/components/ui/sidebar";
+import { signOutSession, testAction } from "@/redux/actions/AuthActions";
+import { AppDispatch, RootState } from "@/redux/store"; // Import correct type
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export function NavUser({
   user,
 }: {
   user: {
-    name: string
-    email: string
-    avatar: string
-  }
+    name: string;
+    email: string;
+    avatar: string;
+  };
 }) {
-  const { isMobile } = useSidebar()
-  const dispatch = useDispatch<AppDispatch>()
+  const { isMobile } = useSidebar();
+  const dispatch = useDispatch<AppDispatch>();
+  const signOutState = useSelector((state: RootState) => state.signOut);
+  const router = useRouter();
+  
+    useEffect(() => {
+     
+      console.log(signOutState);
+      // sign up success
+      if(signOutState?.success ){
+        router.push("/auth/login");
+      }
+  
+    }, [signOutState]);
 
-  function handleSignOut(e: React.MouseEvent){
-  dispatch(testAction())
+  function handleSignOut(e: React.MouseEvent) {
+    dispatch(signOutSession());
   }
 
   return (
@@ -111,12 +122,12 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <LogOut onClick={handleSignOut}/>
+              <LogOut onClick={handleSignOut} />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

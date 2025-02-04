@@ -4,11 +4,15 @@ import { Client, Account } from "node-appwrite";
 import { cookies } from "next/headers";
 
 export async function createSessionClient() {
-  const client = new Client()
+
+  try{
+
+    const client = new Client()
     .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
     .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT);
 
-  const session = await cookies().get("my-custom-session");
+  const cookieStore  = await cookies()
+  const session = cookieStore.get("my-custom-session");
   if (!session || !session.value) {
     throw new Error("No session");
   }
@@ -20,10 +24,17 @@ export async function createSessionClient() {
       return new Account(client);
     },
   };
+  }catch(error){
+    console.log(error);
+    throw new Error("Error creating session client")
+  }
+  
 }
 
 export async function createAdminClient() {
-  const client = new Client()
+
+  try{
+    const client = new Client()
     .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
     .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT)
     .setKey(process.env.NEXT_APPWRITE_KEY);
@@ -33,6 +44,11 @@ export async function createAdminClient() {
       return new Account(client);
     },
   };
+  }catch(error){
+    console.log(error);
+    throw new Error("Error creating admin client")
+  }
+  
 }
 
 // ... your initilization functions
@@ -42,7 +58,8 @@ export async function getLoggedInUser() {
       const { account } = await createSessionClient();
       return await account.get();
     } catch (error) {
-      return null;
+      console.log(error);
+      throw new Error("Error getting session");
     }
   }
   

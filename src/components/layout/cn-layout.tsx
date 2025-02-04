@@ -41,7 +41,7 @@ export default function CNLayout({ children }: CNLayoutProps) {
   useEffect(() => {
     console.log(sessionState);
 
-    if (!sessionState.user) {
+    if (sessionState?.user == null) {
       //redirect("/account");
       router.push("/auth/login");
     }

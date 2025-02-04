@@ -11,11 +11,10 @@ interface AuthState {
   user: any | null;
   loading: boolean;
   error: any;
+  success: boolean;
 }
 
-
-
-const signInReducer = (state = { user: null, loading: false, error: null}, action: any): AuthState => {
+const signInReducer = (state = { user: null, loading: false, error: null, success: false}, action: any): AuthState => {
   switch (action.type) {
     case SIGN_IN_LOADING:
       return {
@@ -29,6 +28,7 @@ const signInReducer = (state = { user: null, loading: false, error: null}, actio
         loading: false,
         user: action.payload,
         error: null,
+        success: true,
       };
     case SIGN_IN_FAILED:
       return {
@@ -36,6 +36,7 @@ const signInReducer = (state = { user: null, loading: false, error: null}, actio
         loading: false,
         user: null,
         error: action.payload,
+        success: false,
       };
     default:
       return state;
@@ -63,19 +64,20 @@ const testAuthReducer = (state = {message: "",error: null}, action: any) : testA
 interface SignOutState {
   loading: boolean;
   error: any;
+  success: boolean;
 }
 
-const signOutReducer = (state = {loading: false, error: null}, action: any): SignOutState => {
+const signOutReducer = (state = {loading: false, error: null, success: false}, action: any): SignOutState => {
   switch (action.type) {
     case SIGN_OUT_SUCCESS:
       return {
-        ...state,
+        success: true,
         loading: false,
         error: null,
       };
     case SIGN_OUT_FAILED:
       return {
-        ...state,
+        success: false,
         loading: false,
         error: action.payload,
       };

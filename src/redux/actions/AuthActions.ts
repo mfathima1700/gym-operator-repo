@@ -19,7 +19,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { saltAndHashPassword } from "@/lib/bcryptHelper";
 import { GymRole, UserRole } from "@prisma/client";
-import {signUpWithEmail} from "@/lib/server/auth";
+import {signInWithEmail, signOut, signUpWithEmail} from "@/lib/server/auth";
 import { getLoggedInUser } from "@/lib/server/appwrite";
 
 
@@ -48,11 +48,7 @@ export async function testAction (){
 
 
 
-interface SignInUser{
-  email: string;
-  password: string;
 
-}
 
 
 
@@ -86,7 +82,7 @@ export default async function registerUser( registerData: RegisterUser) {
       },
     });
 
-    console.log("success");
+    console.log("REGISTER SUCESSFUL");
     return {
       type: SIGN_UP_SUCCESS,
       payload: user,
@@ -120,4 +116,50 @@ export async function getSession(){
 
   }
   
+}
+
+export async function signOutSession(){
+
+  try{
+    const result = await signOut();
+
+    return {
+      type: SIGN_OUT_SUCCESS,
+      payload: result,
+    };
+  }catch(error){
+
+    console.log(error);
+    return {
+      type: SIGN_OUT_FAILED,
+      payload: error,
+    };
+  }
+  
+}
+
+interface SignInUser{
+  email: string;
+  password: string;
+
+}
+
+export async function signIn(userData: SignInUser){
+
+  try{
+    const user = await signInWithEmail(userData);
+
+    console.log("LOGIN SUCCESSFUL");
+    return {
+      type: SIGN_IN_SUCCESS,
+      payload: user,
+    };
+  }catch(error){
+
+    console.log(error);
+    return {
+      type: SIGN_IN_FAILED,
+      payload: error,
+    };
+  }
 }

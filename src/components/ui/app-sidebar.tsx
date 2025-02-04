@@ -36,7 +36,7 @@ const data = {
   user: {
     name: "Ri",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "https://avatars.githubusercontent.com/u/10198767?v=4",
   },
   teams: [
     {
