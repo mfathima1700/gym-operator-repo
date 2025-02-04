@@ -16,8 +16,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import AuthProvider from "@/app/providers/AuthProvider"
-
+import { getLoggedInUser } from "@/lib/server/appwrite";
+import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface CNLayoutProps {
     children: ReactNode // This ensures you can pass any valid React component(s)
@@ -26,12 +27,18 @@ interface CNLayoutProps {
   
 
 
-export default function CNLayout({ children }: CNLayoutProps) {
- 
-
+export default async function CNLayout({ children }: CNLayoutProps) {
+  const router = useRouter();
+  
+  const user = await getLoggedInUser();
+  
+  if (!user){
+    //redirect("/auth/signin");
+    router.push("/auth/signin");
+  } 
 
   return (
-    <AuthProvider>
+  
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
@@ -65,6 +72,6 @@ export default function CNLayout({ children }: CNLayoutProps) {
         </div>
       </SidebarInset>
     </SidebarProvider>
-    </AuthProvider>
+   
   )
 }

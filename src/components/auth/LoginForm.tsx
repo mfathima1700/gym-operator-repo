@@ -1,17 +1,21 @@
-import Link from "next/link"
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {  } from "@/redux/actions/AuthActions";
+import { useFormStatus } from "react-dom";
 
-export default function LoginForm({LoginAction}:{LoginAction:any}) {
+export default function LoginForm({ LoginAction }: { LoginAction: any }) {
+  const { pending } = useFormStatus();
+
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -21,7 +25,7 @@ export default function LoginForm({LoginAction}:{LoginAction:any}) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4">
+        <form className="grid gap-4" >
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -29,6 +33,7 @@ export default function LoginForm({LoginAction}:{LoginAction:any}) {
               type="email"
               placeholder="m@example.com"
               required
+              name="email"
             />
           </div>
           <div className="grid gap-2">
@@ -38,15 +43,16 @@ export default function LoginForm({LoginAction}:{LoginAction:any}) {
                 Forgot your password?
               </Link>
             </div>
-            <Input id="password" type="password" required />
+            <Input id="password" type="password" required name="password"  minLength={8}/>
           </div>
-          <Button type="submit" className="w-full" onClick={LoginAction}>
-            Login
+          <Button type="submit" className="w-full"  disabled={pending}
+     >
+            {pending ? "Loading..." : "Sign in"}
           </Button>
           <Button variant="outline" className="w-full">
             Login with Google
           </Button>
-        </div>
+        </form>
         <div className="mt-4 text-center text-sm">
           Don&apos;t have an account?{" "}
           <Link href="#" className="underline">
@@ -55,5 +61,5 @@ export default function LoginForm({LoginAction}:{LoginAction:any}) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

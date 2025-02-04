@@ -10,20 +10,31 @@ import { User } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
+import {
+  getLoggedInUser
+} from "@/lib/server/appwrite";
 
-
-export default function Register() {
+export default async  function Register() {
   const dispatch = useDispatch<AppDispatch>()
   const router = useRouter();
   const signUpState = useSelector((state: RootState) => state.signUp);
 
-  useEffect(() => {
+  const user = await getLoggedInUser();
+  if (user){
+    //redirect("/account");
+    router.push("/individual");
+    // router.push("/owner");
+  } 
 
-    if(signUpState.user.GymRole === GymRole.OWNER){
-      router.push("/owner");
-    }else if (signUpState.user.GymRole === GymRole.MEMBER){
-      router.push("/individual");
-    }
+  useEffect(() => {
+    console.log(signUpState);
+
+    if(signUpState?.user != null){
+    if(signUpState.user.GymRole.equals("OWNER")){
+      router.push("/owner/create");
+    }else if (signUpState.user.GymRole.equals("MEMBER")){
+      router.push("/individual/create");
+    }}
 
   }, [signUpState]);
 

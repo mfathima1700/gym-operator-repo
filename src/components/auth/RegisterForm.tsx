@@ -68,6 +68,7 @@ export default function RegisterForm({
                 required
                 value={userData.password}
                 onChange={handleChange}
+                minLength={8}
               />
             </div>
             <div className="grid gap-2">
@@ -78,6 +79,7 @@ export default function RegisterForm({
                 name="passwordtwo"
                 placeholder="password"
                 required
+                minLength={8}
               />
             </div>
             <div className="grid gap-2">
