@@ -2,7 +2,9 @@ import {
   SIGN_IN_LOADING,
   SIGN_IN_SUCCESS,
   SIGN_IN_FAILED,
-  TEST_SUCCESS, SIGN_OUT_FAILED, SIGN_OUT_SUCCESS, SIGN_UP_FAILED, SIGN_UP_LOADING, SIGN_UP_SUCCESS
+  TEST_SUCCESS, SIGN_OUT_FAILED, SIGN_OUT_SUCCESS, SIGN_UP_FAILED, SIGN_UP_LOADING, SIGN_UP_SUCCESS,
+  GET_SESSION_SUCCESS,
+  GET_SESSION_FAILED
 } from "../constants/AuthConstants";
 
 interface AuthState {
@@ -115,4 +117,31 @@ const signUpReducer = (state = { loading: false, user: null, error: null}, actio
   }
 };
 
-export { signInReducer, testAuthReducer, signUpReducer, signOutReducer };
+interface getSessionState {
+  user: any | null;
+  error: any;
+  success: boolean;
+}
+
+const getSessionReducer = (state = {  user: null, error: null, success: false}, action: any): getSessionState => {
+  switch (action.type) {
+    case GET_SESSION_SUCCESS:
+      return {
+        success: true,
+        user: action.payload,
+        error: null,
+      };
+    case GET_SESSION_FAILED:
+      return {
+        ...state,
+        user: null,
+        error: action.payload,
+        success: false,
+      };
+    default:
+      return state;
+  }
+};
+
+
+export { signInReducer, testAuthReducer, signUpReducer, signOutReducer, getSessionReducer };

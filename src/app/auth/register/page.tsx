@@ -14,17 +14,12 @@ import {
   getLoggedInUser
 } from "@/lib/server/appwrite";
 
-export default async  function Register() {
+export default  function Register() {
   const dispatch = useDispatch<AppDispatch>()
   const router = useRouter();
   const signUpState = useSelector((state: RootState) => state.signUp);
-
-  const user = await getLoggedInUser();
-  if (user){
-    //redirect("/account");
-    router.push("/individual");
-    // router.push("/owner");
-  } 
+  const sessionState = useSelector((state: RootState) => state.getSession);
+  
 
   useEffect(() => {
     console.log(signUpState);
@@ -37,6 +32,17 @@ export default async  function Register() {
     }}
 
   }, [signUpState]);
+
+  useEffect(() => {
+    console.log(sessionState);
+
+    if (sessionState.success){ //sessionState.user
+      //redirect("/account");
+      router.push("/individual");
+      // router.push("/owner");
+    } 
+
+  }, [sessionState]);
 
   const [userData, setUserData] = useState(() => ({
     email: "",

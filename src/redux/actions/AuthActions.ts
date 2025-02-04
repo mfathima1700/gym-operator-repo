@@ -10,6 +10,8 @@ import {
   SIGN_UP_FAILED,
   SIGN_UP_LOADING,
   SIGN_UP_SUCCESS,
+  GET_SESSION_SUCCESS,
+  GET_SESSION_FAILED,
 } from "../constants/AuthConstants";
 import { revalidatePath } from "next/cache";
 import { AppDispatch } from "../store";
@@ -104,14 +106,14 @@ export async function getSession(){
   try{
     const user = await getLoggedInUser();
     return {
-      type: SIGN_UP_SUCCESS,
+      type: GET_SESSION_SUCCESS,
       payload: user,
     };
 
   }catch(error){
     console.log(error);
     return {
-      type: SIGN_UP_SUCCESS,
+      type: GET_SESSION_FAILED,
       payload: error,
     };
 

@@ -1,6 +1,6 @@
 //import { configureStore } from '@reduxjs/toolkit';
 //import authReducer from "@/redux/slices/AuthSlices";
-import {signInReducer, signOutReducer, signUpReducer, testAuthReducer} from "@/redux/reducers/AuthReducer";
+import {signInReducer, signOutReducer, signUpReducer, testAuthReducer, getSessionReducer} from "@/redux/reducers/AuthReducer";
 import { combineReducers, createStore, applyMiddleware  } from "redux";
 import promiseMiddleware from "redux-promise";
 
@@ -15,7 +15,8 @@ import promiseMiddleware from "redux-promise";
   signIn: signInReducer,
    testAuth:testAuthReducer,
    signOut:signOutReducer,
-   signUp: signUpReducer
+   signUp: signUpReducer,
+   getSession:getSessionReducer,
     // Add other reducers here
   });
   

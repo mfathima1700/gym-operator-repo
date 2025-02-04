@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { ReactNode } from "react"
-import { AppSidebar } from "@/components/ui/app-sidebar"
+import { ReactNode } from "react";
+import { AppSidebar } from "@/components/ui/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,36 +9,47 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 import { getLoggedInUser } from "@/lib/server/appwrite";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useState, useEffect } from "react";
+import { getSession } from "@/redux/actions/AuthActions";
+import { AppDispatch } from "@/redux/store";
 
 interface CNLayoutProps {
-    children: ReactNode // This ensures you can pass any valid React component(s)
-  }
-
-  
-
+  children: ReactNode; // This ensures you can pass any valid React component(s)
+}
 
 export default async function CNLayout({ children }: CNLayoutProps) {
+   const dispatch = useDispatch<AppDispatch>()
   const router = useRouter();
-  
-  const user = await getLoggedInUser();
-  
-  if (!user){
-    //redirect("/auth/signin");
-    router.push("/auth/signin");
-  } 
+  const sessionState = useSelector((state: RootState) => state.getSession);
+
+  useEffect(() => {
+    dispatch(getSession());
+  }, []);
+
+  useEffect(() => {
+    console.log(sessionState);
+
+    if (sessionState.success) {
+      //sessionState.user
+      //redirect("/account");
+      router.push("/individual");
+      // router.push("/owner");
+    }
+  }, [sessionState]);
 
   return (
-  
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
@@ -49,9 +60,7 @@ export default async function CNLayout({ children }: CNLayoutProps) {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Dashboard
-                  </BreadcrumbLink>
+                  <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
                 </BreadcrumbItem>
                 {/* <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
@@ -62,7 +71,7 @@ export default async function CNLayout({ children }: CNLayoutProps) {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        {children}
+          {children}
           {/* <div className="grid auto-rows-min gap-4 md:grid-cols-3">
             <div className="aspect-video rounded-xl bg-muted/50" />
             <div className="aspect-video rounded-xl bg-muted/50" />
@@ -72,6 +81,5 @@ export default async function CNLayout({ children }: CNLayoutProps) {
         </div>
       </SidebarInset>
     </SidebarProvider>
-   
-  )
+  );
 }
