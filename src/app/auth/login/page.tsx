@@ -42,10 +42,12 @@ export default function Login() {
    // dispatch(testAction())
   }
 
+  
+
   return (
    
     <div className="flex items-center justify-center min-h-screen">
-      <LoginForm LoginAction={onLoginClick}/>
+      <LoginForm LoginAction={onLoginClick} />
     </div>
     
   );

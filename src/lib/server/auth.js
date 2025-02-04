@@ -3,7 +3,7 @@
 // previous imports ...
 
 import { ID } from "node-appwrite";
-import { createAdminClient } from "@/lib/server/appwrite";
+import { createAdminClient, createSessionClient, getLoggedInUser } from "@/lib/server/appwrite";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { GymRole, UserRole } from "@prisma/client";
@@ -25,6 +25,13 @@ export async function signUpWithEmail(user) {
     });
   
     //redirect("/account");
+  }
+
+  export async function signOut() {
+    const { account } = await createSessionClient();
+  
+    cookies().delete("my-custom-session");
+    await account.deleteSession("current");
   }
 
 // the SignUpPage component ...

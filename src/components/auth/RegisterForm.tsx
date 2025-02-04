@@ -12,7 +12,7 @@ interface RegisterFormProps extends React.ComponentPropsWithoutRef<"div"> {
   userData: any;
   setUserData: React.Dispatch<React.SetStateAction<any>>;  // Function to update userData
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;  // Handles input changes
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  handleSubmit: (e: React.MouseEvent) => void;
 }
 
 export default function RegisterForm({
@@ -24,7 +24,7 @@ export default function RegisterForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)}>
-      <form onSubmit={handleSubmit} > 
+      <form > 
       {/* */}
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
@@ -102,8 +102,8 @@ export default function RegisterForm({
               <></>
             )}
 
-{/* onClick={handleSubmit} */}
-            <Button type="submit" className="w-full">
+{/*  */}
+            <Button type="submit" className="w-full" onClick={handleSubmit}>
               Create
             </Button>
           </div>

@@ -29,7 +29,7 @@ interface CNLayoutProps {
   children: ReactNode; // This ensures you can pass any valid React component(s)
 }
 
-export default async function CNLayout({ children }: CNLayoutProps) {
+export default function CNLayout({ children }: CNLayoutProps) {
    const dispatch = useDispatch<AppDispatch>()
   const router = useRouter();
   const sessionState = useSelector((state: RootState) => state.getSession);
@@ -41,11 +41,9 @@ export default async function CNLayout({ children }: CNLayoutProps) {
   useEffect(() => {
     console.log(sessionState);
 
-    if (sessionState.success) {
-      //sessionState.user
+    if (!sessionState.user) {
       //redirect("/account");
-      router.push("/individual");
-      // router.push("/owner");
+      router.push("/auth/login");
     }
   }, [sessionState]);
 

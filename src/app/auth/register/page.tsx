@@ -22,12 +22,15 @@ export default  function Register() {
   
 
   useEffect(() => {
-    console.log(signUpState);
+   
 
+    // sign up success
     if(signUpState?.user != null){
-    if(signUpState.user.GymRole.equals("OWNER")){
+      console.log(signUpState);
+
+    if(signUpState?.user?.GymRole === "OWNER"){
       router.push("/owner/create");
-    }else if (signUpState.user.GymRole.equals("MEMBER")){
+    }else if (signUpState?.user?.GymRole === "MEMBER"){
       router.push("/individual/create");
     }}
 
@@ -36,6 +39,7 @@ export default  function Register() {
   useEffect(() => {
     console.log(sessionState);
 
+    // already signed in 
     if (sessionState.success){ //sessionState.user
       //redirect("/account");
       router.push("/individual");
@@ -59,7 +63,7 @@ export default  function Register() {
     }));
   }
 
-  async  function handleSubmit (e: React.FormEvent<HTMLFormElement>) {
+  async  function handleSubmit (e: React.MouseEvent) {
     e.preventDefault();
 
       dispatch(registerUser(userData));

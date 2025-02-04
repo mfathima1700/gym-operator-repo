@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import {  } from "@/redux/actions/AuthActions";
 import { useFormStatus } from "react-dom";
 
-export default function LoginForm({ LoginAction }: { LoginAction: any }) {
+export default function LoginForm({ LoginAction }: { LoginAction: any, }) {
   const { pending } = useFormStatus();
 
   return (
@@ -39,14 +39,14 @@ export default function LoginForm({ LoginAction }: { LoginAction: any }) {
           <div className="grid gap-2">
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
-              <Link href="#" className="ml-auto inline-block text-sm underline">
+              <Link href="/auth/forgot-password" className="ml-auto inline-block text-sm underline" >
                 Forgot your password?
               </Link>
             </div>
             <Input id="password" type="password" required name="password"  minLength={8}/>
           </div>
-          <Button type="submit" className="w-full"  disabled={pending}
-     >
+          <Button type="submit" className="w-full"  disabled={pending} onClick={LoginAction}>
+     
             {pending ? "Loading..." : "Sign in"}
           </Button>
           <Button variant="outline" className="w-full">
@@ -55,7 +55,7 @@ export default function LoginForm({ LoginAction }: { LoginAction: any }) {
         </form>
         <div className="mt-4 text-center text-sm">
           Don&apos;t have an account?{" "}
-          <Link href="#" className="underline">
+          <Link href="/auth/register" className="underline" >
             Sign up
           </Link>
         </div>

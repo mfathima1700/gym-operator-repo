@@ -73,6 +73,9 @@ export default async function registerUser( registerData: RegisterUser) {
   const userRole = registerData.userRole;
 
   try {
+
+    const success = await signUpWithEmail(registerData)
+
     const user = await db.user.create({
       data: {
         email,
@@ -82,8 +85,6 @@ export default async function registerUser( registerData: RegisterUser) {
         userRole,
       },
     });
-
-    const success = await signUpWithEmail(registerData)
 
     console.log("success");
     return {
