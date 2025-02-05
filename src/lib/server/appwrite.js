@@ -56,7 +56,14 @@ export async function createAdminClient() {
 export async function getLoggedInUser() {
     try {
       const { account } = await createSessionClient();
-      return await account.get();
+      const user =  await account.get();
+      const { gymRole, userRole } = user.prefs || {};
+
+      return {
+        ...user, // Keep all user details
+        gymRole,
+        userRole,
+      };
     } catch (error) {
       console.log(error);
       throw new Error("Error getting session");

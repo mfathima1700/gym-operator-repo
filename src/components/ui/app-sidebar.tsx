@@ -135,27 +135,32 @@ const data = {
   projects: [
     {
       name: "Home",
-      url: "#",
+      url: `/individual`, // "/owner"
       icon: House,
     },
     {
+      name: "Gym Schedule",
+      url: "/individual/schedule",
+      icon: CalendarDays,
+    },
+    {
       name: "Schedule",
-      url: "#",
+      url: "/individual/schedule",
       icon: CalendarDays,
     },
     {
       name: "Training Sessions",
-      url: "#",
+      url: "/individual/sessions",
       icon: Dumbbell,
     },
     {
       name: "Goals",
-      url: "#",
+      url: "/individual/goals",
       icon: Trophy,
     },
     {
       name: "Progress",
-      url: "#",
+      url: "/individual/progress",
       icon: ChartColumnIncreasing,
     },
 

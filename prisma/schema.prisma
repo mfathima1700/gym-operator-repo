@@ -28,7 +28,7 @@ model User {
   hashedPassword String?
   createdAt     DateTime        @default(now())
   gender        GenderStatus?
-  role          GymRole
+  gymRole          GymRole
   bookings      Booking[]
   gym           Gym?            @relation("UserGym") // One-to-one relationship with Gym
   memberships   Membership[]

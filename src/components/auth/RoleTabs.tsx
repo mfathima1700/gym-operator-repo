@@ -8,12 +8,12 @@ export default function RoleTabs({userData, setUserData}:{userData:any, setUserD
   function handleRoleChange(newRole: GymRole) {
     setUserData((prevState:any) => ({
       ...prevState,
-      role: newRole,
+      gymRole: newRole,
     }));
   }
   
   return (
-    <Tabs value={userData.role} className="w-full" 
+    <Tabs value={userData.gymRole} className="w-full" 
     onValueChange={(value) => handleRoleChange(value as GymRole)}>
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger  value={GymRole.OWNER} >Gym Owner</TabsTrigger>

@@ -56,7 +56,7 @@ export async function testAction (){
 interface RegisterUser{
   email: string,
   password: string,
-  role: GymRole,
+  gymRole: GymRole,
   userRole: UserRole
 }
 
@@ -64,7 +64,7 @@ export default async function registerUser( registerData: RegisterUser) {
   console.log(registerData);
   const hashedPassword = saltAndHashPassword(registerData.password);
   const email = registerData.email;
-  const role = registerData.role;
+  const gymRole = registerData.gymRole;
   const password = registerData.password;
   const userRole = registerData.userRole;
 
@@ -77,7 +77,7 @@ export default async function registerUser( registerData: RegisterUser) {
         email,
         password,
         hashedPassword,
-        role,
+        gymRole,
         userRole,
       },
     });

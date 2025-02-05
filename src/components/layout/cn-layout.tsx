@@ -34,18 +34,21 @@ export default function CNLayout({ children }: CNLayoutProps) {
   const router = useRouter();
   const sessionState = useSelector((state: RootState) => state.getSession);
 
-  useEffect(() => {
-    dispatch(getSession());
-  }, []);
 
-  useEffect(() => {
-    console.log(sessionState);
+  // broken
 
-    if (sessionState?.user == null) {
-      //redirect("/account");
-      router.push("/auth/login");
-    }
-  }, [sessionState]);
+  // useEffect(() => {
+  //   dispatch(getSession());
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log(sessionState.user);
+
+  //   if (sessionState?.user == null) {
+  //     //redirect("/account");
+  //     router.push("/auth/login");
+  //   }
+  // }, [sessionState]);
 
   return (
     <SidebarProvider>
@@ -58,7 +61,7 @@ export default function CNLayout({ children }: CNLayoutProps) {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
+                  <BreadcrumbLink href={ sessionState?.user?.gymRole == "MEMBER" ? "/individual" : "/owner"}>Dashboard</BreadcrumbLink>
                 </BreadcrumbItem>
                 {/* <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>

@@ -1,8 +1,7 @@
 'use client'
 
 import CNLayout from "@/components/layout/cn-layout"
-import { OwnerAccountCard } from "@/components/create/OwnerAccountCard"
-import WeekCalendar from "@/components/schedule/WeekCalendar"
+import GymWeekCalendar from "@/components/gym/GymWeekCalendar"
 
 function classNames(...classes: (string | false | undefined)[]): string {
     return classes.filter(Boolean).join(' ')
@@ -11,11 +10,16 @@ function classNames(...classes: (string | false | undefined)[]): string {
   export default function IndividualSchedule() {
  
 
+    function handleAddClass(){
+
+    }
+
+
     return (
       <>
       <CNLayout>
         <div  >
-<WeekCalendar/>
+<GymWeekCalendar/>
 
         </div>
       </CNLayout>

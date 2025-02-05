@@ -86,7 +86,7 @@ export default function RegisterForm({
               <RoleTabs setUserData={setUserData} userData={userData}/>
             </div>
 
-            {userData.role === GymRole.MEMBER ? (
+            {userData.gymRole === GymRole.MEMBER ? (
               <div className="grid gap-2">
                 <Label htmlFor="email">Gym Code</Label>
                 <Input

@@ -56,7 +56,7 @@ export default  function Register() {
     email: "",
     password: "",
     userRole: UserRole.USER,
-    role: GymRole.MEMBER,
+    gymRole: GymRole.MEMBER,
     gymCode: "",
   }));
 

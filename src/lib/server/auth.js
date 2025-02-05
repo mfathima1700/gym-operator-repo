@@ -10,13 +10,13 @@ import { GymRole, UserRole } from "@prisma/client";
 
 
 export async function signUpWithEmail(user) {
-    const { email, password, role, userRole } = user; 
+    const { email, password, gymRole, userRole } = user; 
   
     try{
 
     const { account } = await createAdminClient();
     await account.create(ID.unique(), email, password); // No `name` field provided
-
+    await account.updatePrefs({ gymRole, userRole });  
     // this part handles sign in
      /*const session = await account.createEmailPasswordSession(email, password);
   
