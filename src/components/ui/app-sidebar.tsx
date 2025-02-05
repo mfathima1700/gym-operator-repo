@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import {
-  AudioWaveform,
   House, 
   CalendarDays,
 Trophy, 
@@ -10,11 +9,8 @@ ChartColumnIncreasing,
 Dumbbell,
   BookOpen,
   Bot,
+  BicepsFlexed, 
   Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
   Settings2,
   SquareTerminal,
 } from "lucide-react"
@@ -140,8 +136,8 @@ const data = {
     },
     {
       name: "Gym Schedule",
-      url: "/individual/schedule",
-      icon: CalendarDays,
+      url: "/gym/schedule",
+      icon: Dumbbell,
     },
     {
       name: "Schedule",
@@ -151,7 +147,7 @@ const data = {
     {
       name: "Training Sessions",
       url: "/individual/sessions",
-      icon: Dumbbell,
+      icon: BicepsFlexed,
     },
     {
       name: "Goals",

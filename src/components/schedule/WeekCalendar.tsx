@@ -9,12 +9,6 @@ import { Label } from "@/components/ui/label";
 import { YearSelect } from "@/components/progress/YearSelect";
 import {
   Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { AddClassSheet } from './AddClassSheet';
