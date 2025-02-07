@@ -25,7 +25,7 @@ export default function ClassOptions() {
         <div className="sm:col-span-2">
           <Select>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a duration" />
+              <SelectValue placeholder="Filter by duration" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -43,7 +43,7 @@ export default function ClassOptions() {
         <div className="sm:col-span-2">
         <Select>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select an intensity" />
+              <SelectValue placeholder="Filter by intensity" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -61,7 +61,7 @@ export default function ClassOptions() {
         <div className="sm:col-span-2">
         <Select>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a capacity" />
+              <SelectValue placeholder="Filter by capacity" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -79,7 +79,7 @@ export default function ClassOptions() {
         <div className="sm:col-span-2">
         <Select>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a location" />
+              <SelectValue placeholder="Filter by location" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>

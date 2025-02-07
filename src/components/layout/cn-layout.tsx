@@ -37,18 +37,18 @@ export default function CNLayout({ children }: CNLayoutProps) {
 
   // broken
 
-  // useEffect(() => {
-  //   dispatch(getSession());
-  // }, []);
+  useEffect(() => {
+    dispatch(getSession());
+  }, []);
 
-  // useEffect(() => {
-  //   console.log(sessionState.user);
+  useEffect(() => {
+    console.log(sessionState.user);
 
-  //   if (sessionState?.user == null) {
-  //     //redirect("/account");
-  //     router.push("/auth/login");
-  //   }
-  // }, [sessionState]);
+    if (sessionState?.user == null) {
+      //redirect("/account");
+      router.push("/auth/login");
+    }
+  }, [sessionState]);
 
   return (
     <SidebarProvider>

@@ -3,15 +3,22 @@
 import { Client, Account } from "node-appwrite";
 import { cookies } from "next/headers";
 
+export async function createClient() {
+  const client = new Client()
+    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
+    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT);
+
+  return client;
+}
+
+
 export async function createSessionClient() {
 
   try{
 
-    const client = new Client()
-    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
-    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT);
+    const client = await createClient();
 
-  const cookieStore  = await cookies()
+  const cookieStore  = cookies()//await cookies()
   const session = cookieStore.get("my-custom-session");
   if (!session || !session.value) {
     throw new Error("No session");
@@ -26,7 +33,7 @@ export async function createSessionClient() {
   };
   }catch(error){
     console.log(error);
-    throw new Error("Error creating session client")
+      throw error;
   }
   
 }
@@ -46,7 +53,7 @@ export async function createAdminClient() {
   };
   }catch(error){
     console.log(error);
-    throw new Error("Error creating admin client")
+    throw error;
   }
   
 }
@@ -66,7 +73,7 @@ export async function getLoggedInUser() {
       };
     } catch (error) {
       console.log(error);
-      throw new Error("Error getting session");
+      throw error;
     }
   }
   

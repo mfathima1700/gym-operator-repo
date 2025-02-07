@@ -57,7 +57,7 @@ export function ClassDropdown() {
         >
           {value
             ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select class..."}
+            : "Filter by class..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>

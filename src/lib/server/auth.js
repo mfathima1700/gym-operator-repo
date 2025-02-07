@@ -1,6 +1,4 @@
-// src/app/signup/page.jsx
-
-// previous imports ...
+"use server";
 
 import { ID } from "node-appwrite";
 import { createAdminClient, createSessionClient, getLoggedInUser } from "@/lib/server/appwrite";
@@ -63,7 +61,8 @@ export async function signInWithEmail(user) {
  
   try{
 
-    const { account } = await createSessionClient();
+    const client = await createClient();
+    const account = new Account(client);
     const session = await account.createEmailPasswordSession(email, password);
 
     // Set the session in cookies
