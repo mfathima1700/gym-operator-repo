@@ -27,23 +27,23 @@ export default function Login() {
         router.push("/individual");
       //}
     }
-  }, [signInState]);
+  }, [signInState.user, signInState.error, signInState.success]);
 
+  /*
   useEffect(() => {
     console.log(sessionState);
 
     // already signed in 
     if (sessionState.success){ //sessionState.user
-      //redirect("/account");
       router.push("/individual");
       // router.push("/owner");
     } 
 
-  }, [sessionState]);
+  }, [sessionState.error, sessionState.success]);
 
     useEffect(() => {
       dispatch(getSession());
-    }, []);
+    }, []);*/
 
   const [loginData, setLoginData] = useState(() => ({
     email: "",

@@ -1,7 +1,7 @@
 "use server";
 
 import { ID } from "node-appwrite";
-import { createAdminClient, createSessionClient, getLoggedInUser } from "@/lib/server/appwrite";
+import { checkSession, createAdminClient, createSessionClient, getLoggedInUser } from "@/lib/server/appwrite";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { GymRole, UserRole } from "@prisma/client";
@@ -41,11 +41,17 @@ export async function signUpWithEmail(user) {
   export async function signOut() {
     try{
 
-      const { account } = await createSessionClient();
-  
-      cookies().delete("my-custom-session");
-      const result = await account.deleteSession("current");
-      return result;
+      //const { account } = await createSessionClient();
+
+      if(checkSession() == true){
+        const cookieStore = cookies();
+        cookieStore.delete("my-custom-session");
+        const result = await account.deleteSession("current");
+        return result;
+      }
+
+      console.log("No session");
+      
     }catch(error){
       //throw new Error("Error signing out");
       console.log(error);
@@ -66,8 +72,8 @@ export async function signInWithEmail(user) {
     const session = await account.createEmailPasswordSession(email, password);
 
     // Set the session in cookies
-    const cookieStore = await cookies();
-    cookieStore().set("my-custom-session", session.secret, {
+    const cookieStore = cookies();
+    cookieStore.set("my-custom-session", session.secret, {
       path: "/",
       httpOnly: true,
       sameSite: "strict",

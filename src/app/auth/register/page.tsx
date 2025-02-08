@@ -34,23 +34,23 @@ export default  function Register() {
       router.push("/individual/create");
     }}
 
-  }, [signUpState]);
+  }, [signUpState.user, signUpState.error]);
 
-  useEffect(() => {
-    console.log(sessionState);
+  // useEffect(() => {
+  //   console.log(sessionState);
 
-    // already signed in 
-    if (sessionState.success){ //sessionState.user
-      //redirect("/account");
-      router.push("/individual");
-      // router.push("/owner");
-    } 
+  //   // already signed in 
+  //   if (sessionState.success){ //sessionState.user
+  //     //redirect("/account");
+  //     router.push("/individual");
+  //     // router.push("/owner");
+  //   } 
 
-  }, [sessionState]);
+  // }, [sessionState.user, sessionState.error, sessionState.success]);
 
-    useEffect(() => {
-      dispatch(getSession());
-    }, []);
+  //   useEffect(() => {
+  //     dispatch(getSession());
+  //   }, []);
 
   const [userData, setUserData] = useState(() => ({
     email: "",

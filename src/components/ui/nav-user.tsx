@@ -54,7 +54,7 @@ export function NavUser({
         router.push("/auth/login");
       }
   
-    }, [signOutState]);
+    }, [signOutState.error, signOutState.success]);
 
   function handleSignOut(e: React.MouseEvent) {
     dispatch(signOutSession());
@@ -114,8 +114,8 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut onClick={handleSignOut} />
+            <DropdownMenuItem onClick={handleSignOut}>
+              <LogOut  />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
