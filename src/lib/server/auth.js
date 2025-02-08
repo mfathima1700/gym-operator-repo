@@ -1,10 +1,11 @@
 "use server";
 
 import { ID } from "node-appwrite";
-import { checkSession, createAdminClient, createSessionClient, getLoggedInUser } from "@/lib/server/appwrite";
+import { checkSession, createAdminClient, createSessionClient, getLoggedInUser, createClient, } from "@/lib/server/appwrite";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { GymRole, UserRole } from "@prisma/client";
+import { Client, Account } from "node-appwrite";
 
 
 export async function signUpWithEmail(user) {

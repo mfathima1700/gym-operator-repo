@@ -37,6 +37,7 @@ export default function CNLayout({ children }: CNLayoutProps) {
 
   // broken
 
+  /*
   useEffect(() => {
     dispatch(getSession());
   }, []);
@@ -48,7 +49,7 @@ export default function CNLayout({ children }: CNLayoutProps) {
       //redirect("/account");
       router.push("/auth/login");
     }
-  }, [sessionState]);
+  }, [sessionState]);*/
 
   return (
     <SidebarProvider>
