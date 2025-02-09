@@ -14,6 +14,10 @@ import {
   GET_SESSION_FAILED,
   VERIFY_SUCCESS,
   VERIFY_FAILED,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_FAILED,
+  FORGET_PASSWORD_SUCCESS,
+  FORGET_PASSWORD_FAILED,
 } from "../constants/AuthConstants";
 import { revalidatePath } from "next/cache";
 import { AppDispatch } from "../store";
@@ -21,7 +25,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { saltAndHashPassword } from "@/lib/bcryptHelper";
 import { GymRole, UserRole } from "@prisma/client";
-import {signInWithEmail, signOut, signUpWithEmail, verifyEmail} from "@/lib/server/auth";
+import {sendForgotPasswordEmail, signInWithEmail, signOut, signUpWithEmail, verifyEmail, setNewPassword} from "@/lib/server/auth";
 import { getLoggedInUser } from "@/lib/server/appwrite";
 
 
@@ -91,7 +95,7 @@ export default async function registerUser( registerData: RegisterUser) {
     };
 
   } catch (error) {
-    
+    console.log("REGISTER FAILED");
     console.log(error);
     return {
       type: SIGN_UP_FAILED,
@@ -131,7 +135,7 @@ export async function signOutSession(){
       payload: result,
     };
   }catch(error){
-
+    console.log("LOGOUT FAILED");
     console.log(error);
     return {
       type: SIGN_OUT_FAILED,
@@ -158,7 +162,7 @@ export async function signIn(userData: SignInUser){
       payload: user,
     };
   }catch(error){
-
+    console.log("LOGIN FAILED");
     console.log(error);
     return {
       type: SIGN_IN_FAILED,
@@ -167,11 +171,7 @@ export async function signIn(userData: SignInUser){
   }
 }
 
-interface SignInUser{
-  email: string;
-  password: string;
 
-}
 
 export async function verifyEmailAddress(){
   try{
@@ -188,6 +188,47 @@ export async function verifyEmailAddress(){
     console.log(error);
     return {
       type: VERIFY_FAILED,
+      payload: error,
+    };
+  }
+}
+
+
+
+export async function sendPasswordEmail( email: string){
+  try{
+
+    const result = await sendForgotPasswordEmail(email);
+
+      console.log("SENT FORGET PASSWORD EMAIL");
+    return {
+      type: FORGET_PASSWORD_SUCCESS,
+      //payload: result,
+    };
+  }catch(error){
+    console.log("FAILED TO SEND FORGET PASSWORD EMAIL");
+    console.log(error);
+    return {
+      type: FORGET_PASSWORD_FAILED,
+      payload: error,
+    };
+  }
+}
+
+export async function resetPassword( password: string){
+  try{
+
+    const result = await setNewPassword(password);
+
+      console.log("RESET PASSWORD SUCCESSFUL");
+    return {
+      type: RESET_PASSWORD_SUCCESS,
+    };
+  }catch(error){
+    console.log("RESET PASSWORD FAILED");
+    console.log(error);
+    return {
+      type: RESET_PASSWORD_FAILED,
       payload: error,
     };
   }

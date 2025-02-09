@@ -86,3 +86,33 @@ export async function signInWithEmail(user) {
     //throw new Error("Invalid credentials or other error");
   }
 }
+
+export async function sendForgotPasswordEmail(email) {
+
+  try{
+    const client = await createClient();
+  const account = new Account(client);
+  await account.createRecovery(email, 'http://localhost:3000/auth/reset-password');
+  }catch(error){
+    console.log(error);
+    throw error;
+  }
+  
+}
+
+export async function setNewPassword( password) {
+
+  try{
+    const client = await createClient();
+  const account = new Account(client);
+
+  const urlParams = new URLSearchParams(window.location.search);
+const secret = urlParams.get('secret');
+const userId = urlParams.get('userId');
+
+  await account.updateRecovery(userId, secret, password);
+  }catch(error){
+    console.log(error);
+    throw error;
+  }
+}
