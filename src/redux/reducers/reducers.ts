@@ -3,8 +3,9 @@ import {
   signInReducer,
   signOutReducer,
   signUpReducer,
-  testAuthReducer,
+  testAuthReducer, verifyReducer
 } from "@/redux/reducers/AuthReducer";
+import { verify } from "crypto";
 import { combineReducers, createStore, applyMiddleware } from "redux";
 
 const rootReducer = combineReducers({
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   testAuth: testAuthReducer,
   signOut: signOutReducer,
   signUp: signUpReducer,
+  verify: verifyReducer,
   // Add other reducers here
 });
 

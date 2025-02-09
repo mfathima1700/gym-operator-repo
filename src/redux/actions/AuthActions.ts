@@ -12,6 +12,8 @@ import {
   SIGN_UP_SUCCESS,
   GET_SESSION_SUCCESS,
   GET_SESSION_FAILED,
+  VERIFY_SUCCESS,
+  VERIFY_FAILED,
 } from "../constants/AuthConstants";
 import { revalidatePath } from "next/cache";
 import { AppDispatch } from "../store";
@@ -19,7 +21,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { saltAndHashPassword } from "@/lib/bcryptHelper";
 import { GymRole, UserRole } from "@prisma/client";
-import {signInWithEmail, signOut, signUpWithEmail} from "@/lib/server/auth";
+import {signInWithEmail, signOut, signUpWithEmail, verifyEmail} from "@/lib/server/auth";
 import { getLoggedInUser } from "@/lib/server/appwrite";
 
 
@@ -123,6 +125,7 @@ export async function signOutSession(){
   try{
     const result = await signOut();
 
+    console.log("LOGOUT SUCCESSFUL");
     return {
       type: SIGN_OUT_SUCCESS,
       payload: result,
@@ -159,6 +162,32 @@ export async function signIn(userData: SignInUser){
     console.log(error);
     return {
       type: SIGN_IN_FAILED,
+      payload: error,
+    };
+  }
+}
+
+interface SignInUser{
+  email: string;
+  password: string;
+
+}
+
+export async function verifyEmailAddress(){
+  try{
+
+    const result = await verifyEmail();
+
+      console.log("VERIFY SUCCESSFUL");
+    return {
+      type: VERIFY_SUCCESS,
+      payload: result,
+    };
+  }catch(error){
+    console.log("VERIFY FAILED");
+    console.log(error);
+    return {
+      type: VERIFY_FAILED,
       payload: error,
     };
   }

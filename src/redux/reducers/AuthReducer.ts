@@ -4,7 +4,9 @@ import {
   SIGN_IN_FAILED,
   TEST_SUCCESS, SIGN_OUT_FAILED, SIGN_OUT_SUCCESS, SIGN_UP_FAILED, SIGN_UP_LOADING, SIGN_UP_SUCCESS,
   GET_SESSION_SUCCESS,
-  GET_SESSION_FAILED
+  GET_SESSION_FAILED,
+  VERIFY_SUCCESS,
+  VERIFY_FAILED
 } from "../constants/AuthConstants";
 
 interface AuthState {
@@ -145,5 +147,27 @@ const getSessionReducer = (state = {  user: null, error: null, success: false}, 
   }
 };
 
+interface verifyState {
+  error: any;
+  success: boolean;
+}
 
-export { signInReducer, testAuthReducer, signUpReducer, signOutReducer, getSessionReducer };
+const verifyReducer = (state = {  error: null, success: false}, action: any): verifyState => {
+  switch (action.type) {
+    case VERIFY_SUCCESS:
+      return {
+        success: true,
+        error: null,
+      };
+    case VERIFY_FAILED:
+      return {
+        error: action.payload,
+        success: false,
+      };
+    default:
+      return state;
+  }
+};
+
+
+export { signInReducer, testAuthReducer, signUpReducer, signOutReducer, getSessionReducer, verifyReducer };
