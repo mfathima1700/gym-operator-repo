@@ -5,46 +5,41 @@ import { GymRole, UserRole } from "@prisma/client";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import registerUser, { getSession }  from "@/redux/actions/AuthActions";
+import registerUser, { getSession } from "@/redux/actions/AuthActions";
 import { User } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
-import {
-  getLoggedInUser
-} from "@/lib/server/appwrite";
+import { getLoggedInUser } from "@/lib/server/appwrite";
 
-export default  function Register() {
-  const dispatch = useDispatch<AppDispatch>()
+export default function Register() {
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const signUpState = useSelector((state: RootState) => state.signUp);
   const sessionState = useSelector((state: RootState) => state.getSession);
-  
 
   useEffect(() => {
-   
-
     // sign up success
-    if(signUpState?.user != null){
+    if (signUpState?.user != null) {
       console.log(signUpState);
 
-    if(signUpState?.user?.GymRole === "OWNER"){
-      router.push("/owner/create");
-    }else if (signUpState?.user?.GymRole === "MEMBER"){
-      router.push("/individual/create");
-    }}
-
+      if (signUpState?.user?.GymRole === "OWNER") {
+        router.push("/owner/create");
+      } else if (signUpState?.user?.GymRole === "MEMBER") {
+        router.push("/individual/create");
+      }
+    }
   }, [signUpState.user, signUpState.error]);
 
   // useEffect(() => {
   //   console.log(sessionState);
 
-  //   // already signed in 
+  //   // already signed in
   //   if (sessionState.success){ //sessionState.user
   //     //redirect("/account");
   //     router.push("/individual");
   //     // router.push("/owner");
-  //   } 
+  //   }
 
   // }, [sessionState.user, sessionState.error, sessionState.success]);
 
@@ -67,19 +62,21 @@ export default  function Register() {
     }));
   }
 
-  async  function handleSubmit (e: React.MouseEvent) {
+  async function handleSubmit(e: React.MouseEvent) {
     e.preventDefault();
 
-      dispatch(registerUser(userData));
-    
+    dispatch(registerUser(userData));
   }
-
-
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
       <div className="w-full max-w-sm">
-        <RegisterForm userData={userData} handleSubmit={handleSubmit} setUserData={setUserData} handleChange={handleChange}/>
+        <RegisterForm
+          userData={userData}
+          handleSubmit={handleSubmit}
+          setUserData={setUserData}
+          handleChange={handleChange}
+        />
       </div>
     </div>
   );

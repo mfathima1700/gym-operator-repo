@@ -58,13 +58,14 @@ export async function getLoggedInUser() {
   try {
     const { account } = await createSessionClient();
     const user = await account.get();
-    const { gymRole, userRole } = user.prefs || {};
+    //const { gymRole, userRole } = user.prefs || {};
 
-    return {
-      ...user, // Keep all user details
-      gymRole,
-      userRole,
-    };
+    return user;
+    // return {
+    //   ...user, // Keep all user details
+    //   gymRole,
+    //   userRole,
+    // };
   } catch (error) {
     console.log(error);
     throw error;

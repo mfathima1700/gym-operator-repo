@@ -19,8 +19,10 @@ export async function signUpWithEmail(user) {
   try {
     const { account } = await createAdminClient();
     await account.create(ID.unique(), email, password); // No `name` field provided
-    await account.updatePrefs({ gymRole, userRole });
-    await account.createVerification("http://localhost:3000/auth/verify");
+    //await account.createEmailPasswordSession(email, password);
+    //await account.updatePrefs({ gymRole, userRole });
+   
+    //await account.createVerification("http://localhost:3000/auth/verify");
     return account;
   } catch (error) {
     //throw new Error("Something went wrong with signing up")
