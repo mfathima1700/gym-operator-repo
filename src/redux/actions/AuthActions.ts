@@ -25,9 +25,15 @@ import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { saltAndHashPassword } from "@/lib/bcryptHelper";
 import { GymRole, UserRole } from "@prisma/client";
-import {sendForgotPasswordEmail, signInWithEmail, signOut, signUpWithEmail, verifyEmail, setNewPassword} from "@/lib/server/auth";
+import {
+  sendForgotPasswordEmail,
+  signInWithEmail,
+  signOut,
+  signUpWithEmail,
+  verifyEmail,
+  setNewPassword,
+} from "@/lib/server/auth";
 import { getLoggedInUser } from "@/lib/server/appwrite";
-
 
 interface AuthState {
   user: any | null;
@@ -42,31 +48,22 @@ const initialState: AuthState = {
   error: null,
 };
 
-
-
-export async function testAction (){
+export async function testAction() {
   console.log("Hi this works");
   return {
     type: TEST_SUCCESS,
     payload: "Hi this works",
   };
-};
-
-
-
-
-
-
-
-
-interface RegisterUser{
-  email: string,
-  password: string,
-  gymRole: GymRole,
-  userRole: UserRole
 }
 
-export default async function registerUser( registerData: RegisterUser) {
+interface RegisterUser {
+  email: string;
+  password: string;
+  gymRole: GymRole;
+  userRole: UserRole;
+}
+
+export default async function registerUser(registerData: RegisterUser) {
   console.log(registerData);
   const hashedPassword = saltAndHashPassword(registerData.password);
   const email = registerData.email;
@@ -75,8 +72,7 @@ export default async function registerUser( registerData: RegisterUser) {
   const userRole = registerData.userRole;
 
   try {
-
-    const success = await signUpWithEmail(registerData)
+    const success = await signUpWithEmail(registerData);
 
     const user = await db.user.create({
       data: {
@@ -93,7 +89,6 @@ export default async function registerUser( registerData: RegisterUser) {
       type: SIGN_UP_SUCCESS,
       payload: user,
     };
-
   } catch (error) {
     console.log("REGISTER FAILED");
     console.log(error);
@@ -104,29 +99,24 @@ export default async function registerUser( registerData: RegisterUser) {
   }
 }
 
-export async function getSession(){
-
-  try{
+export async function getSession() {
+  try {
     const user = await getLoggedInUser();
     return {
       type: GET_SESSION_SUCCESS,
       payload: user,
     };
-
-  }catch(error){
+  } catch (error) {
     console.log(error);
     return {
       type: GET_SESSION_FAILED,
       payload: error,
     };
-
   }
-  
 }
 
-export async function signOutSession(){
-
-  try{
+export async function signOutSession() {
+  try {
     const result = await signOut();
 
     console.log("LOGOUT SUCCESSFUL");
@@ -134,7 +124,7 @@ export async function signOutSession(){
       type: SIGN_OUT_SUCCESS,
       payload: result,
     };
-  }catch(error){
+  } catch (error) {
     console.log("LOGOUT FAILED");
     console.log(error);
     return {
@@ -142,18 +132,15 @@ export async function signOutSession(){
       payload: error,
     };
   }
-  
 }
 
-interface SignInUser{
+interface SignInUser {
   email: string;
   password: string;
-
 }
 
-export async function signIn(userData: SignInUser){
-
-  try{
+export async function signIn(userData: SignInUser) {
+  try {
     const user = await signInWithEmail(userData);
 
     console.log("LOGIN SUCCESSFUL");
@@ -161,7 +148,7 @@ export async function signIn(userData: SignInUser){
       type: SIGN_IN_SUCCESS,
       payload: user,
     };
-  }catch(error){
+  } catch (error) {
     console.log("LOGIN FAILED");
     console.log(error);
     return {
@@ -171,19 +158,16 @@ export async function signIn(userData: SignInUser){
   }
 }
 
+export async function verifyEmailAddress(secret: string, userId: string) {
+  try {
+    const result = await verifyEmail(secret, userId);
 
-
-export async function verifyEmailAddress(){
-  try{
-
-    const result = await verifyEmail();
-
-      console.log("VERIFY SUCCESSFUL");
+    console.log("VERIFY SUCCESSFUL");
     return {
       type: VERIFY_SUCCESS,
       payload: result,
     };
-  }catch(error){
+  } catch (error) {
     console.log("VERIFY FAILED");
     console.log(error);
     return {
@@ -193,19 +177,16 @@ export async function verifyEmailAddress(){
   }
 }
 
-
-
-export async function sendPasswordEmail( email: string){
-  try{
-
+export async function sendPasswordEmail(email: string) {
+  try {
     const result = await sendForgotPasswordEmail(email);
 
-      console.log("SENT FORGET PASSWORD EMAIL");
+    console.log("SENT FORGET PASSWORD EMAIL");
     return {
       type: FORGET_PASSWORD_SUCCESS,
       //payload: result,
     };
-  }catch(error){
+  } catch (error) {
     console.log("FAILED TO SEND FORGET PASSWORD EMAIL");
     console.log(error);
     return {
@@ -215,16 +196,19 @@ export async function sendPasswordEmail( email: string){
   }
 }
 
-export async function resetPassword( password: string){
-  try{
+export async function resetPassword(
+  password: string,
+  secret: string,
+  userId: string
+) {
+  try {
+    const result = await setNewPassword(password, secret, userId);
 
-    const result = await setNewPassword(password);
-
-      console.log("RESET PASSWORD SUCCESSFUL");
+    console.log("RESET PASSWORD SUCCESSFUL");
     return {
       type: RESET_PASSWORD_SUCCESS,
     };
-  }catch(error){
+  } catch (error) {
     console.log("RESET PASSWORD FAILED");
     console.log(error);
     return {

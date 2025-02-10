@@ -21,7 +21,7 @@ export async function signUpWithEmail(user) {
     await account.create(ID.unique(), email, password); // No `name` field provided
     //await account.createEmailPasswordSession(email, password);
     //await account.updatePrefs({ gymRole, userRole });
-   
+
     //await account.createVerification("http://localhost:3000/auth/verify");
     return account;
   } catch (error) {
@@ -31,11 +31,7 @@ export async function signUpWithEmail(user) {
   }
 }
 
-export async function verifyEmail() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const secret = urlParams.get("secret");
-  const userId = urlParams.get("userId");
-
+export async function verifyEmail(secret, userId) {
   const client = await createClient();
   const account = new Account(client);
   const verifiedAccount = await account.updateVerification(userId, secret);
@@ -88,30 +84,26 @@ export async function signInWithEmail(user) {
 }
 
 export async function sendForgotPasswordEmail(email) {
-
-  try{
+  try {
     const client = await createClient();
-  const account = new Account(client);
-  await account.createRecovery(email, 'http://localhost:3000/auth/reset-password');
-  }catch(error){
+    const account = new Account(client);
+    await account.createRecovery(
+      email,
+      "http://localhost:3000/auth/reset-password"
+    );
+  } catch (error) {
     console.log(error);
     throw error;
   }
-  
 }
 
-export async function setNewPassword( password) {
-
-  try{
+export async function setNewPassword(password, secret, userId) {
+  try {
     const client = await createClient();
-  const account = new Account(client);
+    const account = new Account(client);
 
-  const urlParams = new URLSearchParams(window.location.search);
-const secret = urlParams.get('secret');
-const userId = urlParams.get('userId');
-
-  await account.updateRecovery(userId, secret, password);
-  }catch(error){
+    await account.updateRecovery(userId, secret, password);
+  } catch (error) {
     console.log(error);
     throw error;
   }

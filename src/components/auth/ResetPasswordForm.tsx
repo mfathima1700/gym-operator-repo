@@ -39,7 +39,7 @@ export default function ResetPasswordForm({ action, passwordData,  handleChange 
               <Label htmlFor="password">Confirm password</Label>
               
             </div>
-            <Input id="password" type="password" required name="password"  minLength={8} value={passwordData.password}
+            <Input id="passwordTwo" type="password" required name="passwordTwo"  minLength={8} value={passwordData.passwordTwo}
                 onChange={handleChange}/>
           </div>
           <Button type="submit" className="w-full"  disabled={pending} onClick={action}>
