@@ -26,8 +26,16 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { useSearchParams  } from "next/navigation";
 
-// This is sample data.
+
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const searchParams = useSearchParams ();
+  const id = searchParams.get("id");
+  const gymId = searchParams.get("gymId");
+
+  // This is sample data.
 const data = {
   user: {
     name: "Ri",
@@ -131,39 +139,38 @@ const data = {
   projects: [
     {
       name: "Home",
-      url: `/individual`, // "/owner"
+      url: `/individual/${id}`, // "/owner"
       icon: House,
     },
     {
       name: "Gym Schedule",
-      url: "/gym/schedule",
+      url: `/gym/${gymId}/schedule`,
       icon: Dumbbell,
     },
     {
       name: "Schedule",
-      url: "/individual/schedule",
+      url: `/individual/${id}/schedule`,
       icon: CalendarDays,
     },
     {
       name: "Training Sessions",
-      url: "/individual/sessions",
+      url: `/individual/${id}/sessions`,
       icon: BicepsFlexed,
     },
     {
       name: "Goals",
-      url: "/individual/goals",
+      url: `/individual/${id}/goals`,
       icon: Trophy,
     },
     {
       name: "Progress",
-      url: "/individual/progress",
+      url: `/individual/${id}/progress`,
       icon: ChartColumnIncreasing,
     },
 
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

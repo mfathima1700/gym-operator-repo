@@ -141,7 +141,8 @@ interface SignInUser {
 
 export async function signIn(userData: SignInUser) {
   try {
-    const user = await signInWithEmail(userData);
+    const appWriteUser = await signInWithEmail(userData);
+    const user = await getUserByEmail(userData.email);
 
     console.log("LOGIN SUCCESSFUL");
     return {
@@ -217,3 +218,24 @@ export async function resetPassword(
     };
   }
 }
+
+export async function getUserByEmail(email:string){
+  try {
+    const user = await db.user.findUnique({
+      where: { email }, // Look up user by email
+      include: {
+        gym: true, // Include gym details if needed
+        memberships: true,
+         // Include memberships if needed
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return user;
+}catch(error){
+  console.error("Error fetching user:", error);
+    throw error;
+}}

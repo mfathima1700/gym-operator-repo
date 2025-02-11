@@ -31,3 +31,24 @@ export async function createGym(name: string, address: string, ownerId: string) 
   
     return { message: "Successfully joined gym!" };
   }
+
+  export async function getUserById(id:string){
+    try {
+      const user = await db.user.findUnique({
+        where: { id }, // Look up user by email
+        include: {
+          gym: true, // Include gym details if needed
+          memberships: true,
+           // Include memberships if needed
+        },
+      });
+  
+      if (!user) {
+        throw new Error("User not found");
+      }
+  
+      return user;
+  }catch(error){
+    console.error("Error fetching user:", error);
+      throw error;
+  }}

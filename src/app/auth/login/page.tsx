@@ -6,27 +6,29 @@ import { getSession, signIn } from "@/redux/actions/AuthActions";
 import { AppDispatch } from "@/redux/store"; // Import correct type
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useRouter  } from "next/navigation";
+import { useRouter, useSearchParams  } from "next/navigation";
 import { GymRole, UserRole } from "@prisma/client";
 import { useState, useEffect } from "react";
+
 
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const signInState = useSelector((state: RootState) => state.signIn);
   const sessionState = useSelector((state: RootState) => state.getSession);
-
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
 
   useEffect(() => {
     
 
     if (signInState?.success && signInState?.user != null) {
-      console.log(signInState);
-      // if (signInState?.user?.GymRole === GymRole.OWNER) {
-      //   router.push("/owner");
-      // } else if (signInState?.user?.GymRole === GymRole.MEMBER) {
-        router.push("/individual");
-      //}
+      console.log(signInState.user);
+      if (signInState?.user?.GymRole === GymRole.OWNER) {
+        router.push(`/owner/${signInState?.user?.id}`);
+      } else if (signInState?.user?.GymRole === GymRole.MEMBER) {
+        router.push(`/individual/${signInState?.user?.id}`);
+      }
     }
   }, [signInState.user, signInState.error, signInState.success]);
 

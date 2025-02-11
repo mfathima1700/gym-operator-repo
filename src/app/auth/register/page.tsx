@@ -23,11 +23,6 @@ export default function Register() {
     if (signUpState?.user != null) {
       console.log(signUpState);
 
-      if (signUpState?.user?.GymRole === "OWNER") {
-        router.push("/owner/create");
-      } else if (signUpState?.user?.GymRole === "MEMBER") {
-        router.push("/individual/create");
-      }
     }
   }, [signUpState.user, signUpState.error]);
 
