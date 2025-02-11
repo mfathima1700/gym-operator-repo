@@ -9,8 +9,10 @@ import {
   forgetPasswordReducer,
   resetPasswordReducer,
 } from "@/redux/reducers/AuthReducer";
+import { create } from "domain";
 import { combineReducers, createStore, applyMiddleware } from "redux";
 import promiseMiddleware from "redux-promise";
+import { createGymReducer, setUserDataReducer } from "./reducers/GymReducer";
 
 
 const rootReducer = combineReducers({
@@ -22,6 +24,8 @@ const rootReducer = combineReducers({
   verify: verifyReducer,
   forgetPassword: forgetPasswordReducer,
   resetPassword: resetPasswordReducer,
+  createGym: createGymReducer,
+  setUserData: setUserDataReducer,
   // Add other reducers here
 });
 

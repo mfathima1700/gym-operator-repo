@@ -20,8 +20,17 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { InputOTPWithSeparator } from "../ui/InputOTPWithSeparator"
+import { DateInput } from "@/components/create/DateInput"
 
-export function IndividualAccountCard() {
+export function IndividualAccountCard({
+  onSaveClick,
+  createData,
+  handleChange,
+}: {
+  onSaveClick: any;
+  createData: any;
+  handleChange: any;
+}) {
     return (
       <Card className="w-[350px]">
         <CardHeader>
@@ -40,8 +49,8 @@ export function IndividualAccountCard() {
                 <Input id="name" placeholder="Doe" />
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label  htmlFor="name">DOB</Label>
-                <InputOTPWithSeparator />
+                <Label  htmlFor="name">Date of Birth</Label>
+                <DateInput  name={"dob"} value={createData.dob} handleChange={handleChange} />
               </div>
               
             </div>
@@ -49,7 +58,7 @@ export function IndividualAccountCard() {
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button variant="outline">Cancel</Button>
-          <Button>Create</Button>
+          <Button onClick={onSaveClick}>Save</Button>
         </CardFooter>
       </Card>
     )

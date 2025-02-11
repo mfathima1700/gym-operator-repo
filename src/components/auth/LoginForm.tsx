@@ -13,7 +13,8 @@ import { Label } from "@/components/ui/label";
 import {  } from "@/redux/actions/AuthActions";
 import { useFormStatus } from "react-dom";
 
-export default function LoginForm({ LoginAction, setLoginData, loginData, handleChange }: { LoginAction: any, setLoginData: any, loginData: any, handleChange: any }) {
+export default function LoginForm({ LoginAction, loginData, handleChange }:
+   { LoginAction: any, loginData: any, handleChange: any }) {
   const { pending } = useFormStatus();
 
   return (

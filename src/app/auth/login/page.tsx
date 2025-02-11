@@ -67,7 +67,7 @@ export default function Login() {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <LoginForm LoginAction={onLoginClick} setLoginData={setLoginData} loginData={loginData} handleChange={handleChange}/>
+      <LoginForm LoginAction={onLoginClick}  loginData={loginData} handleChange={handleChange}/>
     </div>
   );
 }
