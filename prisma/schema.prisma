@@ -54,6 +54,7 @@ model Gym {
   memberships Membership[]
   classes     Class[]
   createdAt   DateTime     @default(now())
+  gymCode    String      @unique @default(uuid())
 }
 
 // Membership model
