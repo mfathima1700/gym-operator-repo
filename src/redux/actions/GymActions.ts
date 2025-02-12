@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "@/db";
 import {
   CREATE_GYM_FAILED,
@@ -97,11 +99,14 @@ export async function createGym(data: createOwnerData, id: string) {
       },
     });
 
+  console.log("CREATED GYM")
+
     return {
       type: CREATE_GYM_SUCCESS,
       payload: gym,
     };
   } catch (error) {
+  console.log("FAILED TO CREATE GYM")
     console.error("Error updating user and gym:", error);
     return {
       type: CREATE_GYM_FAILED,
@@ -134,14 +139,30 @@ export async function updateUser(data: createUserData, id: string) {
       },
     });
 
+    console.log("UPDATED USER")
     return {
       type: SET_USER_SUCCESS,
       payload: updatedUser,
     };
   } catch (error) {
+    console.log("FAILED TO UPDATE USER")
     return {
       type: SET_USER_FAILED,
       payload: error,
     };
   }
+}
+
+export async function updateUserSettings(data: createUserData, id: string) {
+  try {
+
+
+  }catch (error) {}
+}
+
+export async function updateOwnerSettings(data: createUserData, id: string) {
+  try {
+
+
+  }catch (error) {}
 }

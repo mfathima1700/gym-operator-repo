@@ -25,11 +25,12 @@ import { DateInput } from "@/components/create/DateInput"
 export function IndividualAccountCard({
   onSaveClick,
   createData,
-  handleChange,
+  handleChange,handleDateChange
 }: {
   onSaveClick: any;
   createData: any;
   handleChange: any;
+  handleDateChange: any;
 }) {
     return (
       <Card className="w-[350px]">
@@ -42,15 +43,19 @@ export function IndividualAccountCard({
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">First Name</Label>
-                <Input id="name" placeholder="Jane" />
+                <Input id="name" placeholder="Jane" name="firstName"
+              value={createData.firstName}
+              onChange={handleChange}   />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label  htmlFor="name">Last Name</Label>
-                <Input id="name" placeholder="Doe" />
+                <Input id="lastname" placeholder="Doe" name="lastName"
+              value={createData.lastName}
+              onChange={handleChange}  />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label  htmlFor="name">Date of Birth</Label>
-                <DateInput  name={"dob"} value={createData.dob} handleChange={handleChange} />
+                <DateInput  handleDateChange={handleDateChange} value={createData.dob} handleChange={handleChange} />
               </div>
               
             </div>

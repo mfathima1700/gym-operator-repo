@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
-export function DateInput({ value, handleChange, name }: { value: Date | undefined, handleChange: any, name: any }) {
+export function DateInput({ value, handleChange, handleDateChange }: { value: Date | undefined, handleChange: any, handleDateChange: any }) {
   const [date, setDate] = React.useState<Date | undefined>(value)
 
   return (
@@ -30,7 +30,7 @@ export function DateInput({ value, handleChange, name }: { value: Date | undefin
           selected={date}
           onSelect={(selectedDate) => {
             setDate(selectedDate)
-            handleChange(selectedDate) // Update parent state
+            handleDateChange(selectedDate) // Update parent state
           }}
           initialFocus
         />

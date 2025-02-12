@@ -42,7 +42,10 @@ model User {
   updatedAt     DateTime        @updatedAt
   userRole      UserRole
   isTrainer     Boolean @default(false)
-  
+  phoneNumber     String?         // New field
+  country         String?         // New field
+  emailOffers     Boolean         @default(true) // New field
+  pushNotifications String        @default("everything")
 }
 
 model Gym {

@@ -20,8 +20,9 @@ export default function CreateAccountOwner() {
   const setUserDataState = useSelector((state: RootState) => state.setUserData);
 
   useEffect(() => {
+    console.log(setUserDataState)
     if (setUserDataState?.success) {
-      router.push(`/owner/${id}`);
+      router.push(`/individual/${id}`);
     }
   }, [setUserDataState.error, setUserDataState.success]);
 
@@ -43,6 +44,13 @@ export default function CreateAccountOwner() {
     }));
   }
 
+  function handleDateChange(date: Date) {
+    setCreateData((prevState) => ({
+      ...prevState,
+      dob: date || null, // Handle undefined case
+    }));
+  }
+
   return (
     <>
       <CNLayout>
@@ -51,6 +59,7 @@ export default function CreateAccountOwner() {
             handleChange={handleChange}
             createData={createData}
             onSaveClick={onSaveClick}
+            handleDateChange={handleDateChange}
           />
         </div>
       </CNLayout>

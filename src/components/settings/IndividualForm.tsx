@@ -2,7 +2,7 @@ import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
 import { Input } from '@/components/ui/input'
 
-export default function IndividualForm() {
+export default function IndividualForm({handleChange, userData, onSaveClick}: {handleChange: any, userData: any, onSaveClick: any}) {
   return (
     <form>
       <div className="space-y-12">
@@ -100,6 +100,21 @@ export default function IndividualForm() {
                 <ChevronDownIcon
                   aria-hidden="true"
                   className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-400 sm:size-4"
+                />
+              </div>
+            </div>
+
+            <div className="sm:col-span-3">
+              <label htmlFor="last-name" className="block text-sm/6 font-medium text-white">
+               Phone Number
+              </label>
+              <div className="mt-2">
+                <input
+                  id="last-name"
+                  name="last-name"
+                  type="text"
+                  autoComplete="family-name"
+                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-lime-500 sm:text-sm/6"
                 />
               </div>
             </div>
@@ -229,7 +244,7 @@ export default function IndividualForm() {
           Cancel
         </button>
         <button
-          type="submit"
+          type="button" onClick={onSaveClick}
           className="rounded-md bg-lime-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-lime-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-500"
         >
           Save
