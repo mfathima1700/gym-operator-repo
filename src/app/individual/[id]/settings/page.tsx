@@ -2,7 +2,7 @@
  
  import CNLayout from "@/components/layout/cn-layout";
 import IndividualForm from "@/components/settings/IndividualForm"
-import { updateUserSettings } from "@/redux/actions/GymActions";
+import { getUserById, updateUserSettings } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
   const searchParams = useSearchParams();
   const id = searchParams.get("id") ?? "";
   const updateUserSettingsState = useSelector((state: RootState) => state.updateUserSettings);
+  const userState = useSelector((state: RootState) => state.getUser);
   
   const [userData, setUserData] = useState(() => ({
       firstName: "",
@@ -36,6 +37,27 @@ import { useDispatch, useSelector } from "react-redux";
           router.push(`/individual/${id}`);
         }
       }, [updateUserSettingsState.error, updateUserSettingsState.success]);
+
+      useEffect(() => {
+        if (id) {
+          dispatch(getUserById(id));
+        }
+      }, [dispatch, id]); // Only runs when `id` changes
+    
+      // Update state when user data is available
+      useEffect(() => {
+        if (userState.user) {
+          setUserData({
+            firstName: userState.user.firstName || "",
+            lastName: userState.user.lastName || "",
+            phoneNumber: userState.user.phoneNumber || "",
+            country: userState.user.country || "",
+            image: userState.user.image || "",
+            emailNotifications: userState.user.emailNotifications || "everything",
+            pushNotifications: userState.user.pushNotifications || "everything",
+          });
+        }
+      }, [userState.user]);
   
     function onSaveClick(e: React.MouseEvent) {
       e.preventDefault();

@@ -4,6 +4,8 @@ import { db } from "@/db";
 import {
   CREATE_GYM_FAILED,
   CREATE_GYM_SUCCESS,
+  GET_GYM_DATA_FAILED,
+  GET_GYM_DATA_SUCCESS,
   SET_USER_FAILED,
   SET_USER_SUCCESS,
   UPDATE_OWNER_SETTINGS_FAILED,
@@ -64,10 +66,20 @@ export async function getUserById(id: string) {
       throw new Error("User not found");
     }
 
-    return user;
+    console.error("USER DATA SUCCESS");
+
+    return {
+      type: GET_GYM_DATA_SUCCESS,
+      payload: user,
+    };
+
   } catch (error) {
-    console.error("Error fetching user:", error);
-    throw error;
+    console.error("FAILED TO GET USER DATA");
+    console.error(error);
+    return {
+      type: GET_GYM_DATA_FAILED,
+      payload: error,
+    };
   }
 }
 
