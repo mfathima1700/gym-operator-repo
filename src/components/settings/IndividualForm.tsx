@@ -32,8 +32,7 @@ export default function IndividualForm({
       <div className="border-b border-white/10 pb-12">
         <h2 className="text-lg font-semibold text-white">Profile</h2>
         <p className="mt-1 text-sm text-gray-400">
-          This information will be displayed publicly so be careful what you
-          share.
+          This information will be shared with the owner of your gym and their staff.
         </p>
 
         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -46,6 +45,7 @@ export default function IndividualForm({
               placeholder="janesmith@example.com"
               value={userData.email}
               disabled={true}
+              name="email"
             />
           </div>
 
@@ -57,6 +57,7 @@ export default function IndividualForm({
               type="text"
               value={userData.firstName}
               onChange={handleChange}
+              name="firstName"
             />
           </div>
 
@@ -68,13 +69,14 @@ export default function IndividualForm({
               type="text"
               value={userData.lastName}
               onChange={handleChange}
+              name="lastName"
             />
           </div>
 
           {/* Gym */}
           <div className="sm:col-span-3 grid gap-2">
             <Label htmlFor="gym">Gym</Label>
-            <Input id="gym" type="text" value={gymName} disabled />
+            <Input id="gym" type="text" value={gymName} disabled name="gymName" />
           </div>
 
           {/* Country Dropdown */}
@@ -101,6 +103,7 @@ export default function IndividualForm({
             <Input
               id="phone"
               type="text"
+              name="phoneNumber"
               value={userData.phoneNumber}
               onChange={handleChange}
             />
@@ -150,7 +153,7 @@ export default function IndividualForm({
           </div>
         </div>*/}
 
-<div className="mt-10 ">
+        <div className="mt-10 ">
           <Label className="text-white">By email</Label>
           <p className="mt-1 text-sm text-gray-400">
             These are delivered to your inbox. You can unsubscribe at any time.
@@ -166,7 +169,9 @@ export default function IndividualForm({
             </div>
             <div className="flex items-center gap-x-3">
               <RadioGroupItem value="critical-and-classes" id="push-email" />
-              <Label htmlFor="push-email">Upcoming Classes and Critical Updates</Label>
+              <Label htmlFor="push-email">
+                Upcoming Classes and Critical Updates
+              </Label>
             </div>
             <div className="flex items-center gap-x-3">
               <RadioGroupItem value="critical-only" id="push-nothing" />
@@ -192,7 +197,9 @@ export default function IndividualForm({
             </div>
             <div className="flex items-center gap-x-3">
               <RadioGroupItem value="same-as-email" id="push-email" />
-              <Label htmlFor="push-email">Upcoming Classes and Critical Updates</Label>
+              <Label htmlFor="push-email">
+                Upcoming Classes and Critical Updates
+              </Label>
             </div>
             <div className="flex items-center gap-x-3">
               <RadioGroupItem value="no-push" id="push-nothing" />

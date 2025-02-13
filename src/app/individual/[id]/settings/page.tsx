@@ -5,7 +5,7 @@ import IndividualForm from "@/components/settings/IndividualForm"
 import { updateUserSettings } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
  
  function classNames(...classes: (string | false | undefined)[]): string {
@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id") ?? "";
-  const setUserDataState = useSelector((state: RootState) => state.setUserData);
+  const updateUserSettingsState = useSelector((state: RootState) => state.updateUserSettings);
   
   const [userData, setUserData] = useState(() => ({
       firstName: "",
@@ -29,6 +29,13 @@ import { useDispatch, useSelector } from "react-redux";
       emailNotifications: "everything", // Represents whether the user wants to receive email offers
       pushNotifications: "everything",
     }));
+
+    useEffect(() => {
+        console.log(updateUserSettingsState)
+        if (updateUserSettingsState?.success) {
+          router.push(`/individual/${id}`);
+        }
+      }, [updateUserSettingsState.error, updateUserSettingsState.success]);
   
     function onSaveClick(e: React.MouseEvent) {
       e.preventDefault();

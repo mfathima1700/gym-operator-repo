@@ -44,20 +44,26 @@ model User {
   isTrainer     Boolean @default(false)
   phoneNumber     String?         // New field
   country         String?         // New field
-  emailNotifications     @default("everything") // New field
+  emailNotifications     String @default("everything") // New field
   pushNotifications String        @default("everything")
 }
 
 model Gym {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  address     String
   ownerId     String       @unique @db.ObjectId // Ensure uniqueness for one-to-one
   owner       User         @relation("UserGym", fields: [ownerId], references: [id]) // One-to-one relationship with User
   memberships Membership[]
   classes     Class[]
   createdAt   DateTime     @default(now())
   gymCode    String      @unique @default(uuid())
+  country    String?
+  city         String?
+  postcode        String?
+  streetAddress  String?
+  state         String?
+  description   String?
+
 }
 
 // Membership model

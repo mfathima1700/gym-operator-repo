@@ -6,6 +6,10 @@ import {
   CREATE_GYM_SUCCESS,
   SET_USER_FAILED,
   SET_USER_SUCCESS,
+  UPDATE_OWNER_SETTINGS_FAILED,
+  UPDATE_OWNER_SETTINGS_SUCCESS,
+  UPDATE_USER_SETTINGS_FAILED,
+  UPDATE_USER_SETTINGS_SUCCESS,
 } from "../constants/GymConstants";
 
 /*
@@ -71,7 +75,7 @@ interface createOwnerData {
   firstName: string;
   lastName: string;
   gymName: string;
-  address: string;
+  //address: string;
 }
 
 export async function createGym(data: createOwnerData, id: string) {
@@ -94,7 +98,7 @@ export async function createGym(data: createOwnerData, id: string) {
     const gym = await db.gym.create({
       data: {
         name: data.gymName,
-        address: data.address,
+        //address: data.address,
         ownerId: user.id, // Link gym to the owner
       },
     });
@@ -153,16 +157,141 @@ export async function updateUser(data: createUserData, id: string) {
   }
 }
 
-export async function updateUserSettings(data: createUserData, id: string) {
-  try {
-
-
-  }catch (error) {}
+interface userSettingsData {
+  firstName: string;
+  lastName: string;
+  dob: Date;
+  phoneNumber?: string;
+  country?: string;
+  image?: string;
+  emailNotifications?: string;
+  pushNotifications?: string;
 }
 
-export async function updateOwnerSettings(data: createUserData, id: string) {
+export async function updateUserSettings(data: userSettingsData, id: string) {
   try {
 
+    const user = await db.user.findUnique({
+      where: { id: id },
+    });
 
-  }catch (error) {}
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const updatedUser = await db.user.update({
+      where: { id },
+      data: {
+        name: `${data.firstName} ${data.lastName}`,
+        dateOfBirth: data.dob,
+        phoneNumber: data.phoneNumber,
+        country: data.country,
+        image: data.image,
+        emailNotifications: data.emailNotifications,
+        pushNotifications: data.pushNotifications,
+        updatedAt: new Date(), // Ensure `updatedAt` updates automatically
+      },
+    });
+
+
+    console.log("UPDATE USER SUCCESS");
+    return {
+      type: UPDATE_USER_SETTINGS_SUCCESS,
+      payload: updatedUser,
+    };
+
+    
+
+  }catch (error) {
+    console.log("UPDATE USER FAILED");
+    return {
+      type: UPDATE_USER_SETTINGS_FAILED,
+      payload: error,
+    };
+  }
+}
+
+interface ownerSettingsData {
+  firstName: string;
+  lastName: string;
+  dob: Date;
+  phoneNumber?: string;
+  country?: string;
+  image?: string;
+  emailNotifications?: string;
+  pushNotifications?: string;
+}
+
+interface gymSettingsData {
+  country?: string;
+  city?: string;
+  postcode?: string;
+  streetAddress?: string;
+  state?: string;
+  description?: string;
+  gymName?: string;
+  logo?: string;
+}
+
+export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSettingsData, id: string) {
+  try {
+
+    const user = await db.user.findUnique({
+      where: { id: id },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Update the User
+    const updatedUser = await db.user.update({
+      where: { id },
+      data: {
+        name: `${data.firstName} ${data.lastName}`,
+        dateOfBirth: data.dob,
+        phoneNumber: data.phoneNumber,
+        country: data.country,
+        image: data.image,
+        emailNotifications: data.emailNotifications,
+        pushNotifications: data.pushNotifications,
+        updatedAt: new Date(),
+      },
+    });
+
+    // Find the Gym associated with this User
+    const gym = await db.gym.findUnique({
+      where: { ownerId: id },
+    });
+
+    // If the Gym exists, update its details
+    if (gym) {
+      await db.gym.update({
+        where: { ownerId: id },
+        data: {
+          name: gymData.gymName,
+          country: gymData.country,
+          city: gymData.city,
+          postcode: gymData.postcode,
+          streetAddress: gymData.streetAddress,
+          state: gymData.state,
+          description: gymData.description,
+        },
+      });
+    }
+
+    console.log("UPDATE OWNER SUCCESS");
+    return {
+      type: UPDATE_OWNER_SETTINGS_SUCCESS,
+      payload: updatedUser,
+    };
+
+  }catch (error) {
+    console.log("UPDATE OWNER FAILED");
+    return {
+      type: UPDATE_OWNER_SETTINGS_FAILED,
+      payload: error,
+    };
+
+  }
 }

@@ -1,335 +1,193 @@
-import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
-import { ChevronDownIcon } from '@heroicons/react/16/solid'
+import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon } from "@heroicons/react/16/solid";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Card, CardContent } from "@/components/ui/card";
+import { UserCircle, ImageIcon, ChevronDown } from "lucide-react";
 
-export default function OwnerForm() {
+export default function OwnerForm({
+  handleChange,
+  ownerData,
+  onSaveClick,
+  gymData,
+  handleGymChange,
+}: {
+  handleChange: any;
+  ownerData: any;
+  onSaveClick: any;
+  gymData: any;
+  handleGymChange: any;
+}) {
   return (
-    <form>
-      <div className="space-y-12">
-        <div className="border-b border-white/10 pb-12">
-          <h2 className="text-base/7 font-semibold text-white">Gym Information</h2>
-          <p className="mt-1 text-sm/6 text-gray-400">
-            This information will be displayed publicly so be careful what you share.
+    <form className="space-y-12">
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-lg font-semibold">Gym Information</h2>
+          <p className="text-sm text-gray-500">
+            This information will be displayed publicly, so be careful what you
+            share.
           </p>
-
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-6">
             <div className="sm:col-span-4">
-              <label htmlFor="username" className="block text-sm/6 font-medium text-white">
-                Gym Name
-              </label>
-              <div className="mt-2">
-                <div className="flex items-center rounded-md bg-white/5 pl-3 outline-1 -outline-offset-1 outline-white/10 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-lime-500">
-                  <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">workcation.com/</div>
-                  <input
-                    id="username"
-                    name="username"
-                    type="text"
-                    placeholder="janesmith"
-                    className="block min-w-0 grow bg-transparent py-1.5 pr-3 pl-1 text-base text-white placeholder:text-gray-500 focus:outline-none sm:text-sm/6"
-                  />
-                </div>
-              </div>
+              <Label htmlFor="gym-name">Gym Name</Label>
+              <Input
+                id="gym-name"
+                placeholder="Enter gym name"
+                className="mt-2"
+                value={gymData.gymName}
+                name="gymName"
+                onChange={handleGymChange}
+              />
             </div>
-
             <div className="col-span-full">
-              <label htmlFor="about" className="block text-sm/6 font-medium text-white">
-                Description
-              </label>
-              <div className="mt-2">
-                <textarea
-                  id="about"
-                  name="about"
-                  rows={3}
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-lime-500 sm:text-sm/6"
-                  defaultValue={''}
-                />
-              </div>
-              <p className="mt-3 text-sm/6 text-gray-400">Write a few sentences about your gym.</p>
+              <Label htmlFor="description">Description</Label>
+              <Textarea id="description" rows={3} className="mt-2"  value={gymData.description}
+                name="description"
+                onChange={handleGymChange} />
+              <p className="text-sm text-gray-500">
+                Write a few sentences about your gym.
+              </p>
             </div>
-
+            <div className="col-span-full flex items-center gap-4">
+              <UserCircle className="size-12 text-gray-500" />
+              <Button variant="outline">Change</Button>
+            </div>
             <div className="col-span-full">
-              <label htmlFor="photo" className="block text-sm/6 font-medium text-white">
-                Photo
-              </label>
-              <div className="mt-2 flex items-center gap-x-3">
-                <UserCircleIcon aria-hidden="true" className="size-12 text-gray-500" />
-                <button
-                  type="button"
-                  className="rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-white/20"
+              <Label>Logo</Label>
+              <div className="mt-2 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 p-6 rounded-lg">
+                <ImageIcon className="size-12 text-gray-500" />
+                <Label
+                  htmlFor="file-upload"
+                  className="mt-2 cursor-pointer text-sm font-semibold text-primary"
                 >
-                  Change
-                </button>
+                  Upload a file
+                </Label>
+                <input id="file-upload" type="file" className="hidden" />
+                <p className="text-xs text-gray-500">
+                  PNG, JPG, GIF up to 10MB
+                </p>
               </div>
             </div>
-
-            <div className="col-span-full">
-              <label htmlFor="cover-photo" className="block text-sm/6 font-medium text-white">
-                Logo
-              </label>
-              <div className="mt-2 flex justify-center rounded-lg border border-dashed border-white/25 px-6 py-10">
-                <div className="text-center">
-                  <PhotoIcon aria-hidden="true" className="mx-auto size-12 text-gray-500" />
-                  <div className="mt-4 flex text-sm/6 text-gray-400">
-                    <label
-                      htmlFor="file-upload"
-                      className="relative cursor-pointer rounded-md bg-gray-900 font-semibold text-white focus-within:ring-2 focus-within:ring-lime-600 focus-within:ring-offset-2 focus-within:ring-offset-gray-900 focus-within:outline-hidden hover:text-lime-500"
-                    >
-                      <span>Upload a file</span>
-                      <input id="file-upload" name="file-upload" type="file" className="sr-only" />
-                    </label>
-                    <p className="pl-1">or drag and drop</p>
-                  </div>
-                  <p className="text-xs/5 text-gray-400">PNG, JPG, GIF up to 10MB</p>
-                </div>
-              </div>
-            </div>
-
             <div className="sm:col-span-3">
-              <label htmlFor="country" className="block text-sm/6 font-medium text-white">
-                Country
-              </label>
-              <div className="mt-2 grid grid-cols-1">
-                <select
-                  id="country"
-                  name="country"
-                  autoComplete="country-name"
-                  className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/5 py-1.5 pr-8 pl-3 text-base text-white outline-1 -outline-offset-1 outline-white/10 *:bg-gray-800 focus:outline-2 focus:-outline-offset-2 focus:outline-lime-500 sm:text-sm/6"
-                >
-                  <option>United States</option>
-                  <option>Canada</option>
-                  <option>Mexico</option>
-                </select>
-                <ChevronDownIcon
-                  aria-hidden="true"
-                  className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-400 sm:size-4"
-                />
-              </div>
+              <Label htmlFor="country">Country</Label>
+              <Select>
+                <SelectTrigger className="mt-2">
+                  <SelectValue placeholder="Select country" />
+                  <ChevronDown className="ml-auto size-5 text-gray-400" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="us">United States</SelectItem>
+                  <SelectItem value="ca">Canada</SelectItem>
+                  <SelectItem value="mx">Mexico</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-
             <div className="col-span-full">
-              <label htmlFor="street-address" className="block text-sm/6 font-medium text-white">
-                Street address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="street-address"
-                  name="street-address"
-                  type="text"
-                  autoComplete="street-address"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-lime-500 sm:text-sm/6"
-                />
-              </div>
-            </div>
-
-            <div className="sm:col-span-2 sm:col-start-1">
-              <label htmlFor="city" className="block text-sm/6 font-medium text-white">
-                City
-              </label>
-              <div className="mt-2">
-                <input
-                  id="city"
-                  name="city"
-                  type="text"
-                  autoComplete="address-level2"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-lime-500 sm:text-sm/6"
-                />
-              </div>
-            </div>
-
-            <div className="sm:col-span-2">
-              <label htmlFor="region" className="block text-sm/6 font-medium text-white">
-                State / Province
-              </label>
-              <div className="mt-2">
-                <input
-                  id="region"
-                  name="region"
-                  type="text"
-                  autoComplete="address-level1"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-lime-500 sm:text-sm/6"
-                />
-              </div>
-            </div>
-
-            <div className="sm:col-span-2">
-              <label htmlFor="postal-code" className="block text-sm/6 font-medium text-white">
-                ZIP / Postal code
-              </label>
-              <div className="mt-2">
-                <input
-                  id="postal-code"
-                  name="postal-code"
-                  type="text"
-                  autoComplete="postal-code"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-lime-500 sm:text-sm/6"
-                />
-              </div>
+              <Label htmlFor="address">Street Address</Label>
+              <Input
+                id="address"
+                className="mt-2"
+                value={gymData.streetAddress}
+                name="streetAddress"
+                onChange={handleGymChange}
+              />
             </div>
           </div>
-        </div>
+        </CardContent>
+      </Card>
 
-        <div className="border-b border-white/10 pb-12">
-          <h2 className="text-base/7 font-semibold text-white">Personal Information</h2>
-          <p className="mt-1 text-sm/6 text-gray-400">Use a permanent address where you can receive mail.</p>
-
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-lg font-semibold">Personal Information</h2>
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-6">
             <div className="sm:col-span-3">
-              <label htmlFor="first-name" className="block text-sm/6 font-medium text-white">
-                First name
-              </label>
-              <div className="mt-2">
-                <input
-                  id="first-name"
-                  name="first-name"
-                  type="text"
-                  autoComplete="given-name"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-lime-500 sm:text-sm/6"
-                />
-              </div>
+              <Label htmlFor="first-name">First Name</Label>
+              <Input
+                id="first-name"
+                className="mt-2"
+                value={ownerData.firstName}
+                name="firstName"
+                onChange={handleChange}
+              />
             </div>
-
             <div className="sm:col-span-3">
-              <label htmlFor="last-name" className="block text-sm/6 font-medium text-white">
-                Last name
-              </label>
-              <div className="mt-2">
-                <input
-                  id="last-name"
-                  name="last-name"
-                  type="text"
-                  autoComplete="family-name"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-lime-500 sm:text-sm/6"
-                />
-              </div>
+              <Label htmlFor="last-name">Last Name</Label>
+              <Input
+                id="last-name"
+                className="mt-2"
+                value={ownerData.lastName}
+                name="lastName"
+                onChange={handleChange}
+              />
             </div>
-
             <div className="sm:col-span-4">
-              <label htmlFor="email" className="block text-sm/6 font-medium text-white">
-                Email address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-lime-500 sm:text-sm/6"
-                />
-              </div>
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                type="email"
+                className="mt-2"
+                value={ownerData.email}
+                disabled={true}
+                name="email"
+                onChange={handleChange}
+              />
             </div>
-
-            
           </div>
-        </div>
+        </CardContent>
+      </Card>
 
-        <div className="border-b border-white/10 pb-12">
-          <h2 className="text-base/7 font-semibold text-white">Notifications</h2>
-          <p className="mt-1 text-sm/6 text-gray-400">
-            We'll always let you know about important changes, but you pick what else you want to hear about.
-          </p>
-
-          <div className="mt-10 space-y-10">
-            <fieldset>
-              <legend className="text-sm/6 font-semibold text-white">By email</legend>
-              <div className="mt-6 space-y-6">
-                <div className="flex gap-3">
-                  <div className="flex h-6 shrink-0 items-center">
-                    <div className="group grid size-4 grid-cols-1">
-                      <input
-                        id="offers"
-                        name="offers"
-                        type="checkbox"
-                        aria-describedby="offers-description"
-                        className="col-start-1 row-start-1 appearance-none rounded-sm border border-white/10 bg-white/5 checked:border-lime-600 checked:bg-lime-600 indeterminate:border-lime-600 indeterminate:bg-lime-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600 disabled:border-white/10 disabled:bg-transparent forced-colors:appearance-auto"
-                      />
-                      <svg
-                        fill="none"
-                        viewBox="0 0 14 14"
-                        className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-white/25"
-                      >
-                        <path
-                          d="M3 8L6 11L11 3.5"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="opacity-0 group-has-checked:opacity-100"
-                        />
-                        <path
-                          d="M3 7H11"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="opacity-0 group-has-indeterminate:opacity-100"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="text-sm/6">
-                    <label htmlFor="offers" className="font-medium text-white">
-                      Offers
-                    </label>
-                    <p id="offers-description" className="text-gray-400">
-                      Get notified when a candidate accepts or rejects an offer.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </fieldset>
-
-            <fieldset>
-              <legend className="text-sm/6 font-semibold text-white">Push notifications</legend>
-              <p className="mt-1 text-sm/6 text-gray-400">These are delivered via SMS to your mobile phone.</p>
-              <div className="mt-6 space-y-6">
-                <div className="flex items-center gap-x-3">
-                  <input
-                    defaultChecked
-                    id="push-everything"
-                    name="push-notifications"
-                    type="radio"
-                    className="relative size-4 appearance-none rounded-full border border-white/10 bg-white/5 before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-lime-600 checked:bg-lime-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600 disabled:border-white/10 disabled:bg-transparent disabled:before:bg-white/25 forced-colors:appearance-auto forced-colors:before:hidden"
-                  />
-                  <label htmlFor="push-everything" className="block text-sm/6 font-medium text-white">
-                    Everything
-                  </label>
-                </div>
-                <div className="flex items-center gap-x-3">
-                  <input
-                    id="push-email"
-                    name="push-notifications"
-                    type="radio"
-                    className="relative size-4 appearance-none rounded-full border border-white/10 bg-white/5 before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-lime-600 checked:bg-lime-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600 disabled:border-white/10 disabled:bg-transparent disabled:before:bg-white/25 forced-colors:appearance-auto forced-colors:before:hidden"
-                  />
-                  <label htmlFor="push-email" className="block text-sm/6 font-medium text-white">
-                    Same as email
-                  </label>
-                </div>
-                <div className="flex items-center gap-x-3">
-                  <input
-                    id="push-nothing"
-                    name="push-notifications"
-                    type="radio"
-                    className="relative size-4 appearance-none rounded-full border border-white/10 bg-white/5 before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-lime-600 checked:bg-lime-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600 disabled:border-white/10 disabled:bg-transparent disabled:before:bg-white/25 forced-colors:appearance-auto forced-colors:before:hidden"
-                  />
-                  <label htmlFor="push-nothing" className="block text-sm/6 font-medium text-white">
-                    No push notifications
-                  </label>
-                </div>
-              </div>
-            </fieldset>
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-lg font-semibold">Notifications</h2>
+          <div className="mt-6">
+            <Label className="font-semibold">By Email</Label>
+            <div className="mt-2 flex items-center gap-3">
+              <Checkbox id="offers" />
+              <Label htmlFor="offers">Offers</Label>
+            </div>
           </div>
-        </div>
-      </div>
+          <div className="mt-6">
+            <Label className="font-semibold">Push Notifications</Label>
+            <p className="text-sm text-gray-500">
+              These are delivered via SMS to your mobile phone.
+            </p>
+            <RadioGroup className="mt-2">
+              <div className="flex items-center gap-3">
+                <RadioGroupItem
+                  value="everything"
+                  id="push-everything"
+                  defaultChecked
+                />
+                <Label htmlFor="push-everything">Everything</Label>
+              </div>
+              <div className="flex items-center gap-3">
+                <RadioGroupItem value="email" id="push-email" />
+                <Label htmlFor="push-email">Same as email</Label>
+              </div>
+              <div className="flex items-center gap-3">
+                <RadioGroupItem value="nothing" id="push-nothing" />
+                <Label htmlFor="push-nothing">No push notifications</Label>
+              </div>
+            </RadioGroup>
+          </div>
+        </CardContent>
+      </Card>
 
-      <div className="mt-6 flex items-center justify-end gap-x-6">
-        <button type="button" className="text-sm/6 font-semibold text-white">
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="rounded-md bg-lime-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-lime-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-500"
-        >
-          Save
-        </button>
+      <div className="mt-6 flex items-center justify-end gap-4">
+        <Button variant="outline">Cancel</Button>
+        <Button type="button" onClick={onSaveClick}></Button>
       </div>
     </form>
-  )
+  );
 }

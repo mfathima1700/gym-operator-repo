@@ -12,7 +12,7 @@ import {
 import { create } from "domain";
 import { combineReducers, createStore, applyMiddleware } from "redux";
 import promiseMiddleware from "redux-promise";
-import { createGymReducer, setUserDataReducer } from "./reducers/GymReducer";
+import { createGymReducer, setUserDataReducer, updateUserSettingsReducer, updateOwnerSettingsReducer } from "./reducers/GymReducer";
 
 
 const rootReducer = combineReducers({
@@ -26,6 +26,8 @@ const rootReducer = combineReducers({
   resetPassword: resetPasswordReducer,
   createGym: createGymReducer,
   setUserData: setUserDataReducer,
+  updateUserSettings: updateUserSettingsReducer,
+  updateOwnerSettings: updateOwnerSettingsReducer,
   // Add other reducers here
 });
 
