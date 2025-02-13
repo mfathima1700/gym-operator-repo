@@ -44,7 +44,7 @@ model User {
   isTrainer     Boolean @default(false)
   phoneNumber     String?         // New field
   country         String?         // New field
-  emailOffers     Boolean         @default(true) // New field
+  emailNotifications     @default("everything") // New field
   pushNotifications String        @default("everything")
 }
 

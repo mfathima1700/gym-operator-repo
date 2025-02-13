@@ -26,9 +26,8 @@ import { useDispatch, useSelector } from "react-redux";
       phoneNumber: "",
       country:"",
       image:"",
-      emailOffers: true, // Represents whether the user wants to receive email offers
+      emailNotifications: "everything", // Represents whether the user wants to receive email offers
       pushNotifications: "everything",
-
     }));
   
     function onSaveClick(e: React.MouseEvent) {
@@ -54,7 +53,7 @@ import { useDispatch, useSelector } from "react-redux";
      <>
        <CNLayout>
          <div >
-          <IndividualForm handleChange={handleChange} userData={userData} onSaveClick={onSaveClick}/>
+          <IndividualForm handleChange={handleChange} userData={userData} onSaveClick={onSaveClick} gymName={""}/>
            
          </div>
        </CNLayout>
