@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
   const [userData, setUserData] = useState(() => ({
       firstName: "",
       lastName: "",
-      dob: new Date(),
+      //dob: new Date(),
       phoneNumber: "",
       country:"",
       image:"",

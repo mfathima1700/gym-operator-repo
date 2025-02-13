@@ -30,7 +30,7 @@ export default function CreateAccountOwner() {
     gymName: "",
     firstName: "",
     lastName: "",
-    address: "",
+    description: "",
     // city: "",
     // state: "",
     // zip: "",

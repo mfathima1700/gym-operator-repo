@@ -29,7 +29,7 @@ export default function CreateAccountOwner() {
   const [createData, setCreateData] = useState(() => ({
     firstName: "",
     lastName: "",
-    dob: new Date(),
+   // dob: new Date(),
   }));
 
   function onSaveClick(e: React.MouseEvent) {
@@ -44,12 +44,12 @@ export default function CreateAccountOwner() {
     }));
   }
 
-  function handleDateChange(date: Date) {
-    setCreateData((prevState) => ({
-      ...prevState,
-      dob: date || null, // Handle undefined case
-    }));
-  }
+  // function handleDateChange(date: Date) {
+  //   setCreateData((prevState) => ({
+  //     ...prevState,
+  //     dob: date || null, // Handle undefined case
+  //   }));
+  // }
 
   return (
     <>
@@ -59,7 +59,7 @@ export default function CreateAccountOwner() {
             handleChange={handleChange}
             createData={createData}
             onSaveClick={onSaveClick}
-            handleDateChange={handleDateChange}
+            //handleDateChange={handleDateChange}
           />
         </div>
       </CNLayout>

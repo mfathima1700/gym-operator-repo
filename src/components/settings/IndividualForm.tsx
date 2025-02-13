@@ -79,23 +79,26 @@ export default function IndividualForm({
             <Input id="gym" type="text" value={gymName} disabled name="gymName" />
           </div>
 
-          {/* Country Dropdown */}
-          {/*
-          <div className="sm:col-span-3 grid gap-2">
-            <Label htmlFor="country" className="text-white">
-              Country
-            </Label>
-            <Select onValueChange={setCountry} defaultValue={country}>
-              <SelectTrigger className="bg-white/5 text-white">
-                <SelectValue placeholder="Select a country" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="United States">United States</SelectItem>
-                <SelectItem value="Canada">Canada</SelectItem>
-                <SelectItem value="Mexico">Mexico</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>*/}
+          {/* Country Dropdown  onValueChange={setCountry} defaultValue={country}*/}
+          
+          <div className="sm:col-span-3">
+              <Label htmlFor="country">Country</Label>
+              <Select>
+                <SelectTrigger className="mt-2">
+                  <SelectValue placeholder="Select country" />
+                 
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="us">United States</SelectItem>
+                  <SelectItem value="ca">Canada</SelectItem>
+                  <SelectItem value="mx">Mexico</SelectItem>
+                  <SelectItem value="uk">United Kingdom</SelectItem>
+                  <SelectItem value="fa">France</SelectItem>
+                  <SelectItem value="de">Germany</SelectItem>
+                  <SelectItem value="au">Australia</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
           {/* Phone Number */}
           <div className="sm:col-span-3 grid gap-2">
@@ -211,8 +214,9 @@ export default function IndividualForm({
 
       {/* Action Buttons */}
       <div className="mt-6 flex items-center justify-end gap-x-6">
-        <Button variant="ghost">Cancel</Button>
-        <Button onClick={onSaveClick} className="bg-lime-500 hover:bg-lime-400">
+        <Button variant="outline">Cancel</Button>
+        {/* className="bg-lime-500 hover:bg-lime-400 text-white" */}
+        <Button onClick={onSaveClick} >
           Save
         </Button>
       </div>

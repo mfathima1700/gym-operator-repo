@@ -51,9 +51,9 @@ export function OwnerAccountCard({
               onChange={handleChange}  />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="framework">Gym Address</Label>
+              <Label htmlFor="framework">Gym Description</Label>
               <Textarea name="address" placeholder="123 Main St, Anytown, USA"
-              value={createData.address}
+              value={createData.description}
               onChange={handleChange} />
             </div>
           </div>

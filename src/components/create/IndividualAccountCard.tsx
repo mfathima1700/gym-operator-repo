@@ -25,12 +25,13 @@ import { DateInput } from "@/components/create/DateInput"
 export function IndividualAccountCard({
   onSaveClick,
   createData,
-  handleChange,handleDateChange
+  handleChange,
+  //handleDateChange
 }: {
   onSaveClick: any;
   createData: any;
   handleChange: any;
-  handleDateChange: any;
+  //handleDateChange: any;
 }) {
     return (
       <Card className="w-[350px]">
@@ -53,10 +54,10 @@ export function IndividualAccountCard({
               value={createData.lastName}
               onChange={handleChange}  />
               </div>
-              <div className="flex flex-col space-y-1.5">
+              {/* <div className="flex flex-col space-y-1.5">
                 <Label  htmlFor="name">Date of Birth</Label>
                 <DateInput  handleDateChange={handleDateChange} value={createData.dob} handleChange={handleChange} />
-              </div>
+              </div> */}
               
             </div>
           </form>

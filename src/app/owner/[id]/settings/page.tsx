@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
   const [ownerData, setOwnerData] = useState(() => ({
       firstName: "",
       lastName: "",
-      dob: new Date(),
+    //  dob: new Date(),
       phoneNumber: "",
       image:"",
       emailNotifications: "everything", // Represents whether the user wants to receive email offers

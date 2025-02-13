@@ -75,6 +75,7 @@ interface createOwnerData {
   firstName: string;
   lastName: string;
   gymName: string;
+  description: string;
   //address: string;
 }
 
@@ -98,6 +99,7 @@ export async function createGym(data: createOwnerData, id: string) {
     const gym = await db.gym.create({
       data: {
         name: data.gymName,
+        description: data.description,
         //address: data.address,
         ownerId: user.id, // Link gym to the owner
       },
@@ -122,7 +124,7 @@ export async function createGym(data: createOwnerData, id: string) {
 interface createUserData {
   firstName: string;
   lastName: string;
-  dob: Date;
+  //dob: Date;
 }
 
 export async function updateUser(data: createUserData, id: string) {
@@ -139,7 +141,7 @@ export async function updateUser(data: createUserData, id: string) {
       where: { id: user.id },
       data: {
         name: `${data.firstName} ${data.lastName}`,
-        dateOfBirth: data.dob,
+        //dateOfBirth: data.dob,
       },
     });
 
@@ -160,7 +162,7 @@ export async function updateUser(data: createUserData, id: string) {
 interface userSettingsData {
   firstName: string;
   lastName: string;
-  dob: Date;
+ // dob: Date;
   phoneNumber?: string;
   country?: string;
   image?: string;
@@ -183,7 +185,7 @@ export async function updateUserSettings(data: userSettingsData, id: string) {
       where: { id },
       data: {
         name: `${data.firstName} ${data.lastName}`,
-        dateOfBirth: data.dob,
+        //dateOfBirth: data.dob,
         phoneNumber: data.phoneNumber,
         country: data.country,
         image: data.image,
@@ -214,7 +216,7 @@ export async function updateUserSettings(data: userSettingsData, id: string) {
 interface ownerSettingsData {
   firstName: string;
   lastName: string;
-  dob: Date;
+ // dob: Date;
   phoneNumber?: string;
   country?: string;
   image?: string;
@@ -249,7 +251,7 @@ export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSe
       where: { id },
       data: {
         name: `${data.firstName} ${data.lastName}`,
-        dateOfBirth: data.dob,
+        //dateOfBirth: data.dob,
         phoneNumber: data.phoneNumber,
         country: data.country,
         image: data.image,
