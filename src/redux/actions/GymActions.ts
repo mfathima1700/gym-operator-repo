@@ -218,6 +218,7 @@ export async function updateUserSettings(data: userSettingsData, id: string) {
 
   }catch (error) {
     console.log("UPDATE USER FAILED");
+    console.log(error);
     return {
       type: UPDATE_USER_SETTINGS_FAILED,
       payload: error,
@@ -245,6 +246,7 @@ interface gymSettingsData {
   description?: string;
   gymName?: string;
   logo?: string;
+  gymCode?: string;
 }
 
 export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSettingsData, id: string) {

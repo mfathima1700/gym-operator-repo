@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
   const id = searchParams.get("id") ?? "";
   const updateUserSettingsState = useSelector((state: RootState) => state.updateUserSettings);
   const userState = useSelector((state: RootState) => state.getUser);
+  const [gymName, setGymName] = useState("")
   
   const [userData, setUserData] = useState(() => ({
       firstName: "",
@@ -56,6 +57,11 @@ import { useDispatch, useSelector } from "react-redux";
             emailNotifications: userState.user.emailNotifications || "everything",
             pushNotifications: userState.user.pushNotifications || "everything",
           });
+
+          setGymName(userState.user.gym.name)
+
+          console.log("individual/id/settings")
+          console.log(userState.user);
         }
       }, [userState.user]);
   
@@ -64,10 +70,10 @@ import { useDispatch, useSelector } from "react-redux";
       dispatch(updateUserSettings(userData, id));
     }
   
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    function handleChange(field: string, value: string) {
       setUserData((prevState: any) => ({
         ...prevState,
-        [e.target.name]: e.target.value,
+        [field]:value,
       }));
     }
 
@@ -82,7 +88,7 @@ import { useDispatch, useSelector } from "react-redux";
      <>
        <CNLayout>
          <div >
-          <IndividualForm handleChange={handleChange} userData={userData} onSaveClick={onSaveClick} gymName={""}/>
+          <IndividualForm handleChange={handleChange} userData={userData} onSaveClick={onSaveClick} gymName={gymName}/>
            
          </div>
        </CNLayout>

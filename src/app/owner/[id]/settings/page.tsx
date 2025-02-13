@@ -1,81 +1,125 @@
- "use client";
- 
- import CNLayout from "@/components/layout/cn-layout";
-import OwnerForm from "@/components/settings/OwnerForm"
-import { updateOwnerSettings } from "@/redux/actions/GymActions";
+"use client";
+
+import CNLayout from "@/components/layout/cn-layout";
+import OwnerForm from "@/components/settings/OwnerForm";
+import { getUserById, updateOwnerSettings } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
- 
- function classNames(...classes: (string | false | undefined)[]): string {
-   return classes.filter(Boolean).join(" ");
- }
- 
- export default function OwnerSettings() {
+
+function classNames(...classes: (string | false | undefined)[]): string {
+  return classes.filter(Boolean).join(" ");
+}
+
+export default function OwnerSettings() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id") ?? "";
-  const updateOwnerSettingsState = useSelector((state: RootState) => state.updateOwnerSettings);
-  
+  const updateOwnerSettingsState = useSelector(
+    (state: RootState) => state.updateOwnerSettings
+  );
+  const userState = useSelector((state: RootState) => state.getUser);
+
   const [ownerData, setOwnerData] = useState(() => ({
-      firstName: "",
-      lastName: "",
+    firstName: "",
+    lastName: "",
     //  dob: new Date(),
-      phoneNumber: "",
-      image:"",
-      emailNotifications: "everything", // Represents whether the user wants to receive email offers
-      pushNotifications: "everything",
+    phoneNumber: "",
+    image: "",
+    emailNotifications: "everything", // Represents whether the user wants to receive email offers
+    pushNotifications: "everything",
+   
+  }));
+
+  const [gymData, setGymData] = useState(() => ({
+    country: "",
+    city: "",
+    postcode: "",
+    streetAddress: "",
+    state: "",
+    description: "",
+    gymName: "",
+    logo: "",
+    gymCode: "",
+  }));
+
+  useEffect(() => {
+    console.log(updateOwnerSettingsState);
+    if (updateOwnerSettingsState?.success) {
+      router.push(`/owner/${id}`);
+    }
+  }, [updateOwnerSettingsState.error, updateOwnerSettingsState.success]);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(getUserById(id));
+    }
+  }, [dispatch, id]); // Only runs when `id` changes
+
+  // Update state when user data is available
+  useEffect(() => {
+    if (userState.user) {
+      setOwnerData({
+        firstName: userState.user.firstName || "",
+        lastName: userState.user.lastName || "",
+        phoneNumber: userState.user.phoneNumber || "",
+        image: userState.user.image || "",
+        emailNotifications: userState.user.emailNotifications || "everything",
+        pushNotifications: userState.user.pushNotifications || "everything",
+      });
+
+      console.log(userState.user);
+    }
+
+    if (userState.user?.gym) {
+      setGymData({
+        country: userState.user.gym.country || "",
+        city: userState.user.gym.city || "",
+        postcode: userState.user.gym.postcode || "",
+        streetAddress: userState.user.gym.streetAddress || "",
+        state: userState.user.gym.state || "",
+        description: userState.user.gym.description || "",
+        gymName: userState.user.gym.name || "",
+        logo: userState.user.gym.logo || "",
+        gymCode: userState.user.gym.gymCode || "",
+      });
+    }
+  }, [userState.user]);
+
+  function onSaveClick(e: React.MouseEvent) {
+    e.preventDefault();
+    dispatch(updateOwnerSettings(ownerData, gymData, id));
+  }
+
+  function handleChange(field:string, value: string) {
+    setOwnerData((prevState: any) => ({
+      ...prevState,
+      [field]: value,
     }));
+  }
 
-    const [gymData, setGymData] = useState(() => ({
-      country:"",
-      city:"",
-      postcode:"",
-      streetAddress:"",
-      state:"",
-    description:"",
-    gymName:"",
-    logo:"",
+  function handleGymChange(field:string,value: string) {
+    setGymData((prevState: any) => ({
+      ...prevState,
+      [field]: value,
     }));
+  }
 
-    useEffect(() => {
-        console.log(updateOwnerSettingsState)
-        if (updateOwnerSettingsState?.success) {
-          router.push(`/owner/${id}`);
-        }
-      }, [updateOwnerSettingsState.error, updateOwnerSettingsState.success]);
-
-       function onSaveClick(e: React.MouseEvent) {
-            e.preventDefault();
-            dispatch(updateOwnerSettings(ownerData,gymData, id));
-          }
-        
-          function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-            setOwnerData((prevState: any) => ({
-              ...prevState,
-              [e.target.name]: e.target.value,
-            }));
-          }
-
-          function handleGymChange(e: React.ChangeEvent<HTMLInputElement>) {
-            setGymData((prevState: any) => ({
-              ...prevState,
-              [e.target.name]: e.target.value,
-            }));
-          }
-      
-   return (
-     <>
-       <CNLayout>
-         <div >
-          <OwnerForm handleChange={handleChange} ownerData={ownerData} onSaveClick={onSaveClick} gymData={gymData}
-          handleGymChange={handleGymChange}/>
-           
-         </div>
-       </CNLayout>
-     </>
-   );
- }
- 
+  return (
+    <>
+      <CNLayout>
+        <div>
+          <OwnerForm
+            handleChange={handleChange}
+            ownerData={ownerData}
+            onSaveClick={onSaveClick}
+            gymData={gymData}
+            handleGymChange={handleGymChange}
+          />
+        </div>
+      </CNLayout>
+    </>
+  );
+}

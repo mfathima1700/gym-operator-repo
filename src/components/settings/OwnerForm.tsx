@@ -30,6 +30,12 @@ export default function OwnerForm({
   gymData: any;
   handleGymChange: any;
 }) {
+
+  function generateGymCode(): void {
+    const num =  Array.from({ length: 16 }, () => Math.floor(Math.random() * 10)).join('');
+    handleGymChange("gymCode", num);
+  }
+
   return (
     <form className="space-y-12">
       <Card>
@@ -48,19 +54,42 @@ export default function OwnerForm({
                 className="mt-2"
                 value={gymData.gymName}
                 name="gymName"
-                onChange={handleGymChange}
+                onChange={(e) => handleGymChange(e.target.name, e.target.value)}
               />
             </div>
+
+            <div className="col-span-full">
+  <Label htmlFor="first-name">Gym Code</Label>
+  <div className="flex items-center gap-4 mt-2">
+    <Input
+      id="first-name"
+      className="w-full max-w-[200px] sm:max-w-[250px] md:max-w-[300px]"  // Makes input take available space
+      value={gymData.gymCode}
+      defaultValue={""}
+      placeholder="0000000000000"
+      name="gymCode"
+    />
+    <Button variant="outline" onClick={(e) => generateGymCode()} >Regenerate</Button>
+  </div>
+</div>
+
+           
+
             <div className="col-span-full">
               <Label htmlFor="description">Description</Label>
-              <Textarea id="description" rows={3} className="mt-2"  value={gymData.description}
+              <Textarea
+                id="description"
+                rows={3}
+                className="mt-2"
+                value={gymData.description}
                 name="description"
-                onChange={handleGymChange} />
+                onChange={(e) => handleGymChange(e.target.name, e.target.value)}
+              />
               <p className="text-sm text-gray-500 mt-2">
                 Write a few sentences about your gym.
               </p>
             </div>
-            
+
             <div className="col-span-full">
               <Label>Logo</Label>
               <div className="mt-2 flex flex-col items-center justify-center border-2 border-dashed border-gray-800 p-6 rounded-lg">
@@ -79,10 +108,9 @@ export default function OwnerForm({
             </div>
             <div className="sm:col-span-3">
               <Label htmlFor="country">Country</Label>
-              <Select>
+              <Select  value={gymData.country}   onValueChange={(value) => handleGymChange("country", value)}>
                 <SelectTrigger className="mt-2">
                   <SelectValue placeholder="Select country" />
-                 
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="us">United States</SelectItem>
@@ -100,9 +128,9 @@ export default function OwnerForm({
               <Input
                 id="first-name"
                 className="mt-2"
-                value={ownerData.firstName}
-                name="firstName"
-                onChange={handleChange}
+                value={ownerData.city}
+                name="city"
+                onChange={(e) => handleGymChange(e.target.name, e.target.value)}
               />
             </div>
             <div className="sm:col-span-3">
@@ -110,9 +138,9 @@ export default function OwnerForm({
               <Input
                 id="address"
                 className="mt-2"
-                value={gymData.streetAddress}
-                name="streetAddress"
-                onChange={handleGymChange}
+                value={gymData.state}
+                name="state"
+                onChange={(e) => handleGymChange(e.target.name, e.target.value)}
               />
             </div>
             <div className="sm:col-span-3">
@@ -122,7 +150,7 @@ export default function OwnerForm({
                 className="mt-2"
                 value={gymData.streetAddress}
                 name="streetAddress"
-                onChange={handleGymChange}
+                onChange={(e) => handleGymChange(e.target.name, e.target.value)}
               />
             </div>
             <div className="sm:col-span-3">
@@ -130,9 +158,9 @@ export default function OwnerForm({
               <Input
                 id="first-name"
                 className="mt-2"
-                value={ownerData.firstName}
-                name="firstName"
-                onChange={handleChange}
+                value={ownerData.postcode}
+                name="postcode"
+                onChange={(e) => handleGymChange(e.target.name, e.target.value)}
               />
             </div>
           </div>
@@ -143,7 +171,7 @@ export default function OwnerForm({
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold">Personal Information</h2>
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-6">
-          <div className="sm:col-span-4">
+            <div className="sm:col-span-4">
               <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
@@ -152,7 +180,7 @@ export default function OwnerForm({
                 value={ownerData.email}
                 disabled={true}
                 name="email"
-                onChange={handleChange}
+                onChange={(e) => handleChange(e.target.name, e.target.value)}
               />
             </div>
             <div className="sm:col-span-3">
@@ -162,7 +190,7 @@ export default function OwnerForm({
                 className="mt-2"
                 value={ownerData.firstName}
                 name="firstName"
-                onChange={handleChange}
+                onChange={(e) => handleChange(e.target.name, e.target.value)}
               />
             </div>
             <div className="sm:col-span-3">
@@ -172,7 +200,7 @@ export default function OwnerForm({
                 className="mt-2"
                 value={ownerData.lastName}
                 name="lastName"
-                onChange={handleChange}
+                onChange={(e) => handleChange(e.target.name, e.target.value)}
               />
             </div>
             <div className="sm:col-span-3">
@@ -182,18 +210,18 @@ export default function OwnerForm({
                 className="mt-2"
                 value={ownerData.lastName}
                 name="lastName"
-                onChange={handleChange}
+                onChange={(e) => handleChange(e.target.name, e.target.value)}
               />
             </div>
             <div className="col-span-full grid gap-2">
-            <Label htmlFor="photo">Photo</Label>
-            <div className="mt-2 flex items-center gap-x-3">
-              <Avatar>
-                <AvatarFallback>JS</AvatarFallback>
-              </Avatar>
-              <Button variant="outline">Change</Button>
+              <Label htmlFor="photo">Photo</Label>
+              <div className="mt-2 flex items-center gap-x-3">
+                <Avatar>
+                  <AvatarFallback>JS</AvatarFallback>
+                </Avatar>
+                <Button variant="outline">Change</Button>
+              </div>
             </div>
-          </div>
           </div>
         </CardContent>
       </Card>
@@ -202,72 +230,74 @@ export default function OwnerForm({
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold">Notifications</h2>
           <p className="mt-1 text-sm text-gray-400">
-          We'll always let you know about important changes, but you pick what
-          else you want to hear about.
-        </p>
-
+            We'll always let you know about important changes, but you pick what
+            else you want to hear about.
+          </p>
 
           <div className="mt-10 ">
-          <Label className="text-white">By email</Label>
-          <p className="mt-1 text-sm text-gray-400">
-            These are delivered to your inbox. You can unsubscribe at any time.
-          </p>
-          <RadioGroup
-            className="mt-6 space-y-3"
-            defaultValue={ownerData.emailNotifications}
-            onValueChange={handleChange}
-          >
-            <div className="flex items-center gap-x-3">
-              <RadioGroupItem value="everything" id="email-everything" />
-              <Label htmlFor="email-everything">Everything</Label>
-            </div>
-            <div className="flex items-center gap-x-3">
-              <RadioGroupItem value="critical-and-classes" id="push-email" />
-              <Label htmlFor="push-email">
-                Upcoming Classes and Critical Updates
-              </Label>
-            </div>
-            <div className="flex items-center gap-x-3">
-              <RadioGroupItem value="critical-only" id="push-nothing" />
-              <Label htmlFor="push-nothing">Critical Updates only</Label>
-            </div>
-          </RadioGroup>
-        </div>
+            <Label className="text-white">By email</Label>
+            <p className="mt-1 text-sm text-gray-400">
+              These are delivered to your inbox. You can unsubscribe at any
+              time.
+            </p>
+            <RadioGroup
+              className="mt-6 space-y-3"
+              defaultValue={ownerData.emailNotifications}
+              onValueChange={(e) => handleChange("emailNotifications", e.valueOf)}
+            >
+              <div className="flex items-center gap-x-3">
+                <RadioGroupItem value="everything" id="email-everything" />
+                <Label htmlFor="email-everything">Everything</Label>
+              </div>
+              <div className="flex items-center gap-x-3">
+                <RadioGroupItem value="critical-and-classes" id="push-email" />
+                <Label htmlFor="push-email">
+                  Upcoming Classes and Critical Updates
+                </Label>
+              </div>
+              <div className="flex items-center gap-x-3">
+                <RadioGroupItem value="critical-only" id="push-nothing" />
+                <Label htmlFor="push-nothing">Critical Updates only</Label>
+              </div>
+            </RadioGroup>
+          </div>
 
-        {/* Push Notifications */}
-        <div className="mt-10 ">
-          <Label className="text-white">Push notifications</Label>
-          <p className="mt-1 text-sm text-gray-400">
-            These are delivered via SMS to your mobile phone.
-          </p>
-          <RadioGroup
-            className="mt-6 space-y-3"
-            defaultValue={ownerData.pushNotifications}
-            onValueChange={handleChange}
-          >
-            <div className="flex items-center gap-x-3">
-              <RadioGroupItem value="everything" id="push-everything" />
-              <Label htmlFor="push-everything">Everything</Label>
-            </div>
-            <div className="flex items-center gap-x-3">
-              <RadioGroupItem value="same-as-email" id="push-email" />
-              <Label htmlFor="push-email">
-                Upcoming Classes and Critical Updates
-              </Label>
-            </div>
-            <div className="flex items-center gap-x-3">
-              <RadioGroupItem value="no-push" id="push-nothing" />
-              <Label htmlFor="push-nothing">Critical Updates only</Label>
-            </div>
-          </RadioGroup>
-        </div>
+          {/* Push Notifications */}
+          <div className="mt-10 ">
+            <Label className="text-white">Push notifications</Label>
+            <p className="mt-1 text-sm text-gray-400">
+              These are delivered via SMS to your mobile phone.
+            </p>
+            <RadioGroup
+              className="mt-6 space-y-3"
+              defaultValue={ownerData.pushNotifications}
+              onValueChange={(e) => handleChange("pushNotifications", e.valueOf)}
+            >
+              <div className="flex items-center gap-x-3">
+                <RadioGroupItem value="everything" id="push-everything" />
+                <Label htmlFor="push-everything">Everything</Label>
+              </div>
+              <div className="flex items-center gap-x-3">
+                <RadioGroupItem value="same-as-email" id="push-email" />
+                <Label htmlFor="push-email">
+                  Upcoming Classes and Critical Updates
+                </Label>
+              </div>
+              <div className="flex items-center gap-x-3">
+                <RadioGroupItem value="no-push" id="push-nothing" />
+                <Label htmlFor="push-nothing">Critical Updates only</Label>
+              </div>
+            </RadioGroup>
+          </div>
         </CardContent>
       </Card>
 
       <div className="mt-6 flex items-center justify-end gap-4">
         <Button variant="outline">Cancel</Button>
         {/* className="bg-lime-500 hover:bg-lime-400 text-white" */}
-        <Button type="button" onClick={onSaveClick} >Save</Button>
+        <Button type="button" onClick={onSaveClick}>
+          Save
+        </Button>
       </div>
     </form>
   );

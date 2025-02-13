@@ -61,6 +61,7 @@ interface RegisterUser {
   password: string;
   gymRole: GymRole;
   userRole: UserRole;
+  gymCode: string;
 }
 
 export default async function registerUser(registerData: RegisterUser) {
@@ -70,8 +71,18 @@ export default async function registerUser(registerData: RegisterUser) {
   const gymRole = registerData.gymRole;
   const password = registerData.password;
   const userRole = registerData.userRole;
+  const code = registerData.gymCode;
 
   try {
+
+    const gym = await db.gym.findUnique({
+      where: { gymCode: code },
+    });
+
+    if (!gym) {
+      throw new Error("Invalid gym code");
+    }
+
     const success = await signUpWithEmail(registerData);
 
     const user = await db.user.create({

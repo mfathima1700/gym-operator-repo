@@ -57,7 +57,7 @@ export default function IndividualForm({
                 id="first-name"
                 type="text"
                 value={userData.firstName}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e.target.name, e.target.value)}
                 name="firstName"
               />
             </div>
@@ -69,7 +69,7 @@ export default function IndividualForm({
                 id="last-name"
                 type="text"
                 value={userData.lastName}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e.target.name, e.target.value)}
                 name="lastName"
               />
             </div>
@@ -90,7 +90,7 @@ export default function IndividualForm({
 
             <div className="sm:col-span-3">
               <Label htmlFor="country">Country</Label>
-              <Select>
+              <Select value={userData.country}   onValueChange={(value) => handleChange("country", value)}>
                 <SelectTrigger className="mt-2">
                   <SelectValue placeholder="Select country" />
                 </SelectTrigger>
@@ -114,7 +114,7 @@ export default function IndividualForm({
                 type="text"
                 name="phoneNumber"
                 value={userData.phoneNumber}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e.target.name, e.target.value)}
               />
             </div>
 
@@ -147,11 +147,11 @@ export default function IndividualForm({
               <p className="mt-1 text-sm text-gray-400">
                 These are delivered to your inbox. You can unsubscribe at any
                 time.
-              </p>
+              </p> 
               <RadioGroup
                 className="mt-6 space-y-3"
                 defaultValue={userData.emailNotifications}
-                onValueChange={handleChange}
+                onValueChange={(e) => handleChange("emailNotifications", e.valueOf)}
               >
                 <div className="flex items-center gap-x-3">
                   <RadioGroupItem value="everything" id="email-everything" />
@@ -182,7 +182,7 @@ export default function IndividualForm({
               <RadioGroup
                 className="mt-6 space-y-3"
                 defaultValue={userData.pushNotifications}
-                onValueChange={handleChange}
+                onValueChange={(e) => handleChange("pushNotifications", e.valueOf)}
               >
                 <div className="flex items-center gap-x-3">
                   <RadioGroupItem value="everything" id="push-everything" />
