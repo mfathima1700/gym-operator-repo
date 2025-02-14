@@ -99,12 +99,14 @@ const getUserReducer = (
   switch (action.type) {
     case GET_USER_DATA_SUCCESS:
       return {
-        user:action.playload,
+        ...state,
+        user:action.payload,
         success: true,
         error: null,
       };
     case GET_USER_DATA_FAILED:
       return {
+        ...state,
         user:null,
         error: action.payload,
         success: false,

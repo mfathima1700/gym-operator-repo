@@ -6,6 +6,8 @@ import {
   CREATE_GYM_SUCCESS,
   GET_GYM_DATA_FAILED,
   GET_GYM_DATA_SUCCESS,
+  GET_USER_DATA_FAILED,
+  GET_USER_DATA_SUCCESS,
   SET_USER_FAILED,
   SET_USER_SUCCESS,
   UPDATE_OWNER_SETTINGS_FAILED,
@@ -75,7 +77,7 @@ export async function getUserById(id: string) {
     console.error("USER DATA SUCCESS");
 
     return {
-      type: GET_GYM_DATA_SUCCESS,
+      type: GET_USER_DATA_SUCCESS,
       payload: user,
     };
 
@@ -83,7 +85,7 @@ export async function getUserById(id: string) {
     console.error("FAILED TO GET USER DATA");
     console.error(error);
     return {
-      type: GET_GYM_DATA_FAILED,
+      type: GET_USER_DATA_FAILED,
       payload: error,
     };
   }

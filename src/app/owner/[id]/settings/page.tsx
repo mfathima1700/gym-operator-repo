@@ -87,7 +87,7 @@ export default function OwnerSettings() {
         gymCode: userState.user.gym.gymCode || "",
       }));
     }
-  }, [userState.user]);
+  }, [userState.user, userState.success, userState.error]);
 
   function onSaveClick(e: React.MouseEvent) {
     e.preventDefault();
