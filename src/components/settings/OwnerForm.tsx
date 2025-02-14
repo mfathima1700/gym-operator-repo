@@ -30,9 +30,10 @@ export default function OwnerForm({
   gymData: any;
   handleGymChange: any;
 }) {
-
   function generateGymCode(): void {
-    const num =  Array.from({ length: 16 }, () => Math.floor(Math.random() * 10)).join('');
+    const num = Array.from({ length: 16 }, () =>
+      Math.floor(Math.random() * 10)
+    ).join("");
     handleGymChange("gymCode", num);
   }
 
@@ -59,21 +60,21 @@ export default function OwnerForm({
             </div>
 
             <div className="col-span-full">
-  <Label htmlFor="first-name">Gym Code</Label>
-  <div className="flex items-center gap-4 mt-2">
-    <Input
-      id="first-name"
-      className="w-full max-w-[200px] sm:max-w-[250px] md:max-w-[300px]"  // Makes input take available space
-      value={gymData.gymCode}
-      defaultValue={""}
-      placeholder="0000000000000"
-      name="gymCode"
-    />
-    <Button variant="outline" onClick={(e) => generateGymCode()} >Regenerate</Button>
-  </div>
-</div>
-
-           
+              <Label htmlFor="first-name">Gym Code</Label>
+              <div className="flex items-center gap-4 mt-2">
+                <Input
+                  id="first-name"
+                  className="w-full max-w-[200px] sm:max-w-[250px] md:max-w-[300px]" // Makes input take available space
+                  value={gymData.gymCode}
+                  placeholder="0000000000000"
+                  name="gymCode"
+                  readOnly={true}
+                />
+                <Button variant="outline" onClick={(e) => generateGymCode()}>
+                  Regenerate
+                </Button>
+              </div>
+            </div>
 
             <div className="col-span-full">
               <Label htmlFor="description">Description</Label>
@@ -108,7 +109,10 @@ export default function OwnerForm({
             </div>
             <div className="sm:col-span-3">
               <Label htmlFor="country">Country</Label>
-              <Select  value={gymData.country}   onValueChange={(value) => handleGymChange("country", value)}>
+              <Select
+                value={gymData.country}
+                onValueChange={(value) => handleGymChange("country", value)}
+              >
                 <SelectTrigger className="mt-2">
                   <SelectValue placeholder="Select country" />
                 </SelectTrigger>
@@ -243,7 +247,9 @@ export default function OwnerForm({
             <RadioGroup
               className="mt-6 space-y-3"
               defaultValue={ownerData.emailNotifications}
-              onValueChange={(e) => handleChange("emailNotifications", e.valueOf)}
+              onValueChange={(e) =>
+                handleChange("emailNotifications", e.valueOf)
+              }
             >
               <div className="flex items-center gap-x-3">
                 <RadioGroupItem value="everything" id="email-everything" />
@@ -271,7 +277,9 @@ export default function OwnerForm({
             <RadioGroup
               className="mt-6 space-y-3"
               defaultValue={ownerData.pushNotifications}
-              onValueChange={(e) => handleChange("pushNotifications", e.valueOf)}
+              onValueChange={(e) =>
+                handleChange("pushNotifications", e.valueOf)
+              }
             >
               <div className="flex items-center gap-x-3">
                 <RadioGroupItem value="everything" id="push-everything" />

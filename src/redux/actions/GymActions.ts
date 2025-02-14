@@ -13,6 +13,8 @@ import {
   UPDATE_USER_SETTINGS_FAILED,
   UPDATE_USER_SETTINGS_SUCCESS,
 } from "../constants/GymConstants";
+import { ObjectId } from "mongodb";
+import { GymRole } from "@prisma/client";
 
 /*
 export async function createGym(
@@ -39,8 +41,10 @@ async function joinGym(userId: string, gymCode: string) {
     throw new Error("Invalid gym code");
   }
 
+  //const objectId = new ObjectId(userId);
+
   await db.user.update({
-    where: { id: userId },
+    where: { id: userId },//objectId.toString() },
     data: {
       gym: {
         connect: { id: gym.id },
@@ -65,6 +69,8 @@ export async function getUserById(id: string) {
     if (!user) {
       throw new Error("User not found");
     }
+
+    //console.log(user);
 
     console.error("USER DATA SUCCESS");
 
@@ -93,12 +99,19 @@ interface createOwnerData {
 
 export async function createGym(data: createOwnerData, id: string) {
   try {
+    //const objectId = new ObjectId(id);
+
     const user = await db.user.findUnique({
-      where: { id: id },
+      where: { id: id }//objectId.toString() },
     });
 
     if (!user) {
       throw new Error("User not found");
+    }
+
+    //user.gymRole === GymRole.MEMBER || 
+    if(user.gymRole === "MEMBER"){
+      throw new Error("User not a gym owner");
     }
 
     const updatedUser = await db.user.update({
@@ -113,7 +126,7 @@ export async function createGym(data: createOwnerData, id: string) {
         name: data.gymName,
         description: data.description,
         //address: data.address,
-        ownerId: user.id, // Link gym to the owner
+        ownerId: updatedUser.id, // Link gym to the owner
       },
     });
 
@@ -141,7 +154,8 @@ interface createUserData {
 
 export async function updateUser(data: createUserData, id: string) {
   try {
-    const user = await db.user.findUnique({
+    const user = 
+    await db.user.findUnique({
       where: { id: id },
     });
 

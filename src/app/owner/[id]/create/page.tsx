@@ -5,7 +5,7 @@ import { OwnerAccountCard } from "@/components/create/OwnerAccountCard";
 import { AppDispatch } from "@/redux/store"; // Import correct type
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { createGym } from "@/redux/actions/GymActions";
 
@@ -16,8 +16,8 @@ function classNames(...classes: (string | false | undefined)[]): string {
 export default function CreateAccountOwner() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id") ?? "";
+  const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : params.id ?? "";
   const createGymState = useSelector((state: RootState) => state.createGym);
 
   useEffect(() => {

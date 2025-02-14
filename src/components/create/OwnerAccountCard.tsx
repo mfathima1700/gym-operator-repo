@@ -52,7 +52,7 @@ export function OwnerAccountCard({
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="framework">Gym Description</Label>
-              <Textarea name="address" placeholder="123 Main St, Anytown, USA"
+              <Textarea name="description" placeholder="A gym description that encourages customers to join"
               value={createData.description}
               onChange={handleChange} />
             </div>

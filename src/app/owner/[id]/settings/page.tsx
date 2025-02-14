@@ -4,7 +4,7 @@ import CNLayout from "@/components/layout/cn-layout";
 import OwnerForm from "@/components/settings/OwnerForm";
 import { getUserById, updateOwnerSettings } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useParams  } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -15,8 +15,8 @@ function classNames(...classes: (string | false | undefined)[]): string {
 export default function OwnerSettings() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id") ?? "";
+  const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : params.id ?? "";
   const updateOwnerSettingsState = useSelector(
     (state: RootState) => state.updateOwnerSettings
   );
@@ -53,28 +53,29 @@ export default function OwnerSettings() {
   }, [updateOwnerSettingsState.error, updateOwnerSettingsState.success]);
 
   useEffect(() => {
-    if (id) {
       dispatch(getUserById(id));
-    }
-  }, [dispatch, id]); // Only runs when `id` changes
+  }, [id]); // Only runs when `id` changes
 
   // Update state when user data is available
   useEffect(() => {
+    console.log(userState.user);
     if (userState.user) {
-      setOwnerData({
+      setOwnerData((prevState) => ({
+        ...prevState,
         firstName: userState.user.firstName || "",
         lastName: userState.user.lastName || "",
         phoneNumber: userState.user.phoneNumber || "",
         image: userState.user.image || "",
         emailNotifications: userState.user.emailNotifications || "everything",
         pushNotifications: userState.user.pushNotifications || "everything",
-      });
+      }));
 
-      console.log(userState.user);
+     
     }
 
     if (userState.user?.gym) {
-      setGymData({
+      setGymData((prevState) => ({
+        ...prevState,
         country: userState.user.gym.country || "",
         city: userState.user.gym.city || "",
         postcode: userState.user.gym.postcode || "",
@@ -84,7 +85,7 @@ export default function OwnerSettings() {
         gymName: userState.user.gym.name || "",
         logo: userState.user.gym.logo || "",
         gymCode: userState.user.gym.gymCode || "",
-      });
+      }));
     }
   }, [userState.user]);
 

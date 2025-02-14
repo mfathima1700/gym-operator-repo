@@ -4,7 +4,7 @@ import CNLayout from "@/components/layout/cn-layout";
 import { IndividualAccountCard } from "@/components/create/IndividualAccountCard";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { updateUser } from "@/redux/actions/GymActions";
 
@@ -15,8 +15,8 @@ function classNames(...classes: (string | false | undefined)[]): string {
 export default function CreateAccountOwner() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id") ?? "";
+  const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : params.id ?? "";
   const setUserDataState = useSelector((state: RootState) => state.setUserData);
 
   useEffect(() => {

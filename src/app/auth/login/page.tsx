@@ -24,9 +24,9 @@ export default function Login() {
 
     if (signInState?.success && signInState?.user != null) {
       console.log(signInState.user);
-      if (signInState?.user?.GymRole === GymRole.OWNER) {
+      if (signInState?.user?.GymRole === "OWNER") {
         router.push(`/owner/${signInState?.user?.id}`);
-      } else if (signInState?.user?.GymRole === GymRole.MEMBER) {
+      } else if (signInState?.user?.GymRole === "MEMBER") {
         router.push(`/individual/${signInState?.user?.id}`);
       }
     }

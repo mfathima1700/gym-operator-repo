@@ -4,7 +4,7 @@
 import IndividualForm from "@/components/settings/IndividualForm"
 import { getUserById, updateUserSettings } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
  
@@ -15,8 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
  export default function IndividualSettings() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id") ?? "";
+  const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : params.id ?? "";
   const updateUserSettingsState = useSelector((state: RootState) => state.updateUserSettings);
   const userState = useSelector((state: RootState) => state.getUser);
   const [gymName, setGymName] = useState("")
