@@ -26,14 +26,10 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { useSearchParams  } from "next/navigation";
 
 
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const searchParams = useSearchParams ();
-  const id = searchParams.get("id");
-  const gymId = searchParams.get("gymId");
+export function AppSidebar({  user, id, ...props }: React.ComponentProps<typeof Sidebar> & { id?: string; user?: any }) {
 
   // This is sample data.
 const data = {
@@ -144,7 +140,7 @@ const data = {
     },
     {
       name: "Gym Schedule",
-      url: `/gym/${gymId}/schedule`,
+      url: `/gym/${id}/schedule`,
       icon: Dumbbell,
     },
     {

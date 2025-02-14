@@ -17,6 +17,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { AddClassDialog } from './AddClassDialog';
+import { Drawer, DrawerTrigger } from '../ui/drawer';
+import { AddClassDrawer } from './AddClassDrawer';
 
 export default function GymWeekCalendar() {
   const container = useRef<HTMLDivElement | null>(null)
@@ -58,7 +60,16 @@ export default function GymWeekCalendar() {
           <div className="hidden md:ml-4 md:flex md:items-center">
              <YearSelect />
             <div className="ml-6 h-6 w-px bg-gray-700" />
-            <Dialog>
+            <Drawer>
+  <DrawerTrigger> <button
+              type="button"
+              className="ml-6 rounded-md bg-lime-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-lime-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600"
+            >
+              Add class
+            </button></DrawerTrigger>
+<AddClassDrawer />
+</Drawer>
+            {/* <Dialog>
       <DialogTrigger asChild>
             <button
               type="button"
@@ -69,7 +80,7 @@ export default function GymWeekCalendar() {
             </DialogTrigger>
 
 <AddClassDialog />
-            </Dialog>
+            </Dialog> */}
           </div>
           <Menu as="div" className="relative ml-6 md:hidden">
             <MenuButton className="-mx-2 flex items-center rounded-full border border-transparent p-2 text-gray-400 hover:text-gray-500">

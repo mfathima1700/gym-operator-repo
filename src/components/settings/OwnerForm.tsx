@@ -192,18 +192,8 @@ export default function OwnerForm({
               <Input
                 id="first-name"
                 className="mt-2"
-                value={ownerData.firstName}
-                name="firstName"
-                onChange={(e) => handleChange(e.target.name, e.target.value)}
-              />
-            </div>
-            <div className="sm:col-span-3">
-              <Label htmlFor="last-name">Last Name</Label>
-              <Input
-                id="last-name"
-                className="mt-2"
-                value={ownerData.lastName}
-                name="lastName"
+                value={ownerData.name}
+                name="name"
                 onChange={(e) => handleChange(e.target.name, e.target.value)}
               />
             </div>
@@ -212,8 +202,8 @@ export default function OwnerForm({
               <Input
                 id="last-name"
                 className="mt-2"
-                value={ownerData.lastName}
-                name="lastName"
+                value={ownerData.phoneNumber}
+                name="phoneNumber"
                 onChange={(e) => handleChange(e.target.name, e.target.value)}
               />
             </div>

@@ -67,17 +67,19 @@ const updateUserSettingsReducer = (
 };
 
 const updateOwnerSettingsReducer = (
-  state = { error: null, success: false },
+  state = { error: null, success: false, user:null },
   action: any
-): basicDataState => {
+): userDataState => {
   switch (action.type) {
     case UPDATE_OWNER_SETTINGS_SUCCESS:
       return {
+        user:action.payload,
         success: true,
         error: null,
       };
     case UPDATE_OWNER_SETTINGS_FAILED:
       return {
+        user:null,
         error: action.payload,
         success: false,
       };

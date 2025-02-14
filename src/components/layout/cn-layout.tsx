@@ -27,9 +27,11 @@ import { AppDispatch } from "@/redux/store";
 
 interface CNLayoutProps {
   children: ReactNode; // This ensures you can pass any valid React component(s)
+  user: any;
+  id:string
 }
 
-export default function CNLayout({ children }: CNLayoutProps) {
+export default function CNLayout({ children, user, id }: CNLayoutProps) {
    const dispatch = useDispatch<AppDispatch>()
   const router = useRouter();
   const sessionState = useSelector((state: RootState) => state.getSession);
@@ -53,7 +55,7 @@ export default function CNLayout({ children }: CNLayoutProps) {
 
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar  user={user} id={id}/>
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
@@ -62,7 +64,7 @@ export default function CNLayout({ children }: CNLayoutProps) {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href={ sessionState?.user?.gymRole == "MEMBER" ? "/individual" : "/owner"}>Dashboard</BreadcrumbLink>
+                  <BreadcrumbLink href={ sessionState?.user?.gymRole === "MEMBER" ? `/individual/${id}` : `/owner/${id}`}>Dashboard</BreadcrumbLink>
                 </BreadcrumbItem>
                 {/* <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>

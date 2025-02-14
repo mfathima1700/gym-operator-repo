@@ -224,7 +224,7 @@ export async function updateUserSettings(data: userSettingsData, id: string) {
     });
 
 
-    console.log("UPDATE USER SUCCESS");
+    console.log("UPDATE MEMBER SUCCESS");
     return {
       type: UPDATE_USER_SETTINGS_SUCCESS,
       payload: updatedUser,
@@ -243,8 +243,7 @@ export async function updateUserSettings(data: userSettingsData, id: string) {
 }
 
 interface ownerSettingsData {
-  firstName: string;
-  lastName: string;
+  name: string;
  // dob: Date;
   phoneNumber?: string;
   country?: string;
@@ -278,9 +277,9 @@ export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSe
 
     // Update the User
     const updatedUser = await db.user.update({
-      where: { id },
+      where: { id:user.id },
       data: {
-        name: `${data.firstName} ${data.lastName}`,
+        name: data.name,
         //dateOfBirth: data.dob,
         phoneNumber: data.phoneNumber,
         country: data.country,
@@ -291,9 +290,19 @@ export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSe
       },
     });
 
+    /*const updatedUser = await db.user.update({
+      where: { id: user.id },
+      data: {
+        name: `${data.firstName} ${data.lastName}`,
+      },
+    });*/
+
+   
+
+    
     // Find the Gym associated with this User
     const gym = await db.gym.findUnique({
-      where: { ownerId: id },
+      where: { ownerId: updatedUser.id },
     });
 
     // If the Gym exists, update its details
@@ -312,7 +321,7 @@ export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSe
       });
     }
 
-    console.log("UPDATE OWNER SUCCESS");
+    console.log("UPDATE GYM SUCCESS");
     return {
       type: UPDATE_OWNER_SETTINGS_SUCCESS,
       payload: updatedUser,
@@ -320,6 +329,10 @@ export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSe
 
   }catch (error) {
     console.log("UPDATE OWNER FAILED");
+
+    if(error !== null){
+      console.log(error);
+    }
     return {
       type: UPDATE_OWNER_SETTINGS_FAILED,
       payload: error,

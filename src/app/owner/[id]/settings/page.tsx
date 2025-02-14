@@ -23,9 +23,9 @@ export default function OwnerSettings() {
   const userState = useSelector((state: RootState) => state.getUser);
 
   const [ownerData, setOwnerData] = useState(() => ({
-    firstName: "",
-    lastName: "",
+    name: "",
     //  dob: new Date(),
+    email: "",
     phoneNumber: "",
     image: "",
     emailNotifications: "everything", // Represents whether the user wants to receive email offers
@@ -62,8 +62,8 @@ export default function OwnerSettings() {
     if (userState.user) {
       setOwnerData((prevState) => ({
         ...prevState,
-        firstName: userState.user.firstName || "",
-        lastName: userState.user.lastName || "",
+        name: userState.user.name || "",
+        email: userState.user.email || "",
         phoneNumber: userState.user.phoneNumber || "",
         image: userState.user.image || "",
         emailNotifications: userState.user.emailNotifications || "everything",
@@ -110,7 +110,7 @@ export default function OwnerSettings() {
 
   return (
     <>
-      <CNLayout>
+      <CNLayout user={userState.user} id={id}>
         <div>
           <OwnerForm
             handleChange={handleChange}
