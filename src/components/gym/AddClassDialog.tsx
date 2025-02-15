@@ -132,6 +132,11 @@ export function AddClassDialog() {
             </SelectContent>
           </Select>
         </div>
+
+        <div className="sm:col-span-3">
+          <Label htmlFor="address">Location</Label>
+          <Input id="address" className="mt-2" />
+        </div>
       </div>
       <DialogFooter>
         <Button type="button">Create</Button>

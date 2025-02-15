@@ -8,6 +8,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUserById } from "@/redux/actions/GymActions";
+import { createClass } from "@/redux/actions/ClassActions";
 
 function classNames(...classes: (string | false | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
@@ -35,6 +36,31 @@ const [userData, setUserData] = useState(() => ({}));
     }
   }, [userState.user, userState.success, userState.error]);
 
+  const [classData, setClassData] = useState(() => ({
+    name: "",               // Class name
+    description: "",        // Description of the class
+    instructorId: "",         // Selected instructor
+    startDate: new Date(),        // Start date
+    endDate: new Date(),          // End date
+    capacity: 0,           // Max capacity of class
+    intensity: "",          // Intensity level: BEGINNER, INTERMEDIATE, ADVANCED
+    recurrence: "",         // Recurrence: one-off, weekly, biweekly
+    duration: 0,           // Duration in minutes
+    days: [],               // Days selected for the class (array of weekdays)    // Any required equipment
+    room: "",               // Room in which the class will take place
+  }));
+  
+  const handleChange = (field:string, value:any) => {
+    setClassData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  function onSaveClick(e: React.MouseEvent) {
+      e.preventDefault();
+      dispatch(createClass(classData, id));
+    }
   
   return (
     <>
