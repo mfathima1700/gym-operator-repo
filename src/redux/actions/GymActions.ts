@@ -277,16 +277,16 @@ export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSe
 
     // Update the User
     const updatedUser = await db.user.update({
-      where: { id:user.id },
+      where: { id: user.id },
       data: {
         name: data.name,
         //dateOfBirth: data.dob,
-        phoneNumber: data.phoneNumber,
-        country: data.country,
-        image: data.image,
-        emailNotifications: data.emailNotifications,
-        pushNotifications: data.pushNotifications,
-        updatedAt: new Date(),
+        // phoneNumber: data.phoneNumber,
+        // country: data.country,
+        // image: data.image,
+        // emailNotifications: data.emailNotifications,
+        // pushNotifications: data.pushNotifications,
+        // updatedAt: new Date(),
       },
     });
 

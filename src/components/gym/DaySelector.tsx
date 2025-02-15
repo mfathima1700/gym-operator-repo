@@ -25,7 +25,7 @@ export default function DaySelector() {
 
   return (
     <fieldset>
-      <legend className="block text-sm font-semibold text-gray-900">
+      <legend className="block text-sm font-semibold text-gray-200">
         Select Class Days
       </legend>
       <div className="mt-4 flex gap-3">
@@ -34,7 +34,7 @@ export default function DaySelector() {
             key={day.value}
             onClick={() => toggleDay(day.value)}
             variant={selectedDays.includes(day.value) ? undefined : 'outline'}
-            className={`relative flex h-10 w-10 items-center justify-center rounded-full border-2 ${
+            className={`relative flex h-10 w-10 items-center justify-center rounded-full  ${
               selectedDays.includes(day.value)
                 ? 'text-black '
                 : ' '

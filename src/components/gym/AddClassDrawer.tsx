@@ -96,22 +96,6 @@ export function AddClassDrawer() {
             </div>
 
             <div className="sm:col-span-2">
-              <Label htmlFor="country">Recurrance</Label>
-              <Select
-               
-              >
-                <SelectTrigger className="mt-2">
-                  <SelectValue placeholder="Select intensity" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="us">One-off</SelectItem>
-                  <SelectItem value="ca">Weekly</SelectItem>
-                  <SelectItem value="mx">Fortnightly</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="sm:col-span-2">
               <Label htmlFor="country">Time</Label>
               <Select
                

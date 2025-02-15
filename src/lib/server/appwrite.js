@@ -15,7 +15,7 @@ export async function createSessionClient() {
   try {
     const client = await createClient();
 
-    const cookieStore = cookies(); //await cookies()
+    const cookieStore = await cookies(); //await cookies()
     const session = cookieStore.get("my-custom-session");
     if (!session || !session.value) {
       throw new Error("No session");
@@ -74,7 +74,7 @@ export async function getLoggedInUser() {
 
 export async function checkSession() {
   try {
-    const cookieStore = cookies(); //await cookies()
+    const cookieStore = await cookies(); //await cookies()
     const session = cookieStore.get("my-custom-session");
     if (!session || !session.value) {
       return false;

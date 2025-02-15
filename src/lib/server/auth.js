@@ -42,7 +42,7 @@ export async function signOut() {
     //const { account } = await createSessionClient();
 
     if (checkSession() == true) {
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       cookieStore.delete("my-custom-session");
       const result = await account.deleteSession("current");
       return result;
@@ -67,7 +67,7 @@ export async function signInWithEmail(user) {
     const session = await account.createEmailPasswordSession(email, password);
 
     // Set the session in cookies
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     cookieStore.set("my-custom-session", session.secret, {
       path: "/",
       httpOnly: true,
