@@ -90,7 +90,16 @@ model Class {
   gym         Gym             @relation(fields: [gymId], references: [id])
   bookings    Booking[]
   capacity    Int
-  intensity   IntensityRating // Enum: 'BEGINNER', 'INTERMEDIATE', 'ADVANCED'
+  icapacity        Int
+  intensity       IntensityRating  // Enum: 'BEGINNER', 'INTERMEDIATE', 'ADVANCED'
+  instructorId    String?         @db.ObjectId  // Link to an Instructor
+  instructor      User?           @relation(fields: [instructorId], references: [id])
+  recurrence      String          // e.g., "one-off", "weekly", "biweekly"
+  duration        Int             // Duration in minutes
+  days            String[]        // Array of selected weekdays
+  equipmentNeeded String?         // Optional: Equipment needed
+  room            String?         // Optional: Room name or reference
+
 }
 
 // instructor
