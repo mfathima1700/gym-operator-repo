@@ -46,10 +46,10 @@ export default function GymSchedule() {
     instructorId: string;
     startDate: Date;
     endDate: Date;
-    capacity: number;
+    capacity: string;
     intensity: string;
     recurrence: string;
-    duration: number;
+    duration: string;
     days: string[]; // Explicitly specify the type here
     room: string;
     skillLevel: string;
@@ -62,10 +62,10 @@ export default function GymSchedule() {
     instructorId: "", // Selected instructor
     startDate: new Date(), // Start date
     endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)), // End date
-    capacity: 30, // Max capacity of class
+    capacity: "30", // Max capacity of class
     intensity: "LOW", // Intensity level: BEGINNER, INTERMEDIATE, ADVANCED
     recurrence: "WEEKLY", // Recurrence: one-off, weekly, biweekly
-    duration: 60, // Duration in minutes
+    duration: "60", // Duration in minutes
     days: [], // Days selected for the class (array of weekdays)    // Any required equipment
     room: "", // Room in which the class will take place
     skillLevel: "BEGINNER",
@@ -80,8 +80,8 @@ export default function GymSchedule() {
   };
 
   function onSaveClick(e: React.MouseEvent) {
-    e.preventDefault();
-
+    //e.preventDefault();
+console.log(classData);
     dispatch(createClass(classData, userData.gym.id));
   }
 

@@ -10,10 +10,10 @@ interface classData {
     instructorId?: string,         // Selected instructor
     startDate: Date,        // Start date
     endDate: Date,          // End date
-    capacity: number           // Max capacity of class
+    capacity: string,           // Max capacity of class
     intensity: string         // Intensity level: BEGINNER, INTERMEDIATE, ADVANCED
     recurrence: string         // Recurrence: one-off, weekly, biweekly
-    duration: number,           // Duration in minutes
+    duration: string,           // Duration in minutes
     days: string[],               // Days selected for the class (array of weekdays)   // Any required equipment
     room?: string, 
     skillLevel: string,
@@ -41,13 +41,15 @@ export async function createClass(data: classData, gymId: string) {
           name: data.name,
           description: data.description,
           gymId: gymId,
+          capacity: parseInt(data.capacity),
+          duration: parseInt(data.duration),
+          intensity: data.intensity as IntensityRating, // Ensure it matches the enum
+          recurrence: data.recurrence as Occurance,
+          //
           /*instructorId: data.instructorId, // Assuming instructor is a User
           startDate: startDateTime,
           endDate: data.endDate,
-          capacity: data.capacity,
-          intensity: data.intensity as IntensityRating, // Ensure it matches the enum
-          recurrence: data.recurrence as Occurance,
-          duration: data.duration,
+         
           days: data.days ?? [], // Ensure this is stored properly (e.g., array of weekdays)
           room: data.room,
           skillLevel: data.skillLevel as SkillLevel*/
