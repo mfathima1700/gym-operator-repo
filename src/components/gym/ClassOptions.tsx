@@ -24,7 +24,7 @@ export default function ClassOptions() {
 
         <div className="sm:col-span-2">
           <Select>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Filter by duration" />
             </SelectTrigger>
             <SelectContent>
@@ -42,7 +42,7 @@ export default function ClassOptions() {
 
         <div className="sm:col-span-2">
         <Select>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Filter by intensity" />
             </SelectTrigger>
             <SelectContent>
@@ -60,7 +60,7 @@ export default function ClassOptions() {
 
         <div className="sm:col-span-2">
         <Select>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Filter by capacity" />
             </SelectTrigger>
             <SelectContent>
@@ -78,7 +78,7 @@ export default function ClassOptions() {
 
         <div className="sm:col-span-2">
         <Select>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Filter by location" />
             </SelectTrigger>
             <SelectContent>

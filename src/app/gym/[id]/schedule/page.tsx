@@ -1,7 +1,7 @@
 "use client";
 
 import CNLayout from "@/components/layout/cn-layout";
-import GymWeekCalendar from "@/components/gym/GymWeekCalendar"
+import GymWeekCalendar from "@/components/gym/GymWeekCalendar";
 import ClassOptions from "@/components/gym/ClassOptions";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -18,19 +18,19 @@ export default function GymSchedule() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const params = useParams();
-  const id = Array.isArray(params.id) ? params.id[0] : params.id ?? "";
+  const id = Array.isArray(params.id) ? params.id[0] : (params.id ?? "");
   const updateOwnerSettingsState = useSelector(
     (state: RootState) => state.updateOwnerSettings
   );
   const userState = useSelector((state: RootState) => state.getUser);
-const [userData, setUserData] = useState(() => ({
-  gym: {
-    id: "",
-  },
-}));
+  const [userData, setUserData] = useState(() => ({
+    gym: {
+      id: "",
+    },
+  }));
 
   useEffect(() => {
-      dispatch(getUserById(id));
+    dispatch(getUserById(id));
   }, [id]);
 
   useEffect(() => {
@@ -50,25 +50,29 @@ const [userData, setUserData] = useState(() => ({
     intensity: string;
     recurrence: string;
     duration: number;
-    days: string[];  // Explicitly specify the type here
+    days: string[]; // Explicitly specify the type here
     room: string;
+    skillLevel: string;
+    startTime: string;
   };
 
   const [classData, setClassData] = useState<ClassData>(() => ({
-    name: "",               // Class name
-    description: "",        // Description of the class
-    instructorId: "",         // Selected instructor
-    startDate: new Date(),        // Start date
-    endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)),          // End date
-    capacity: 0,           // Max capacity of class
-    intensity: "",          // Intensity level: BEGINNER, INTERMEDIATE, ADVANCED
-    recurrence: "",         // Recurrence: one-off, weekly, biweekly
-    duration: 0,           // Duration in minutes
-    days: [],               // Days selected for the class (array of weekdays)    // Any required equipment
-    room: "",               // Room in which the class will take place
+    name: "", // Class name
+    description: "", // Description of the class
+    instructorId: "", // Selected instructor
+    startDate: new Date(), // Start date
+    endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)), // End date
+    capacity: 30, // Max capacity of class
+    intensity: "LOW", // Intensity level: BEGINNER, INTERMEDIATE, ADVANCED
+    recurrence: "WEEKLY", // Recurrence: one-off, weekly, biweekly
+    duration: 60, // Duration in minutes
+    days: [], // Days selected for the class (array of weekdays)    // Any required equipment
+    room: "", // Room in which the class will take place
+    skillLevel: "BEGINNER",
+    startTime: "08:00"
   }));
-  
-  const handleChange = (field:string, value:any) => {
+
+  const handleChange = (field: string, value: any) => {
     setClassData((prev) => ({
       ...prev,
       [field]: value,
@@ -76,27 +80,31 @@ const [userData, setUserData] = useState(() => ({
   };
 
   function onSaveClick(e: React.MouseEvent) {
-      e.preventDefault();
+    e.preventDefault();
 
-      dispatch(createClass(classData,  userData.gym.id ));
-    }
+    dispatch(createClass(classData, userData.gym.id));
+  }
 
-    const toggleDay = (day: string) => {
-      setClassData((prev) => ({
-        ...prev,
-        days: prev.days.includes(day)
-          ? prev.days.filter((d) => d !== day) // Remove if already selected
-          : [...prev.days, day], // Add if not selected
-      }));
-    };
-  
+  const toggleDay = (day: string) => {
+    setClassData((prev) => ({
+      ...prev,
+      days: prev.days.includes(day)
+        ? prev.days.filter((d) => d !== day) // Remove if already selected
+        : [...prev.days, day], // Add if not selected
+    }));
+  };
+
   return (
     <>
       <CNLayout user={userData} id={id}>
         <div className="py-8 space-y-8">
-
-<ClassOptions/>
-        <GymWeekCalendar classData={classData} handleChange={handleChange} onSaveClick={onSaveClick}  toggleDay={toggleDay}/>
+          <ClassOptions />
+          <GymWeekCalendar
+            classData={classData}
+            handleChange={handleChange}
+            onSaveClick={onSaveClick}
+            toggleDay={toggleDay}
+          />
         </div>
       </CNLayout>
     </>

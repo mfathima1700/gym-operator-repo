@@ -22,9 +22,19 @@ import { SelectInstructor } from "./SelectInstructor";
 import DaySelector from "./DaySelector";
 import { StartDateControl } from "./StartDateControl";
 import { EndDateControl } from "./EndDateConrol";
+import { format, parse } from "date-fns";
 
-export function AddClassDialog({classData, handleChange, onSaveClick, toggleDay} :
-   {classData:any, handleChange:any, onSaveClick:any, toggleDay:any}) {
+export function AddClassDialog({
+  classData,
+  handleChange,
+  onSaveClick,
+  toggleDay,
+}: {
+  classData: any;
+  handleChange: any;
+  onSaveClick: any;
+  toggleDay: any;
+}) {
   return (
     <DialogContent className="sm:max-w-[700px] w-full max-w-3xl max-h-[80vh] overflow-y-auto">
       <DialogHeader>
@@ -34,18 +44,22 @@ export function AddClassDialog({classData, handleChange, onSaveClick, toggleDay}
         </DialogDescription>
       </DialogHeader>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
-
         <div className="sm:col-span-3">
           <Label htmlFor="address">Class Name</Label>
-          <Input id="address" className="mt-2" value={classData.name}
-                name="name"
-                onChange={(e) => handleChange(e.target.name, e.target.value)} />
+          <Input
+            id="address"
+            className="mt-2"
+            value={classData.name}
+            name="name"
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
+          />
         </div>
-
         <div className="sm:col-span-3">
           <Label htmlFor="country">Instructor</Label>
-          <Select  value={classData.instructorId}
-                onValueChange={(value) => handleChange("instructorId", value)}>
+          <Select
+            value={classData.instructorId}
+            onValueChange={(value) => handleChange("instructorId", value)}
+          >
             <SelectTrigger className="mt-2">
               <SelectValue placeholder="Select instructor" />
             </SelectTrigger>
@@ -60,67 +74,55 @@ export function AddClassDialog({classData, handleChange, onSaveClick, toggleDay}
             </SelectContent>
           </Select>
         </div>
-
         <div className="col-span-full">
           <Label htmlFor="description">Description</Label>
-          <Textarea id="description" rows={2} className="mt-2" 
-          value={classData.description}
-                name="description"
-                onChange={(e) => handleChange(e.target.name, e.target.value)} />
+          <Textarea
+            id="description"
+            rows={2}
+            className="mt-2"
+            value={classData.description}
+            name="description"
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
+          />
           <p className="text-sm text-gray-500 mt-2">
             Write a few sentences about this class.
           </p>
         </div>
-
         <div className="sm:col-span-3">
-        <Label htmlFor="country">Start Date</Label>
-        <div className="mt-2">
-        <StartDateControl   date={classData.startDate}
-            onChange={(newDate) => handleChange("startDate", newDate)}/>
-        </div>
-         
-        </div>
-
-        <div className="sm:col-span-3">
-        <Label htmlFor="country">End Date</Label>
-        <div className="mt-2">
-          <EndDateControl   date={classData.startDate}
-  onChange={(newDate) => handleChange("endDate", newDate)}/>
-          </div>
-        </div>
-
-        <div className="sm:w-[75px]">
-          <Label htmlFor="address">Capacity</Label>
-          <Input id="address" className="mt-2" 
-          value={classData.capacity}
-                name="capacity" 
-                type="number"
-                onChange={(e) => handleChange(e.target.name, e.target.value)} />
-        </div>
-
-        <div className="sm:col-span-4">
-          <DaySelector  selectedDays={classData.days} toggleDay={toggleDay} />
-        </div>
-
-        <div className="sm:col-span-3">
-          <Label htmlFor="country">Intensity</Label>
-          <Select value={classData.intensity}
-                onValueChange={(value) => handleChange("intensity", value)}>
+          <Label htmlFor="time">Time</Label>
+          <Select
+            value={classData.startTime} // No need for format() since it's a string
+            onValueChange={(value) => {
+              handleChange("startTime", value); // Directly store as string "HH:mm"
+            }}
+          >
             <SelectTrigger className="mt-2">
-              <SelectValue placeholder="Select intensity" />
+              <SelectValue placeholder="Select class start time" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="BEGINNER">Beginner</SelectItem>
-              <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
-              <SelectItem value="ADVANCED">Advanced</SelectItem>
+              {Array.from({ length: 15 }, (_, index) => {
+                const hour = 8 + index;
+                const formattedTime = format(
+                  new Date(2023, 0, 1, hour, 0),
+                  "h:mm a"
+                ); // Format display value
+                const valueTime = `${hour.toString().padStart(2, "0")}:00`; // Store in "HH:mm" format
+                return (
+                  <SelectItem key={valueTime} value={valueTime}>
+                    {formattedTime}
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
         </div>
-
+        
         <div className="sm:col-span-3">
           <Label htmlFor="country">Recurrance</Label>
-          <Select value={classData.recurrence}
-                onValueChange={(value) => handleChange("recurrence", value)}>
+          <Select
+            value={classData.recurrence}
+            onValueChange={(value) => handleChange("recurrence", value)}
+          >
             <SelectTrigger className="mt-2">
               <SelectValue placeholder="Select occurance" />
             </SelectTrigger>
@@ -131,16 +133,90 @@ export function AddClassDialog({classData, handleChange, onSaveClick, toggleDay}
             </SelectContent>
           </Select>
         </div>
-
+        <div className="sm:col-span-3">
+          <Label htmlFor="country">Start Date</Label>
+          <div className="mt-2">
+            <StartDateControl
+              date={classData.startDate}
+              onChange={(newDate) => {
+                //const existingTime = new Date(classData.startDate);
+                //newDate.setHours(existingTime.getHours(), existingTime.getMinutes());
+                handleChange("startDate", newDate);
+              }}
+            />
+          </div>
+        </div>
+        <div className="sm:col-span-3">
+          <Label htmlFor="country">End Date</Label>
+          <div className="mt-2">
+            <EndDateControl
+              date={classData.endDate}
+              onChange={(newDate) => {
+                //const existingTime = new Date(classData.endDate);
+                //newDate.setHours(existingTime.getHours(), existingTime.getMinutes());
+                handleChange("endDate", newDate);
+              }}
+            />
+          </div>
+        </div>
+        <div className="sm:col-span-4">
+          <DaySelector selectedDays={classData.days} toggleDay={toggleDay} />
+        </div>
+        <div className="sm:w-[75px]">
+          <Label htmlFor="address">Capacity</Label>
+          <Input
+            id="address"
+            className="mt-2"
+            value={classData.capacity}
+            name="capacity"
+            type="number"
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
+          />
+        </div>
+        <div className="sm:col-span-3">
+          <Label htmlFor="country">Skill Level</Label>
+          <Select
+            value={classData.skillLevel}
+            onValueChange={(value) => handleChange("skillLevel", value)}
+          >
+            <SelectTrigger className="mt-2">
+              <SelectValue placeholder="Select skill level" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="BEGINNER">Beginner</SelectItem>
+              <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
+              <SelectItem value="ADVANCED">Advanced</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="sm:col-span-3">
+          <Label htmlFor="country">Intensity</Label>
+          <Select
+            value={classData.intensity}
+            onValueChange={(value) => handleChange("intensity", value)}
+          >
+            <SelectTrigger className="mt-2">
+              <SelectValue placeholder="Select intensity" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="LOW">Low</SelectItem>
+              <SelectItem value="MODERATE">Moderate</SelectItem>
+              <SelectItem value="INTENSE">Intense</SelectItem>
+              <SelectItem value="EXTREME">Extreme</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         <div className="sm:col-span-3">
           <Label htmlFor="country">Duration</Label>
-          <Select value={classData.recurrence}
-                onValueChange={(value) => handleChange("recurrence", value)}>
+          <Select
+            value={classData.recurrence}
+            onValueChange={(value) => handleChange("recurrence", value)}
+          >
             <SelectTrigger className="mt-2">
               <SelectValue placeholder="Select duration" />
             </SelectTrigger>
             <SelectContent>
-            <SelectItem value="15">15 minutes</SelectItem>
+              <SelectItem value="15">15 minutes</SelectItem>
               <SelectItem value="20">20 minutes</SelectItem>
               <SelectItem value="30">30 minutes</SelectItem>
               <SelectItem value="45">45 minutes</SelectItem>
@@ -152,17 +228,21 @@ export function AddClassDialog({classData, handleChange, onSaveClick, toggleDay}
             </SelectContent>
           </Select>
         </div>
-
         <div className="sm:col-span-3">
           <Label htmlFor="address">Room</Label>
-          <Input id="address" className="mt-2" 
-          value={classData.room}
-                name="room"
-                onChange={(e) => handleChange(e.target.name, e.target.value)} />
+          <Input
+            id="address"
+            className="mt-2"
+            value={classData.room}
+            name="room"
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
+          />
         </div>
       </div>
       <DialogFooter>
-        <Button type="button" onClick={onSaveClick}>Create</Button>
+        <Button type="button" onClick={onSaveClick}>
+          Create
+        </Button>
       </DialogFooter>
     </DialogContent>
   );

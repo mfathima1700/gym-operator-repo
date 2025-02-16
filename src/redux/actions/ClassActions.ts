@@ -1,6 +1,8 @@
+"use server"
+
 import { db } from "@/db";
 import { CREATE_CLASS_FAILED, CREATE_CLASS_SUCCESS } from "../constants/ClassConstants";
-import { IntensityRating, Occurance } from "@prisma/client";
+import { IntensityRating, Occurance, SkillLevel } from "@prisma/client";
 
 interface classData {
     name: string,           // Class name
@@ -14,7 +16,9 @@ interface classData {
     duration: number,           // Duration in minutes
     days: string[],               // Days selected for the class (array of weekdays)   // Any required equipment
     room?: string, 
-}
+    skillLevel: string,
+    startTime:string,
+  }
 
 export async function createClass(data: classData, gymId: string) {
   try {
@@ -27,21 +31,26 @@ export async function createClass(data: classData, gymId: string) {
       throw new Error("Gym not found");
     }
 
+    const startDateTime = new Date(data.startDate);
+    const [startHour, startMinute] = data.startTime.split(":").map(Number);
+    startDateTime.setHours(startHour, startMinute, 0, 0);
+
 
     const newClass = await db.class.create({
         data: {
           name: data.name,
           description: data.description,
-          instructorId: data.instructorId, // Assuming instructor is a User
-          startDate: data.startDate,
+          gymId: gymId,
+          /*instructorId: data.instructorId, // Assuming instructor is a User
+          startDate: startDateTime,
           endDate: data.endDate,
           capacity: data.capacity,
           intensity: data.intensity as IntensityRating, // Ensure it matches the enum
           recurrence: data.recurrence as Occurance,
           duration: data.duration,
-          days: data.days, // Ensure this is stored properly (e.g., array of weekdays)
+          days: data.days ?? [], // Ensure this is stored properly (e.g., array of weekdays)
           room: data.room,
-          gymId: gymId  // Connects the class to the gym
+          skillLevel: data.skillLevel as SkillLevel*/
         },
       });
 

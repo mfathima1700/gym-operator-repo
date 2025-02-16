@@ -41,11 +41,11 @@ model User {
   Authenticator Authenticator[]
   updatedAt     DateTime        @updatedAt
   userRole      UserRole
-  isTrainer     Boolean @default(false)
+  isTrainer     Boolean? @default(false)
   phoneNumber     String?         // New field
   country         String?         // New field
-  emailNotifications     String @default("everything") // New field
-  pushNotifications String        @default("everything")
+  emailNotifications     String? @default("everything") // New field
+  pushNotifications String?        @default("everything")
  classesTaught   Class[] @relation("InstructorClasses")
 }
 
@@ -89,16 +89,17 @@ model Class {
   gymId           String          @db.ObjectId
   gym             Gym             @relation(fields: [gymId], references: [id])
   bookings        Booking[]
-  capacity        Int
-  intensity       IntensityRating  // Enum: 'BEGINNER', 'INTERMEDIATE', 'ADVANCED'
+  capacity        Int?
+  intensity       IntensityRating?
+  skillLevel      SkillLevel?
   instructorId    String?  @db.ObjectId  
   instructor      User?    @relation("InstructorClasses", fields: [instructorId], references: [id]) // ✅ Fix the relation name
-  recurrence      Occurance          // e.g., "one-off", "weekly", "biweekly"
-  duration        Int             // Duration in minutes
+  recurrence      Occurance?          // e.g., "one-off", "weekly", "biweekly"
+  duration        Int?             // Duration in minutes
   days            String[]        // Array of selected weekdays
   room            String?         // Optional: Room name or reference
-  startDate       DateTime
-  endDate         DateTime
+  startDate       DateTime?
+  endDate         DateTime?
 }
 
 // instructor
@@ -134,10 +135,17 @@ enum MembershipStatus {
   INACTIVE
 }
 
-enum IntensityRating {
+enum SkillLevel {
   BEGINNER
   INTERMEDIATE
   ADVANCED
+}
+
+enum IntensityRating {
+  LOW
+  MODERATE
+  INTENSE
+  EXTREME
 }
 
 enum GenderStatus {
