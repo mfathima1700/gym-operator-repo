@@ -45,14 +45,14 @@ export async function createClass(data: classData, gymId: string) {
           duration: parseInt(data.duration),
           intensity: data.intensity as IntensityRating, // Ensure it matches the enum
           recurrence: data.recurrence as Occurance,
-          //
-          /*instructorId: data.instructorId, // Assuming instructor is a User
-          startDate: startDateTime,
-          endDate: data.endDate,
+          
+          //instructorId: data.instructorId, // Assuming instructor is a User
+          //startDate: startDateTime,
+          //endDate: data.endDate,
          
-          days: data.days ?? [], // Ensure this is stored properly (e.g., array of weekdays)
-          room: data.room,
-          skillLevel: data.skillLevel as SkillLevel*/
+          //days: data.days ?? [], // Ensure this is stored properly (e.g., array of weekdays)
+          //room: data.room,
+          //skillLevel: data.skillLevel as SkillLevel
         },
       });
 

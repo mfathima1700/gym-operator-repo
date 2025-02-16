@@ -9,6 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUserById } from "@/redux/actions/GymActions";
 import { createClass } from "@/redux/actions/ClassActions";
+import { set } from "date-fns";
 
 function classNames(...classes: (string | false | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
@@ -56,7 +57,7 @@ export default function GymSchedule() {
     startTime: string;
   };
 
-  const [classData, setClassData] = useState<ClassData>(() => ({
+  const initalState = {
     name: "", // Class name
     description: "", // Description of the class
     instructorId: "", // Selected instructor
@@ -70,7 +71,9 @@ export default function GymSchedule() {
     room: "", // Room in which the class will take place
     skillLevel: "BEGINNER",
     startTime: "08:00"
-  }));
+  }
+
+  const [classData, setClassData] = useState<ClassData>(() => initalState);
 
   const handleChange = (field: string, value: any) => {
     setClassData((prev) => ({
@@ -83,6 +86,7 @@ export default function GymSchedule() {
     //e.preventDefault();
 console.log(classData);
     dispatch(createClass(classData, userData.gym.id));
+    setClassData(initalState);
   }
 
   const toggleDay = (day: string) => {

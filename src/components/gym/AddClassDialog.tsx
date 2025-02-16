@@ -209,8 +209,8 @@ export function AddClassDialog({
         <div className="sm:col-span-3">
           <Label htmlFor="country">Duration</Label>
           <Select
-            value={classData.recurrence}
-            onValueChange={(value) => handleChange("recurrence", value)}
+            value={classData.duration}
+            onValueChange={(value) => handleChange("duration", value)}
           >
             <SelectTrigger className="mt-2">
               <SelectValue placeholder="Select duration" />
