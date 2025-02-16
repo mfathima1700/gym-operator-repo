@@ -23,7 +23,11 @@ export default function GymSchedule() {
     (state: RootState) => state.updateOwnerSettings
   );
   const userState = useSelector((state: RootState) => state.getUser);
-const [userData, setUserData] = useState(() => ({}));
+const [userData, setUserData] = useState(() => ({
+  gym: {
+    id: "",
+  },
+}));
 
   useEffect(() => {
       dispatch(getUserById(id));
@@ -36,12 +40,26 @@ const [userData, setUserData] = useState(() => ({}));
     }
   }, [userState.user, userState.success, userState.error]);
 
-  const [classData, setClassData] = useState(() => ({
+  type ClassData = {
+    name: string;
+    description: string;
+    instructorId: string;
+    startDate: Date;
+    endDate: Date;
+    capacity: number;
+    intensity: string;
+    recurrence: string;
+    duration: number;
+    days: string[];  // Explicitly specify the type here
+    room: string;
+  };
+
+  const [classData, setClassData] = useState<ClassData>(() => ({
     name: "",               // Class name
     description: "",        // Description of the class
     instructorId: "",         // Selected instructor
     startDate: new Date(),        // Start date
-    endDate: new Date(),          // End date
+    endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)),          // End date
     capacity: 0,           // Max capacity of class
     intensity: "",          // Intensity level: BEGINNER, INTERMEDIATE, ADVANCED
     recurrence: "",         // Recurrence: one-off, weekly, biweekly
@@ -59,8 +77,18 @@ const [userData, setUserData] = useState(() => ({}));
 
   function onSaveClick(e: React.MouseEvent) {
       e.preventDefault();
-      dispatch(createClass(classData, id));
+
+      dispatch(createClass(classData,  userData.gym.id ));
     }
+
+    const toggleDay = (day: string) => {
+      setClassData((prev) => ({
+        ...prev,
+        days: prev.days.includes(day)
+          ? prev.days.filter((d) => d !== day) // Remove if already selected
+          : [...prev.days, day], // Add if not selected
+      }));
+    };
   
   return (
     <>
@@ -68,7 +96,7 @@ const [userData, setUserData] = useState(() => ({}));
         <div className="py-8 space-y-8">
 
 <ClassOptions/>
-        <GymWeekCalendar/>
+        <GymWeekCalendar classData={classData} handleChange={handleChange} onSaveClick={onSaveClick}  toggleDay={toggleDay}/>
         </div>
       </CNLayout>
     </>

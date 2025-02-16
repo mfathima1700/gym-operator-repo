@@ -25,7 +25,8 @@ import { AddClassDialog } from "./AddClassDialog";
 import { Drawer, DrawerTrigger } from "../ui/drawer";
 import { AddClassDrawer } from "./AddClassDrawer";
 
-export default function GymWeekCalendar() {
+export default function GymWeekCalendar({classData, handleChange, onSaveClick, toggleDay }:
+  {classData:any, handleChange:any, onSaveClick:any, toggleDay:any}) {
   const container = useRef<HTMLDivElement | null>(null);
   const containerNav = useRef<HTMLDivElement | null>(null);
   const containerOffset = useRef<HTMLDivElement | null>(null);
@@ -89,7 +90,7 @@ export default function GymWeekCalendar() {
             </button>
             </DialogTrigger>
 
-<AddClassDialog />
+<AddClassDialog  classData={classData} handleChange={handleChange} onSaveClick={onSaveClick} toggleDay={toggleDay}/>
             </Dialog>
           </div>
           <Menu as="div" className="relative ml-6 md:hidden">

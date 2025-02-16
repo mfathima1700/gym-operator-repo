@@ -14,14 +14,14 @@ const days = [
   { name: 'Sun', value: 'sunday' },
 ]
 
-export default function DaySelector() {
-  const [selectedDays, setSelectedDays] = useState<string[]>([])
+export default function DaySelector({ selectedDays, toggleDay } : { selectedDays: string[], toggleDay: any }) {
+  //const [selectedDays, setSelectedDays] = useState<string[]>([])
 
-  const toggleDay = (day: string) => {
-    setSelectedDays((prev) =>
-      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
-    )
-  }
+  // const toggleDay = (day: string) => {
+  //   setSelectedDays((prev) =>
+  //     prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+  //   )
+  // }
 
   return (
     <fieldset>
@@ -34,10 +34,8 @@ export default function DaySelector() {
             key={day.value}
             onClick={() => toggleDay(day.value)}
             variant={selectedDays.includes(day.value) ? undefined : 'outline'}
-            className={`relative flex h-10 w-10 items-center justify-center rounded-full  ${
-              selectedDays.includes(day.value)
-                ? 'text-black '
-                : ' '
+            className={`relative flex h-10 w-10 items-center justify-center rounded-full ${
+              selectedDays.includes(day.value) ? 'text-black ' : ''
             } transition`}
           >
             
