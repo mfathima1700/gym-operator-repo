@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { CREATE_CLASS_FAILED, CREATE_CLASS_SUCCESS } from "../constants/ClassConstants";
-import { IntensityRating } from "@prisma/client";
+import { IntensityRating, Occurance } from "@prisma/client";
 
 interface classData {
     name: string,           // Class name
@@ -27,6 +27,7 @@ export async function createClass(data: classData, gymId: string) {
       throw new Error("Gym not found");
     }
 
+
     const newClass = await db.class.create({
         data: {
           name: data.name,
@@ -36,7 +37,7 @@ export async function createClass(data: classData, gymId: string) {
           endDate: data.endDate,
           capacity: data.capacity,
           intensity: data.intensity as IntensityRating, // Ensure it matches the enum
-          recurrence: data.recurrence,
+          recurrence: data.recurrence as Occurance,
           duration: data.duration,
           days: data.days, // Ensure this is stored properly (e.g., array of weekdays)
           room: data.room,

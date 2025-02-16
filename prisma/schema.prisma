@@ -46,6 +46,7 @@ model User {
   country         String?         // New field
   emailNotifications     String @default("everything") // New field
   pushNotifications String        @default("everything")
+ classesTaught   Class[] @relation("InstructorClasses")
 }
 
 model Gym {
@@ -82,24 +83,22 @@ model Membership {
 
 // Class model
 model Class {
-  id          String          @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String
-  schedule    DateTime[]
-  gymId       String          @db.ObjectId
-  gym         Gym             @relation(fields: [gymId], references: [id])
-  bookings    Booking[]
-  capacity    Int
-  icapacity        Int
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  description     String?
+  gymId           String          @db.ObjectId
+  gym             Gym             @relation(fields: [gymId], references: [id])
+  bookings        Booking[]
+  capacity        Int
   intensity       IntensityRating  // Enum: 'BEGINNER', 'INTERMEDIATE', 'ADVANCED'
-  instructorId    String?         @db.ObjectId  // Link to an Instructor
-  instructor      User?           @relation(fields: [instructorId], references: [id])
-  recurrence      String          // e.g., "one-off", "weekly", "biweekly"
+  instructorId    String?  @db.ObjectId  
+  instructor      User?    @relation("InstructorClasses", fields: [instructorId], references: [id]) // ✅ Fix the relation name
+  recurrence      Occurance          // e.g., "one-off", "weekly", "biweekly"
   duration        Int             // Duration in minutes
   days            String[]        // Array of selected weekdays
-  equipmentNeeded String?         // Optional: Equipment needed
   room            String?         // Optional: Room name or reference
-
+  startDate       DateTime
+  endDate         DateTime
 }
 
 // instructor
@@ -144,7 +143,13 @@ enum IntensityRating {
 enum GenderStatus {
   MALE
   FEMALE
-  NONBINARY
+  OTHER
+}
+
+enum Occurance {
+  WEEKLY
+  ONCE
+  BIWEEKLY
 }
 
 model Goal {
