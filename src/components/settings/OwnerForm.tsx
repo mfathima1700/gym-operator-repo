@@ -237,8 +237,8 @@ export default function OwnerForm({
             <RadioGroup
               className="mt-6 space-y-3"
               defaultValue={ownerData.emailNotifications}
-              onValueChange={(e) =>
-                handleChange("emailNotifications", e.valueOf)
+              onValueChange={(value) =>
+                handleChange("emailNotifications", value)
               }
             >
               <div className="flex items-center gap-x-3">
@@ -267,8 +267,8 @@ export default function OwnerForm({
             <RadioGroup
               className="mt-6 space-y-3"
               defaultValue={ownerData.pushNotifications}
-              onValueChange={(e) =>
-                handleChange("pushNotifications", e.valueOf)
+              onValueChange={(value) =>
+                handleChange("pushNotifications", value)
               }
             >
               <div className="flex items-center gap-x-3">

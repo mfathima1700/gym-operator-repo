@@ -36,7 +36,7 @@ export default function DaySelector({ selectedDays, toggleDay } : { selectedDays
             onClick={() => toggleDay(day.value)}
             variant={selectedDays.includes(day.value) ? "default" : 'outline'}
             className={cn(`relative flex h-10 w-10 items-center justify-center rounded-full ${
-              selectedDays.includes(day.value) ? " text-black-foreground text-black" : ""
+              selectedDays.includes(day.value) ? "" : ""
             } transition`)}
           >
             

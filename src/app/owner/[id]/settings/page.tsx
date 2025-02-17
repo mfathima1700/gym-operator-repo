@@ -91,6 +91,9 @@ export default function OwnerSettings() {
 
   function onSaveClick(e: React.MouseEvent) {
     e.preventDefault();
+
+    console.log(ownerData);
+    console.log(gymData);
     dispatch(updateOwnerSettings(ownerData, gymData, id));
   }
 

@@ -57,14 +57,14 @@ model Gym {
   memberships Membership[]
   classes     Class[]
   createdAt   DateTime     @default(now())
-  gymCode    String      @unique @default(uuid())
-  country    String?
+  gymCode     String?      @unique @default(uuid())
+  country     String?
   city         String?
   postcode        String?
   streetAddress  String?
   state         String?
   description   String?
-
+  logo         String?
 }
 
 // Membership model
