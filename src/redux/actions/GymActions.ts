@@ -62,7 +62,11 @@ export async function getUserById(id: string) {
     const user = await db.user.findUnique({
       where: { id }, // Look up user by email
       include: {
-        gym: true, // Include gym details if needed
+        gym: {
+          include: {
+            classes: true, // ater this based on date time so only the ones now are fetched -> long wait times
+          }
+        }, // Include gym details if needed
         memberships: true,
         // Include memberships if needed
       },

@@ -17,7 +17,6 @@ export default function Login() {
   const signInState = useSelector((state: RootState) => state.signIn);
   const sessionState = useSelector((state: RootState) => state.getSession);
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
 
   useEffect(() => {
     
