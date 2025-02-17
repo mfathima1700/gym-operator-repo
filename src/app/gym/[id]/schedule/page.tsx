@@ -6,7 +6,7 @@ import ClassOptions from "@/components/gym/ClassOptions";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getUserById } from "@/redux/actions/GymActions";
 import { createClass } from "@/redux/actions/ClassActions";
 import { set } from "date-fns";
@@ -20,6 +20,7 @@ export default function GymSchedule() {
   const router = useRouter();
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : (params.id ?? "");
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const updateOwnerSettingsState = useSelector(
     (state: RootState) => state.updateOwnerSettings
   );
@@ -84,7 +85,8 @@ export default function GymSchedule() {
 
   function onSaveClick(e: React.MouseEvent) {
     //e.preventDefault();
-console.log(classData);
+    triggerRef.current?.click();
+    console.log(classData);
     dispatch(createClass(classData, userData.gym.id));
     setClassData(initalState);
   }
@@ -107,7 +109,8 @@ console.log(classData);
             classData={classData}
             handleChange={handleChange}
             onSaveClick={onSaveClick}
-            toggleDay={toggleDay}
+            toggleDay={toggleDay} 
+            triggerRef={triggerRef}
           />
         </div>
       </CNLayout>

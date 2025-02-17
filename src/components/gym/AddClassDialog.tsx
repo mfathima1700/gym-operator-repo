@@ -51,6 +51,7 @@ export function AddClassDialog({
             className="mt-2"
             value={classData.name}
             name="name"
+            required
             onChange={(e) => handleChange(e.target.name, e.target.value)}
           />
         </div>

@@ -25,8 +25,19 @@ import { AddClassDialog } from "./AddClassDialog";
 import { Drawer, DrawerTrigger } from "../ui/drawer";
 import { AddClassDrawer } from "./AddClassDrawer";
 
-export default function GymWeekCalendar({classData, handleChange, onSaveClick, toggleDay }:
-  {classData:any, handleChange:any, onSaveClick:any, toggleDay:any}) {
+export default function GymWeekCalendar({
+  classData,
+  handleChange,
+  onSaveClick,
+  toggleDay,
+  triggerRef
+}: {
+  classData: any;
+  handleChange: any;
+  onSaveClick: any;
+  toggleDay: any;
+  triggerRef: any;
+}) {
   const container = useRef<HTMLDivElement | null>(null);
   const containerNav = useRef<HTMLDivElement | null>(null);
   const containerOffset = useRef<HTMLDivElement | null>(null);
@@ -81,16 +92,21 @@ export default function GymWeekCalendar({classData, handleChange, onSaveClick, t
               <AddClassDrawer />
             </Drawer> */}
             <Dialog>
-      <DialogTrigger asChild>
-            <button
-              type="button"
-              className="ml-6 rounded-md bg-lime-600 px-3 py-2 text-sm font-semibold text-gray-200 shadow-xs hover:bg-lime-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600"
-            >
-              Add class
-            </button>
-            </DialogTrigger>
+              <DialogTrigger asChild>
+                <button
+                  type="button" ref={triggerRef}
+                  className="ml-6 rounded-md bg-lime-600 px-3 py-2 text-sm font-semibold text-gray-200 shadow-xs hover:bg-lime-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600"
+                >
+                  Add class
+                </button>
+              </DialogTrigger>
 
-<AddClassDialog  classData={classData} handleChange={handleChange} onSaveClick={onSaveClick} toggleDay={toggleDay}/>
+              <AddClassDialog
+                classData={classData}
+                handleChange={handleChange}
+                onSaveClick={onSaveClick}
+                toggleDay={toggleDay}
+              />
             </Dialog>
           </div>
           <Menu as="div" className="relative ml-6 md:hidden">

@@ -35,24 +35,28 @@ export async function createClass(data: classData, gymId: string) {
     const [startHour, startMinute] = data.startTime.split(":").map(Number);
     startDateTime.setHours(startHour, startMinute, 0, 0);
 
+    const endDateTime = new Date(data.endDate);
+    const [endHour, endMinute] = data.startTime.split(":").map(Number);
+    endDateTime.setHours(endHour, endMinute, 0, 0);
+
 
     const newClass = await db.class.create({
         data: {
           name: data.name,
-          description: data.description,
+          ...(data.description ? { description: data.description } : {}),
           gymId: gymId,
           capacity: parseInt(data.capacity),
           duration: parseInt(data.duration),
           intensity: data.intensity as IntensityRating, // Ensure it matches the enum
           recurrence: data.recurrence as Occurance,
           
-          //instructorId: data.instructorId, // Assuming instructor is a User
-          //startDate: startDateTime,
-          //endDate: data.endDate,
+          ...(data.instructorId ? { instructorId: data.instructorId } : {}),
+          startDate: startDateTime,
+          endDate: endDateTime,
          
-          //days: data.days ?? [], // Ensure this is stored properly (e.g., array of weekdays)
-          //room: data.room,
-          //skillLevel: data.skillLevel as SkillLevel
+          days: data.days ?? [], // Ensure this is stored properly (e.g., array of weekdays)
+          ...(data.room ? { room: data.room } : {}),
+          skillLevel: data.skillLevel as SkillLevel
         },
       });
 
