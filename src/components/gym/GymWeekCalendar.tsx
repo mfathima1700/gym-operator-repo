@@ -1,36 +1,98 @@
 "use client";
 
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import {
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  EllipsisHorizontalIcon,
-} from "@heroicons/react/20/solid";
-import { useEffect, useRef } from "react";
+import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
+import { useEffect, useRef, useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { YearSelect } from "@/components/progress/YearSelect";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { AddClassDialog } from "./AddClassDialog";
 import { Drawer, DrawerTrigger } from "../ui/drawer";
 import { AddClassDrawer } from "./AddClassDrawer";
+
+interface WeekdayButtonProps {
+  day: string;
+  date: number;
+  isHighlighted?: boolean;
+}
+
+const WeekdayButton = ({
+  day,
+  date,
+  isHighlighted = false,
+}: WeekdayButtonProps) => (
+  <button type="button" className="flex flex-col items-center pt-2 pb-3">
+    {day}{" "}
+    <span
+      className={`mt-1 flex size-8 items-center justify-center font-semibold ${
+        isHighlighted
+          ? "rounded-full bg-indigo-600 text-gray-200"
+          : "text-gray-900"
+      }`}
+    >
+      {date}
+    </span>
+  </button>
+);
+
+interface WeekdayCellProps {
+  day: string;
+  date: number;
+  isHighlighted?: boolean;
+}
+
+const WeekdayCell = ({
+  day,
+  date,
+  isHighlighted = false,
+}: WeekdayCellProps) => (
+  <div className="flex items-center justify-center py-3">
+    <span className={isHighlighted ? "flex items-baseline" : ""}>
+      {day}{" "}
+      <span
+        className={`items-center justify-center font-semibold ${
+          isHighlighted
+            ? "ml-1.5 flex size-8 rounded-full bg-lime-600 text-gray-200"
+            : "text-gray-400"
+        }`}
+      >
+        {date}
+      </span>
+    </span>
+  </div>
+);
+
+const events = [
+  {
+    title: "Breakfast",
+    startTime: "06:00",
+    duration: 60, // Duration in minutes
+    colStart: 3,
+    color: "blue",
+  },
+  {
+    title: "Flight to Paris",
+    startTime: "12:30",
+    duration: 90, // Duration in minutes
+    colStart: 3,
+    color: "pink",
+  },
+  {
+    title: "Meeting with design team at Disney",
+    startTime: "10:00",
+    duration: 120, // Duration in minutes
+    colStart: 6,
+    color: "purple",
+  },
+];
 
 export default function GymWeekCalendar({
   classData,
   handleChange,
   onSaveClick,
   toggleDay,
-  triggerRef
+  triggerRef,
 }: {
   classData: any;
   handleChange: any;
@@ -55,6 +117,28 @@ export default function GymWeekCalendar({
     }
   }, []);
 
+  const generateHourLabels = () => {
+    const hours = Array.from({ length: 17 }, (_, i) => i + 6); // Generates an array [6, 7, ..., 22] (6 AM to 10 PM)
+    return hours.map((hour) => (
+      <div key={hour}>
+        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+          {hour % 12 === 0 ? 12 : hour % 12}
+          {hour < 12 ? "AM" : "PM"}
+        </div>
+      </div>
+    ));
+  };
+
+  const getRandomColor = () => {
+    const colors = ["blue", "pink", "gray", "indigo", "purple", "teal"];
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
+
+  const timeToGridRow = (time: string) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return (hours - 6) * 12 + minutes / 5 + 1; // Start from 6 AM
+  };
+
   return (
     <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-700 px-6 py-4">
@@ -77,24 +161,12 @@ export default function GymWeekCalendar({
             </Button>
           </div>
           <div className="hidden md:ml-4 md:flex md:items-center">
-            <YearSelect />
             <div className="ml-6 h-6 w-px bg-gray-700" />
-            {/* <Drawer>
-              <DrawerTrigger>
-                {" "}
-                <button
-                  type="button"
-                  className="ml-6 rounded-md bg-lime-600 px-3 py-2 text-sm font-semibold text-gray-200 shadow-xs hover:bg-lime-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600"
-                >
-                  Add class
-                </button>
-              </DrawerTrigger>
-              <AddClassDrawer />
-            </Drawer> */}
             <Dialog>
               <DialogTrigger asChild>
                 <button
-                  type="button" ref={triggerRef}
+                  type="button"
+                  ref={triggerRef}
                   className="ml-6 rounded-md bg-lime-600 px-3 py-2 text-sm font-semibold text-gray-200 shadow-xs hover:bg-lime-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600"
                 >
                   Add class
@@ -125,7 +197,7 @@ export default function GymWeekCalendar({
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
                   >
-                    Create event
+                    Add Class
                   </a>
                 </MenuItem>
               </div>
@@ -136,40 +208,6 @@ export default function GymWeekCalendar({
                     className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
                   >
                     Go to today
-                  </a>
-                </MenuItem>
-              </div>
-              <div className="py-1">
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                  >
-                    Day view
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                  >
-                    Week view
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                  >
-                    Month view
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                  >
-                    Year view
                   </a>
                 </MenuItem>
               </div>
@@ -190,133 +228,29 @@ export default function GymWeekCalendar({
             className="sticky top-0 z-30 flex-none  ring-1 shadow-sm ring-black/5 sm:pr-8"
           >
             <div className="grid grid-cols-7 text-sm/6 text-gray-500 sm:hidden">
-              <button
-                type="button"
-                className="flex flex-col items-center pt-2 pb-3"
-              >
-                M{" "}
-                <span className="mt-1 flex size-8 items-center justify-center font-semibold text-gray-900">
-                  10
-                </span>
-              </button>
-              <button
-                type="button"
-                className="flex flex-col items-center pt-2 pb-3"
-              >
-                T{" "}
-                <span className="mt-1 flex size-8 items-center justify-center font-semibold text-gray-900">
-                  11
-                </span>
-              </button>
-              <button
-                type="button"
-                className="flex flex-col items-center pt-2 pb-3"
-              >
-                W{" "}
-                <span className="mt-1 flex size-8 items-center justify-center rounded-full bg-indigo-600 font-semibold text-gray-200">
-                  12
-                </span>
-              </button>
-              <button
-                type="button"
-                className="flex flex-col items-center pt-2 pb-3"
-              >
-                T{" "}
-                <span className="mt-1 flex size-8 items-center justify-center font-semibold text-gray-900">
-                  13
-                </span>
-              </button>
-              <button
-                type="button"
-                className="flex flex-col items-center pt-2 pb-3"
-              >
-                F{" "}
-                <span className="mt-1 flex size-8 items-center justify-center font-semibold text-gray-900">
-                  14
-                </span>
-              </button>
-              <button
-                type="button"
-                className="flex flex-col items-center pt-2 pb-3"
-              >
-                S{" "}
-                <span className="mt-1 flex size-8 items-center justify-center font-semibold text-gray-900">
-                  15
-                </span>
-              </button>
-              <button
-                type="button"
-                className="flex flex-col items-center pt-2 pb-3"
-              >
-                S{" "}
-                <span className="mt-1 flex size-8 items-center justify-center font-semibold text-gray-900">
-                  16
-                </span>
-              </button>
+              <WeekdayButton day="M" date={10} />
+              <WeekdayButton day="T" date={11} />
+              <WeekdayButton day="W" date={12} isHighlighted />
+              <WeekdayButton day="T" date={13} />
+              <WeekdayButton day="F" date={14} />
+              <WeekdayButton day="S" date={15} />
+              <WeekdayButton day="S" date={16} />
             </div>
 
             <div className="-mr-px hidden grid-cols-7 divide-x divide-gray-700 border-r border-b border-gray-700 text-sm/6 text-gray-200 sm:grid">
               <div className="col-end-1 w-14" />
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Mon{" "}
-                  <span className="items-center justify-center font-semibold text-gray-400">
-                    10
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Tue{" "}
-                  <span className="items-center justify-center font-semibold text-gray-400">
-                    11
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span className="flex items-baseline">
-                  Wed{" "}
-                  <span className="ml-1.5 flex size-8 items-center justify-center rounded-full bg-lime-600 font-semibold text-gray-200">
-                    12
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Thu{" "}
-                  <span className="items-center justify-center font-semibold text-gray-400">
-                    13
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Fri{" "}
-                  <span className="items-center justify-center font-semibold text-gray-400">
-                    14
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Sat{" "}
-                  <span className="items-center justify-center font-semibold text-gray-400">
-                    15
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Sun{" "}
-                  <span className="items-center justify-center font-semibold text-gray-400">
-                    16
-                  </span>
-                </span>
-              </div>
+              <WeekdayCell day="Mon" date={10} />
+              <WeekdayCell day="Tue" date={11} />
+              <WeekdayCell day="Wed" date={12} isHighlighted />
+              <WeekdayCell day="Thu" date={13} />
+              <WeekdayCell day="Fri" date={14} />
+              <WeekdayCell day="Sat" date={15} />
+              <WeekdayCell day="Sun" date={16} />
             </div>
           </div>
           <div className="flex flex-auto">
             <div className="sticky left-0 z-10 w-14 flex-none  ring-1 ring-gray-700" />
+
             <div className="grid flex-auto grid-cols-1 grid-rows-1">
               {/* Horizontal lines */}
               <div
@@ -324,150 +258,7 @@ export default function GymWeekCalendar({
                 style={{ gridTemplateRows: "repeat(48, minmax(3.5rem, 1fr))" }}
               >
                 <div ref={containerOffset} className="row-end-1 h-7"></div>
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    12AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    1AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    2AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    3AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    4AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    5AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    6AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    7AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    8AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    9AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    10AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    11AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    12PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    1PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    2PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    3PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    4PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    5PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    6PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    7PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    8PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    9PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    10PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    11PM
-                  </div>
-                </div>
-                <div />
+                {generateHourLabels()}
               </div>
 
               {/* Vertical lines */}
@@ -489,54 +280,38 @@ export default function GymWeekCalendar({
                   gridTemplateRows: "1.75rem repeat(288, minmax(0, 1fr)) auto",
                 }}
               >
-                <li
-                  className="relative mt-px flex sm:col-start-3"
-                  style={{ gridRow: "74 / span 12" }}
-                >
-                  <a
-                    href="#"
-                    className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-blue-950 p-2 text-xs/5 hover:bg-blue-100"
-                  >
-                    <p className="order-1 font-semibold text-blue-400">
-                      Breakfast
-                    </p>
-                    <p className="text-blue-100 group-hover:text-blue-700">
-                      <time dateTime="2022-01-12T06:00">6:00 AM</time>
-                    </p>
-                  </a>
-                </li>
-                <li
-                  className="relative mt-px flex sm:col-start-3"
-                  style={{ gridRow: "92 / span 30" }}
-                >
-                  <a
-                    href="#"
-                    className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-pink-950 p-2 text-xs/5 hover:bg-pink-100"
-                  >
-                    <p className="order-1 font-semibold text-pink-400">
-                      Flight to Paris
-                    </p>
-                    <p className="text-pink-100 group-hover:text-pink-300">
-                      <time dateTime="2022-01-12T07:30">7:30 AM</time>
-                    </p>
-                  </a>
-                </li>
-                <li
-                  className="relative mt-px hidden sm:col-start-6 sm:flex"
-                  style={{ gridRow: "122 / span 24" }}
-                >
-                  <a
-                    href="#"
-                    className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-gray-800 p-2 text-xs/5 hover:bg-gray-200"
-                  >
-                    <p className="order-1 font-semibold text-gray-400">
-                      Meeting with design team at Disney
-                    </p>
-                    <p className="text-gray-100 group-hover:text-gray-300">
-                      <time dateTime="2022-01-15T10:00">10:00 AM</time>
-                    </p>
-                  </a>
-                </li>
+                {events.map((event, index) => {
+                  const color = event.color || getRandomColor(); // Use predefined color or random color
+                  const startRow = timeToGridRow(event.startTime);
+                  const durationRows = event.duration / 5; // Convert duration to grid rows
+                  const gridRow = `${startRow} / span ${durationRows}`;
+
+                  return (
+                    <li
+                      key={index}
+                      className={`relative mt-px flex sm:col-start-${event.colStart}`}
+                      style={{ gridRow }}
+                    >
+                      <a
+                        href="#"
+                        className={`group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-${color}-950 p-2 text-xs/5 hover:bg-${color}-100`}
+                      >
+                        <p
+                          className={`order-1 font-semibold text-${color}-400`}
+                        >
+                          {event.title}
+                        </p>
+                        <p
+                          className={`text-${color}-100 group-hover:text-${color}-300`}
+                        >
+                          <time dateTime={`2022-01-12T${event.startTime}`}>
+                            {event.startTime}
+                          </time>
+                        </p>
+                      </a>
+                    </li>
+                  );
+                })}
               </ol>
             </div>
           </div>

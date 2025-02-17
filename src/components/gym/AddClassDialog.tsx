@@ -99,6 +99,8 @@ export function AddClassDialog({
         value={classData.time}
         onChange={handleChange}
         maxLength={5}
+        min="08:00"
+        max="20:00"
         className={cn(
           " mt-2 w-24 text-center  ",
          
