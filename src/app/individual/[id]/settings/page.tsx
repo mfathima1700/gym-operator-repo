@@ -22,9 +22,9 @@ import { useDispatch, useSelector } from "react-redux";
   const [gymName, setGymName] = useState("")
   
   const [userData, setUserData] = useState(() => ({
-      firstName: "",
-      lastName: "",
+    name: "",
       //dob: new Date(),
+      email: "",
       phoneNumber: "",
       country:"",
       image:"",
@@ -49,8 +49,8 @@ import { useDispatch, useSelector } from "react-redux";
       useEffect(() => {
         if (userState.user) {
           setUserData({
-            firstName: userState.user.firstName || "",
-            lastName: userState.user.lastName || "",
+            name: userState.user.name || "",
+            email: userState.user.email || "",
             phoneNumber: userState.user.phoneNumber || "",
             country: userState.user.country || "",
             image: userState.user.image || "",
@@ -58,8 +58,10 @@ import { useDispatch, useSelector } from "react-redux";
             pushNotifications: userState.user.pushNotifications || "everything",
           });
 
-          setGymName(userState.user.gym.name)
-
+          if(userState.user?.gym){
+            setGymName(userState.user.gym.name)
+          }
+         
           console.log("individual/id/settings")
           console.log(userState.user);
         }
@@ -67,6 +69,7 @@ import { useDispatch, useSelector } from "react-redux";
   
     function onSaveClick(e: React.MouseEvent) {
       e.preventDefault();
+      console.log(userData);
       dispatch(updateUserSettings(userData, id));
     }
   
@@ -76,17 +79,10 @@ import { useDispatch, useSelector } from "react-redux";
         [field]:value,
       }));
     }
-
-    function handleRadioChange(e: React.ChangeEvent<HTMLInputElement>) {
-      setUserData((prev) => ({
-        ...prev,
-        pushNotifications: e.target.value, // Updates pushNotifications with selected value
-      }));
-    }
     
    return (
      <>
-       <CNLayout>
+       <CNLayout  user={userData} id={id}>
          <div >
           <IndividualForm handleChange={handleChange} userData={userData} onSaveClick={onSaveClick} gymName={gymName}/>
            

@@ -188,8 +188,7 @@ export async function updateUser(data: createUserData, id: string) {
 }
 
 interface userSettingsData {
-  firstName: string;
-  lastName: string;
+  name: string;
  // dob: Date;
   phoneNumber?: string;
   country?: string;
@@ -212,7 +211,7 @@ export async function updateUserSettings(data: userSettingsData, id: string) {
     const updatedUser = await db.user.update({
       where: { id },
       data: {
-        name: `${data.firstName} ${data.lastName}`,
+        name: data.name,
         //dateOfBirth: data.dob,
         phoneNumber: data.phoneNumber,
         country: data.country,
@@ -283,8 +282,8 @@ export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSe
         //dateOfBirth: data.dob,
          phoneNumber: data.phoneNumber,
          image: data.image,
-         //emailNotifications: data.emailNotifications,
-         //pushNotifications: data.pushNotifications,
+         emailNotifications: data.emailNotifications,
+         pushNotifications: data.pushNotifications,
          updatedAt: new Date(),
       },
     });
