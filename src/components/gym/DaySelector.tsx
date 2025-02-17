@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { CheckIcon } from '@heroicons/react/20/solid' 
 import { Button } from '../ui/button'
+import { cn } from '@/lib/utils'
 
 const days = [
   { name: 'Mon', value: 'monday' },
@@ -33,13 +34,13 @@ export default function DaySelector({ selectedDays, toggleDay } : { selectedDays
           <Button
             key={day.value}
             onClick={() => toggleDay(day.value)}
-            variant={selectedDays.includes(day.value) ? undefined : 'outline'}
-            className={`relative flex h-10 w-10 items-center justify-center rounded-full ${
-              selectedDays.includes(day.value) ? 'text-black ' : ''
-            } transition`}
+            variant={selectedDays.includes(day.value) ? "default" : 'outline'}
+            className={cn(`relative flex h-10 w-10 items-center justify-center rounded-full ${
+              selectedDays.includes(day.value) ? " text-black-foreground text-black" : ""
+            } transition`)}
           >
             
-            {!selectedDays.includes(day.value) && (
+            { (
               <span className="absolute text-sm font-medium">{day.name}</span>
             )}
           </Button>
