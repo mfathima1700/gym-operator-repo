@@ -11,57 +11,17 @@ import { AddClassDialog } from "./AddClassDialog";
 import { Drawer, DrawerTrigger } from "../ui/drawer";
 import { AddClassDrawer } from "./AddClassDrawer";
 
-interface WeekdayButtonProps {
-  day: string;
-  date: number;
-  isHighlighted?: boolean;
-}
+const weekdays = [
+  { day: "M", date: 10, name: "Mon" },
+  { day: "T", date: 11, name: "Tue" },
+  { day: "W", date: 12, name: "Wed", isHighlighted: true },
+  { day: "T", date: 13, name: "Thu" },
+  { day: "F", date: 14, name: "Fri" },
+  { day: "S", date: 15, name: "Sat" },
+  { day: "S", date: 16, name: "Sun" },
+];
 
-const WeekdayButton = ({
-  day,
-  date,
-  isHighlighted = false,
-}: WeekdayButtonProps) => (
-  <button type="button" className="flex flex-col items-center pt-2 pb-3">
-    {day}{" "}
-    <span
-      className={`mt-1 flex size-8 items-center justify-center font-semibold ${
-        isHighlighted
-          ? "rounded-full bg-indigo-600 text-gray-200"
-          : "text-gray-900"
-      }`}
-    >
-      {date}
-    </span>
-  </button>
-);
 
-interface WeekdayCellProps {
-  day: string;
-  date: number;
-  isHighlighted?: boolean;
-}
-
-const WeekdayCell = ({
-  day,
-  date,
-  isHighlighted = false,
-}: WeekdayCellProps) => (
-  <div className="flex items-center justify-center py-3">
-    <span className={isHighlighted ? "flex items-baseline" : ""}>
-      {day}{" "}
-      <span
-        className={`items-center justify-center font-semibold ${
-          isHighlighted
-            ? "ml-1.5 flex size-8 rounded-full bg-lime-600 text-gray-200"
-            : "text-gray-400"
-        }`}
-      >
-        {date}
-      </span>
-    </span>
-  </div>
-);
 
 const events = [
   {
@@ -228,24 +188,40 @@ export default function GymWeekCalendar({
             className="sticky top-0 z-30 flex-none  ring-1 shadow-sm ring-black/5 sm:pr-8"
           >
             <div className="grid grid-cols-7 text-sm/6 text-gray-500 sm:hidden">
-              <WeekdayButton day="M" date={10} />
-              <WeekdayButton day="T" date={11} />
-              <WeekdayButton day="W" date={12} isHighlighted />
-              <WeekdayButton day="T" date={13} />
-              <WeekdayButton day="F" date={14} />
-              <WeekdayButton day="S" date={15} />
-              <WeekdayButton day="S" date={16} />
+            {weekdays.map(({ day, date,name,  isHighlighted }) => (
+      <button key={date} type="button" className="flex flex-col items-center pt-2 pb-3">
+        {name}{" "}
+        <span
+          className={`mt-1 flex size-8 items-center justify-center font-semibold ${
+            isHighlighted
+              ? "rounded-full bg-indigo-600 text-gray-200"
+              : "text-gray-900"
+          }`}
+        >
+          {date}
+        </span>
+      </button>
+    ))}
             </div>
 
             <div className="-mr-px hidden grid-cols-7 divide-x divide-gray-700 border-r border-b border-gray-700 text-sm/6 text-gray-200 sm:grid">
               <div className="col-end-1 w-14" />
-              <WeekdayCell day="Mon" date={10} />
-              <WeekdayCell day="Tue" date={11} />
-              <WeekdayCell day="Wed" date={12} isHighlighted />
-              <WeekdayCell day="Thu" date={13} />
-              <WeekdayCell day="Fri" date={14} />
-              <WeekdayCell day="Sat" date={15} />
-              <WeekdayCell day="Sun" date={16} />
+              {weekdays.map(({ day, date,name,  isHighlighted }) => (
+      <div key={date} className="flex items-center justify-center py-3">
+        <span className={isHighlighted ? "flex items-baseline" : ""}>
+          {name}{" "}
+          <span
+            className={`items-center justify-center font-semibold ${
+              isHighlighted
+                ? "ml-1.5 flex size-8 rounded-full bg-lime-600 text-gray-200"
+                : "text-gray-400"
+            }`}
+          >
+            {date}
+          </span>
+        </span>
+      </div>
+    ))}
             </div>
           </div>
           <div className="flex flex-auto">
