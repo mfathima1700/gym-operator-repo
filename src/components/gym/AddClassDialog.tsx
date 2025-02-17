@@ -23,6 +23,7 @@ import DaySelector from "./DaySelector";
 import { StartDateControl } from "./StartDateControl";
 import { EndDateControl } from "./EndDateConrol";
 import { format, parse } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export function AddClassDialog({
   classData,
@@ -89,33 +90,26 @@ export function AddClassDialog({
             Write a few sentences about this class.
           </p>
         </div>
+
         <div className="sm:col-span-3">
           <Label htmlFor="time">Time</Label>
-          <Select
-            value={classData.startTime} // No need for format() since it's a string
-            onValueChange={(value) => {
-              handleChange("startTime", value); // Directly store as string "HH:mm"
-            }}
-          >
-            <SelectTrigger className="mt-2">
-              <SelectValue placeholder="Select class start time" />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from({ length: 15 }, (_, index) => {
-                const hour = 8 + index;
-                const formattedTime = format(
-                  new Date(2023, 0, 1, hour, 0),
-                  "h:mm a"
-                ); // Format display value
-                const valueTime = `${hour.toString().padStart(2, "0")}:00`; // Store in "HH:mm" format
-                return (
-                  <SelectItem key={valueTime} value={valueTime}>
-                    {formattedTime}
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
+          <Input
+        type="time"
+        placeholder="HH:MM"
+        value={classData.time}
+        onChange={handleChange}
+        maxLength={5}
+        className={cn(
+          " mt-2 w-24 text-center  ",
+         
+        )}
+      />
+
+{/* className={cn(
+          "w-24 text-center tracking-widest text-lg font-semibold ",
+          !isValid ? "border-red-500 focus:ring-red-500" : ""
+        )} */}
+
         </div>
         
         <div className="sm:col-span-3">
