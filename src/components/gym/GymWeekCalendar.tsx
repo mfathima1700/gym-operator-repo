@@ -122,27 +122,43 @@ export default function GymWeekCalendar({
   };
 
   const getRandomColor = () => {
-    const colors = ["blue", "pink", "green", "indigo", "purple", "teal", "orange", "red", "amber", "emerald",
-       "lime", "cyan", "sky", "rose", "violet", "fuchsia"];
-    return colors[Math.floor(Math.random() * colors.length)];
+    const colors = [
+      "blue",
+      "pink",
+      "green",
+      "indigo",
+      "purple",
+      "teal",
+      "orange",
+      "red",
+      "amber",
+      "emerald",
+      "lime",
+      "cyan",
+      "sky",
+      "rose",
+      "violet",
+      "fuchsia",
+    ];
+    const resultColour =  colors[Math.floor(Math.random() * colors.length)] || "lime";
+    console.log("colour " + resultColour);
+    return resultColour;
   };
 
   const timeToGridRow = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
-    return (hours - 6)  + Math.floor(minutes / 60) + 1; // Start from 6 AM
+    return hours - 6 + Math.floor(minutes / 60) + 1; // Start from 6 AM
   };
-  
 
   // get day, month, year, and month name
-  const today = new Date(); 
-  const todayDay = today.getDay(); 
+  const today = new Date();
+  const todayDay = today.getDay();
 
   function getMonthName(year: number, month: number) {
-    const name = new Date(year, month).toLocaleString(
-      "default",
-      { month: "long" }
-    ); 
-    return name
+    const name = new Date(year, month).toLocaleString("default", {
+      month: "long",
+    });
+    return name;
   }
 
   // set start of  week
@@ -152,15 +168,15 @@ export default function GymWeekCalendar({
 
   const [startOfWeek, setStartOfWeek] = useState<Date>(() => startOfWeekFirst);
 
-  const [weekdays, setWeekdays] = useState<{ day: string; date: number; name: string; isHighlighted?: boolean }[]>
-  (() => updateWeekdays(startOfWeekFirst));
-
+  const [weekdays, setWeekdays] = useState<
+    { day: string; date: number; name: string; isHighlighted?: boolean }[]
+  >(() => updateWeekdays(startOfWeekFirst));
 
   function updateWeekdays(newStartOfWeek: Date) {
     const weekdays = daysOfWeek.map((day, index) => {
       const date = new Date(newStartOfWeek);
       date.setDate(newStartOfWeek.getDate() + index); // Add the day offset to get the correct date
-  
+
       return {
         ...day,
         date: date.getDate(),
@@ -193,27 +209,35 @@ export default function GymWeekCalendar({
     const minutes = date.getMinutes().toString().padStart(2, "0");
     return `${hours}:${minutes}`;
   }
-  
 
   const dayToColumn = (day: string): number => {
-    const days = [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday","sunday"];
+    const days = [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+    ];
     const index = days.indexOf(day.toLowerCase()); // Ensure case insensitivity
     return index === -1 ? 1 : index + 1; // Default to 1 if invalid day
   };
-
 
   return (
     <div className="flex h-full flex-col ">
       <header className="flex flex-none items-center justify-between border-b border-gray-700 px-6 py-4">
         <h1 className="text-base font-semibold text-gray-200">
-          <time dateTime={`${startOfWeek.getFullYear()}-${new Date().getMonth() + 1}`}>
+          <time
+            dateTime={`${startOfWeek.getFullYear()}-${new Date().getMonth() + 1}`}
+          >
             {`${getMonthName(startOfWeek.getFullYear(), startOfWeek.getMonth())} ${startOfWeek.getFullYear()}`}
           </time>
         </h1>
         <div className="flex items-center">
           <div className="relative flex items-center rounded-md shadow-xs md:items-stretch">
-            <Button variant="outline" size="icon" onClick={handlePreviousWeek} >
-              <ChevronLeft  />
+            <Button variant="outline" size="icon" onClick={handlePreviousWeek}>
+              <ChevronLeft />
             </Button>
 
             <div className="md:block px-3.5  py-1 hidden focus:relative">
@@ -222,7 +246,7 @@ export default function GymWeekCalendar({
 
             <span className="relative -mx-px h-5 w-px bg-gray-300 md:hidden" />
             <Button variant="outline" size="icon" onClick={handleNextWeek}>
-              <ChevronRight  />
+              <ChevronRight />
             </Button>
           </div>
           <div className="hidden md:ml-4 md:flex md:items-center">
@@ -289,7 +313,7 @@ export default function GymWeekCalendar({
           className="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full "
         >
           <div
-            ref={containerNav} 
+            ref={containerNav}
             className="sticky top-0 z-30 flex-none  ring-1 shadow-sm ring-black/5 sm:pr-8"
           >
             <div className="grid grid-cols-7 text-sm/6 text-gray-900 sm:hidden">
@@ -341,13 +365,13 @@ export default function GymWeekCalendar({
 
             <div className="grid flex-auto grid-cols-1 grid-rows-1 ">
               {/* Horizontal lines */}
-               <div
+              <div
                 className="col-start-1 col-end-2 row-start-1 grid divide-y divide-gray-700"
                 style={{ gridTemplateRows: "repeat(17, minmax(3.5rem, 1fr))" }}
               >
                 <div ref={containerOffset} className="row-end-1 h-7"></div>
                 {generateHourLabels()}
-              </div> 
+              </div>
 
               {/* Vertical lines */}
               <div className="col-start-1 col-end-2 row-start-1 hidden grid-cols-7 grid-rows-1 divide-x divide-gray-700 sm:grid sm:grid-cols-7">
@@ -368,45 +392,50 @@ export default function GymWeekCalendar({
                   gridTemplateRows: "3.5rem repeat(17, minmax(0, 1fr)) auto",
                 }}
               >
-                {classes.map((classObject, index) => {
+                {classes.flatMap((classObject, index) => {
+                  // Ensure that we only process classObjects with valid days
                   if (!classObject.days || classObject.days.length === 0) {
-                    return null; // This will skip rendering this classObject
+                    return null; // Skip rendering this class if days array is empty or undefined
                   }
 
-                  classObject.days.forEach((day) => {
-                   
-                  });
+                  return classObject.days.map((day) => {
+                    const color = getRandomColor(); // Use predefined color or random color
+                    const startRow = timeToGridRow(
+                      formatTime(classObject.startDate)
+                    );
+                    const durationRows = Math.floor(classObject.duration / 60); // Convert duration to grid rows
+                    const gridRow = `${startRow} / span ${durationRows}`;
 
-                  const color = getRandomColor(); // Use predefined color or random color
-                  const startRow = timeToGridRow(formatTime(classObject.startDate));
-                  const durationRows = Math.floor(classObject.duration /60); // Convert duration to grid rows
-                  const gridRow = `${startRow} / span ${durationRows}`;
-
-                  return (
-                    <li
-                      key={index}
-                      className={`relative mt-px flex sm:col-start-${dayToColumn(classObject.days[0])}`}
-                      style={{ gridRow }}
-                    >
-                      <a
-                        href="#"
-                        className={`group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-${color}-950 p-2 text-xs/5 hover:bg-${color}-100`}
+                    return (
+                      <li
+                        key={`${index}-${day}`} // Ensure uniqueness across multiple days
+                        className={`relative mt-px flex 
+                          sm:col-start-${dayToColumn(day)} bg-${color}-950 hover:bg-${color}-100 rounded-lg `}
+                        style={{ gridRow}}
                       >
-                        <p
-                          className={`order-1 font-semibold text-${color}-400`}
+                        <a
+                          href="#"
+                          className={`group absolute inset-1 flex flex-col  
+                         p-2 text-xs/5` }
                         >
-                          {classObject.name}
-                        </p>
-                        <p
-                          className={`text-${color}-100 group-hover:text-${color}-300`}
-                        >
-                          <time dateTime={`2022-01-12T${formatTime(classObject.startDate)}`}>
-                            {formatTime(classObject.startDate)}
-                          </time>
-                        </p>
-                      </a>
-                    </li>
-                  );
+                          <p
+                            className={`order-1 font-semibold text-${color}-400`}
+                          >
+                            {classObject.name}
+                          </p>
+                          <p
+                            className={`text-${color}-100 group-hover:text-${color}-300`}
+                          >
+                            <time
+                              dateTime={classObject.startDate.toISOString()}
+                            >
+                              {formatTime(classObject.startDate)}
+                            </time>
+                          </p>
+                        </a>
+                      </li>
+                    );
+                  });
                 })}
               </ol>
             </div>
