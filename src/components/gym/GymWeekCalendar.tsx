@@ -11,10 +11,6 @@ import { AddClassDialog } from "./AddClassDialog";
 import { Drawer, DrawerTrigger } from "../ui/drawer";
 import { AddClassDrawer } from "./AddClassDrawer";
 
-
-
-
-
 const events = [
   {
     title: "Breakfast",
@@ -40,13 +36,13 @@ const events = [
 ];
 
 const daysOfWeek = [
-  { day: 'M', name: 'Mon' },
-  { day: 'T', name: 'Tue' },
-  { day: 'W', name: 'Wed' },
-  { day: 'T', name: 'Thu' },
-  { day: 'F', name: 'Fri' },
-  { day: 'S', name: 'Sat' },
-  { day: 'S', name: 'Sun' },
+  { day: "M", name: "Mon" },
+  { day: "T", name: "Tue" },
+  { day: "W", name: "Wed" },
+  { day: "T", name: "Thu" },
+  { day: "F", name: "Fri" },
+  { day: "S", name: "Sat" },
+  { day: "S", name: "Sun" },
 ];
 
 export default function GymWeekCalendar({
@@ -79,8 +75,6 @@ export default function GymWeekCalendar({
     }
   }, []);
 
-  
-
   const generateHourLabels = () => {
     const hours = Array.from({ length: 17 }, (_, i) => i + 6); // Generates an array [6, 7, ..., 22] (6 AM to 10 PM)
     return hours.map((hour) => (
@@ -103,47 +97,72 @@ export default function GymWeekCalendar({
     return (hours - 6) * 12 + minutes / 5 + 1; // Start from 6 AM
   };
 
-  
-
-  const today = new Date(); // Get the current date
-  const todayDay = today.getDay(); // Get current day (0-Sunday, 1-Monday, etc.)
-  const currentDate = today.getDate(); // Get today's date (day of the month)
-  const currentMonth = today.getMonth(); // Get current month (0-January, 1-February, etc.)
+  // get day, month, year, and month name
+  const today = new Date(); 
+  const todayDay = today.getDay(); 
+  const currentDate = today.getDate(); 
+  const currentMonth = today.getMonth(); 
   const currentYear = today.getFullYear();
-  const currentMonthName=  new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' }) // Current month name
+  const currentMonthName = new Date(currentYear, currentMonth).toLocaleString(
+    "default",
+    { month: "long" }
+  ); 
+
+  // set start of  week
   const diffToMonday = todayDay === 0 ? -6 : 1 - todayDay;
-  const startOfWeek = new Date(today);
-  startOfWeek.setDate(today.getDate() + diffToMonday); 
+  const startOfWeekFirst = new Date(today);
+  startOfWeekFirst.setDate(today.getDate() + diffToMonday);
 
-//   const [weekdays, setWeekdays] = useState<
-//   { day: string; date: number; name: string; isHighlighted?: boolean }[]
-// >([]);
+  const [startOfWeek, setStartOfWeek] = useState<Date>(() => startOfWeekFirst);
+
+  const [weekdays, setWeekdays] = useState<{ day: string; date: number; name: string; isHighlighted?: boolean }[]>
+  (() => updateWeekdays(startOfWeekFirst));
 
 
+  function updateWeekdays(newStartOfWeek: Date) {
+    const weekdays = daysOfWeek.map((day, index) => {
+      const date = new Date(newStartOfWeek);
+      date.setDate(newStartOfWeek.getDate() + index); // Add the day offset to get the correct date
+  
+      return {
+        ...day,
+        date: date.getDate(),
+        isHighlighted: date.toDateString() === today.toDateString(),
+      };
+    });
 
-  const weekdays = daysOfWeek.map((day, index) => {
-    const date = new Date(startOfWeek);
-    date.setDate(startOfWeek.getDate() + index); // Add the day offset to get the correct date
+    return weekdays;
+  }
 
-    return {
-      ...day,
-      date: date.getDate(),
-      isHighlighted: date.toDateString() === today.toDateString(),
-    };
-  });
+  const handlePreviousWeek = (e: React.MouseEvent) => {
+    // Move 7 days back to get the previous week
+    const newStartOfWeek = new Date(startOfWeek);
+    newStartOfWeek.setDate(startOfWeek.getDate() - 7);
+    setStartOfWeek(newStartOfWeek);
+    setWeekdays(updateWeekdays(newStartOfWeek));
+  };
+
+  // Function to go to the next week
+  const handleNextWeek = (e: React.MouseEvent) => {
+    const newStartOfWeek = new Date(startOfWeek);
+    newStartOfWeek.setDate(startOfWeek.getDate() + 7); // Move 7 days forward to get the next week
+    setStartOfWeek(newStartOfWeek);
+    setWeekdays(updateWeekdays(newStartOfWeek));
+  };
+
 
   return (
     <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-700 px-6 py-4">
         <h1 className="text-base font-semibold text-gray-200">
-          <time dateTime={`${currentYear}-${new Date().getMonth() + 1}`} >
-          {`${currentMonthName} ${currentYear}`}
-            </time>
+          <time dateTime={`${currentYear}-${new Date().getMonth() + 1}`}>
+            {`${currentMonthName} ${currentYear}`}
+          </time>
         </h1>
         <div className="flex items-center">
           <div className="relative flex items-center rounded-md shadow-xs md:items-stretch">
-            <Button variant="outline" size="icon">
-              <ChevronLeft />
+            <Button variant="outline" size="icon" onClick={handlePreviousWeek} >
+              <ChevronLeft  />
             </Button>
 
             <div className="md:block px-3.5  py-1 hidden focus:relative">
@@ -151,8 +170,8 @@ export default function GymWeekCalendar({
             </div>
 
             <span className="relative -mx-px h-5 w-px bg-gray-300 md:hidden" />
-            <Button variant="outline" size="icon">
-              <ChevronRight />
+            <Button variant="outline" size="icon" onClick={handleNextWeek}>
+              <ChevronRight  />
             </Button>
           </div>
           <div className="hidden md:ml-4 md:flex md:items-center">
@@ -222,41 +241,48 @@ export default function GymWeekCalendar({
             ref={containerNav}
             className="sticky top-0 z-30 flex-none  ring-1 shadow-sm ring-black/5 sm:pr-8"
           >
-            <div className="grid grid-cols-7 text-sm/6 text-gray-500 sm:hidden">
-            {weekdays.map(({ day, date,name,  isHighlighted }) => (
-      <button key={date} type="button" className="flex flex-col items-center pt-2 pb-3">
-        {name}{" "}
-        <span
-          className={`mt-1 flex size-8 items-center justify-center font-semibold ${
-            isHighlighted
-              ? "rounded-full bg-indigo-600 text-gray-200"
-              : "text-gray-900"
-          }`}
-        >
-          {date}
-        </span>
-      </button>
-    ))}
+            <div className="grid grid-cols-7 text-sm/6 text-gray-900 sm:hidden">
+              {weekdays.map(({ day, date, name, isHighlighted }) => (
+                <button
+                  key={date}
+                  type="button"
+                  className="flex flex-col items-center pt-2 pb-3"
+                >
+                  {name}{" "}
+                  <span
+                    className={`mt-1 flex size-8 items-center justify-center font-semibold ${
+                      isHighlighted
+                        ? "rounded-full bg-lime-600 text-gray-200"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {date}
+                  </span>
+                </button>
+              ))}
             </div>
 
-            <div className="-mr-px hidden grid-cols-7 divide-x divide-gray-700 border-r border-b border-gray-700 text-sm/6 text-gray-200 sm:grid">
+            <div className="-mr-px hidden grid-cols-7 divide-x divide-gray-700 border-r border-b border-gray-700 text-sm/6 text-gray-400 sm:grid">
               <div className="col-end-1 w-14" />
-              {weekdays.map(({ day, date,name,  isHighlighted }) => (
-      <div key={date} className="flex items-center justify-center py-3">
-        <span className={isHighlighted ? "flex items-baseline" : ""}>
-          {name}{" "}
-          <span
-            className={`items-center justify-center font-semibold ${
-              isHighlighted
-                ? "ml-1.5 flex size-8 rounded-full bg-lime-600 text-gray-200"
-                : "text-gray-400"
-            }`}
-          >
-            {date}
-          </span>
-        </span>
-      </div>
-    ))}
+              {weekdays.map(({ day, date, name, isHighlighted }) => (
+                <div
+                  key={date}
+                  className="flex items-center justify-center py-3"
+                >
+                  <span className={isHighlighted ? "flex items-baseline" : ""}>
+                    {name}{" "}
+                    <span
+                      className={`items-center justify-center font-semibold ${
+                        isHighlighted
+                          ? "ml-1.5 flex size-8 rounded-full bg-lime-600 text-gray-200"
+                          : "text-gray-200"
+                      }`}
+                    >
+                      {date}
+                    </span>
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
           <div className="flex flex-auto">
