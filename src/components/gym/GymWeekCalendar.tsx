@@ -100,13 +100,14 @@ export default function GymWeekCalendar({
   // get day, month, year, and month name
   const today = new Date(); 
   const todayDay = today.getDay(); 
-  const currentDate = today.getDate(); 
-  const currentMonth = today.getMonth(); 
-  const currentYear = today.getFullYear();
-  const currentMonthName = new Date(currentYear, currentMonth).toLocaleString(
-    "default",
-    { month: "long" }
-  ); 
+
+  function getMonthName(year: number, month: number) {
+    const name = new Date(year, month).toLocaleString(
+      "default",
+      { month: "long" }
+    ); 
+    return name
+  }
 
   // set start of  week
   const diffToMonday = todayDay === 0 ? -6 : 1 - todayDay;
@@ -155,8 +156,8 @@ export default function GymWeekCalendar({
     <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-700 px-6 py-4">
         <h1 className="text-base font-semibold text-gray-200">
-          <time dateTime={`${currentYear}-${new Date().getMonth() + 1}`}>
-            {`${currentMonthName} ${currentYear}`}
+          <time dateTime={`${startOfWeek.getFullYear()}-${new Date().getMonth() + 1}`}>
+            {`${getMonthName(startOfWeek.getFullYear(), startOfWeek.getMonth())} ${startOfWeek.getFullYear()}`}
           </time>
         </h1>
         <div className="flex items-center">
