@@ -16,22 +16,36 @@ const events = [
     title: "Breakfast",
     startTime: "06:00",
     duration: 60, // Duration in minutes
-    colStart: 3,
+    colStart: 1,
     color: "blue",
   },
   {
     title: "Flight to Paris",
-    startTime: "12:30",
+    startTime: "09:30",
     duration: 90, // Duration in minutes
     colStart: 3,
     color: "pink",
   },
   {
-    title: "Meeting with design team at Disney",
-    startTime: "10:00",
-    duration: 120, // Duration in minutes
+    title: "Team Meeting",
+    startTime: "08:00",
+    duration: 45, // Duration in minutes
     colStart: 6,
     color: "purple",
+  },
+  {
+    title: "Visit Louvre",
+    startTime: "07:00",
+    duration: 30, // Duration in minutes
+    colStart: 5,
+    color: "sky",
+  },
+  {
+    title: "Gym",
+    startTime: "10:00",
+    duration: 60, // Duration in minutes
+    colStart: 4,
+    color: "rose",
   },
 ];
 
@@ -45,18 +59,38 @@ const daysOfWeek = [
   { day: "S", name: "Sun" },
 ];
 
+type ClassType = {
+  id: string;
+  name: string;
+  description?: string;
+  gymId: string;
+  capacity?: number;
+  intensity?: "LOW" | "MODERATE" | "INTENSE" | "EXTREME"; // Adjust based on IntensityRating enum
+  skillLevel?: "BEGINNER" | "INTERMEDIATE" | "ADVANCED"; // Adjust based on SkillLevel enum
+  instructorId?: string;
+  recurrence?: "ONCE" | "WEEKLY" | "BIWEEKLY"; // Adjust based on Occurrence enum
+  duration: number; // In minutes
+  days: string[]; // ["Monday", "Wednesday", ...]
+  room?: string;
+  startDate: Date;
+  endDate?: Date;
+  time: string; // e.g., "10:00"
+};
+
 export default function GymWeekCalendar({
   classData,
   handleChange,
   onSaveClick,
   toggleDay,
   triggerRef,
+  classes,
 }: {
   classData: any;
   handleChange: any;
   onSaveClick: any;
   toggleDay: any;
   triggerRef: any;
+  classes: ClassType[];
 }) {
   const container = useRef<HTMLDivElement | null>(null);
   const containerNav = useRef<HTMLDivElement | null>(null);
@@ -65,7 +99,7 @@ export default function GymWeekCalendar({
   useEffect(() => {
     if (container.current && containerNav.current && containerOffset.current) {
       // Set the container scroll position based on the current time.
-      const currentMinute = new Date().getHours() * 60;
+      const currentMinute = new Date().getHours() * 2;
       container.current.scrollTop =
         ((container.current.scrollHeight -
           containerNav.current.offsetHeight -
@@ -88,14 +122,16 @@ export default function GymWeekCalendar({
   };
 
   const getRandomColor = () => {
-    const colors = ["blue", "pink", "gray", "indigo", "purple", "teal"];
+    const colors = ["blue", "pink", "green", "indigo", "purple", "teal", "orange", "red", "amber", "emerald",
+       "lime", "cyan", "sky", "rose", "violet", "fuchsia"];
     return colors[Math.floor(Math.random() * colors.length)];
   };
 
   const timeToGridRow = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
-    return (hours - 6) * 12 + minutes / 5 + 1; // Start from 6 AM
+    return (hours - 6) * 2 + Math.floor(minutes / 30) + 1; // Start from 6 AM
   };
+  
 
   // get day, month, year, and month name
   const today = new Date(); 
@@ -151,9 +187,23 @@ export default function GymWeekCalendar({
     setWeekdays(updateWeekdays(newStartOfWeek));
   };
 
+  function formatTime(dateTime: string | Date): string {
+    const date = dateTime instanceof Date ? dateTime : new Date(dateTime);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  }
+  
+
+  const dayToColumn = (day: string): number => {
+    const days = [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday","sunday"];
+    const index = days.indexOf(day.toLowerCase()); // Ensure case insensitivity
+    return index === -1 ? 1 : index + 1; // Default to 1 if invalid day
+  };
+
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col ">
       <header className="flex flex-none items-center justify-between border-b border-gray-700 px-6 py-4">
         <h1 className="text-base font-semibold text-gray-200">
           <time dateTime={`${startOfWeek.getFullYear()}-${new Date().getMonth() + 1}`}>
@@ -232,14 +282,14 @@ export default function GymWeekCalendar({
       </header>
       <div
         ref={container}
-        className="isolate flex flex-auto flex-col overflow-auto "
+        className="isolate flex flex-auto flex-col overflow-auto  "
       >
         <div
           style={{ width: "165%" }}
-          className="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full"
+          className="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full "
         >
           <div
-            ref={containerNav}
+            ref={containerNav} 
             className="sticky top-0 z-30 flex-none  ring-1 shadow-sm ring-black/5 sm:pr-8"
           >
             <div className="grid grid-cols-7 text-sm/6 text-gray-900 sm:hidden">
@@ -286,14 +336,14 @@ export default function GymWeekCalendar({
               ))}
             </div>
           </div>
-          <div className="flex flex-auto">
+          <div className="flex flex-auto ">
             <div className="sticky left-0 z-10 w-14 flex-none  ring-1 ring-gray-700" />
 
-            <div className="grid flex-auto grid-cols-1 grid-rows-1">
+            <div className="grid flex-auto grid-cols-1 grid-rows-1 ">
               {/* Horizontal lines */}
               <div
                 className="col-start-1 col-end-2 row-start-1 grid divide-y divide-gray-700"
-                style={{ gridTemplateRows: "repeat(48, minmax(3.5rem, 1fr))" }}
+                style={{ gridTemplateRows: "repeat(32, minmax(3.5rem, 1fr))" }}
               >
                 <div ref={containerOffset} className="row-end-1 h-7"></div>
                 {generateHourLabels()}
@@ -313,21 +363,25 @@ export default function GymWeekCalendar({
 
               {/* Events */}
               <ol
-                className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
+                className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8 "
                 style={{
-                  gridTemplateRows: "1.75rem repeat(288, minmax(0, 1fr)) auto",
+                  gridTemplateRows: "1.75rem repeat(32, minmax(0, 1fr)) auto",
                 }}
               >
-                {events.map((event, index) => {
-                  const color = event.color || getRandomColor(); // Use predefined color or random color
-                  const startRow = timeToGridRow(event.startTime);
-                  const durationRows = event.duration / 5; // Convert duration to grid rows
+                {classes.map((classObject, index) => {
+                  if (!classObject.days || classObject.days.length === 0) {
+                    return null; // This will skip rendering this classObject
+                  }
+                  
+                  const color = getRandomColor(); // Use predefined color or random color
+                  const startRow = timeToGridRow(formatTime(classObject.startDate));
+                  const durationRows = Math.floor(classObject.duration /30); // Convert duration to grid rows
                   const gridRow = `${startRow} / span ${durationRows}`;
 
                   return (
                     <li
                       key={index}
-                      className={`relative mt-px flex sm:col-start-${event.colStart}`}
+                      className={`relative mt-px flex sm:col-start-${dayToColumn(classObject.days[0])}`}
                       style={{ gridRow }}
                     >
                       <a
@@ -337,13 +391,13 @@ export default function GymWeekCalendar({
                         <p
                           className={`order-1 font-semibold text-${color}-400`}
                         >
-                          {event.title}
+                          {classObject.name}
                         </p>
                         <p
                           className={`text-${color}-100 group-hover:text-${color}-300`}
                         >
-                          <time dateTime={`2022-01-12T${event.startTime}`}>
-                            {event.startTime}
+                          <time dateTime={`2022-01-12T${formatTime(classObject.startDate)}`}>
+                            {formatTime(classObject.startDate)}
                           </time>
                         </p>
                       </a>

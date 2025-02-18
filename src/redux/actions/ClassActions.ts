@@ -56,7 +56,8 @@ export async function createClass(data: classData, gymId: string) {
          
           days: data.days ?? [], // Ensure this is stored properly (e.g., array of weekdays)
           ...(data.room ? { room: data.room } : {}),
-          skillLevel: data.skillLevel as SkillLevel
+          skillLevel: data.skillLevel as SkillLevel,
+          time: data.startTime
         },
       });
 

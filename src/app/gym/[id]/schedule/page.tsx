@@ -28,6 +28,7 @@ export default function GymSchedule() {
   const [userData, setUserData] = useState(() => ({
     gym: {
       id: "",
+      classes:[],
     },
   }));
 
@@ -111,6 +112,7 @@ export default function GymSchedule() {
             onSaveClick={onSaveClick}
             toggleDay={toggleDay} 
             triggerRef={triggerRef}
+            classes={userData.gym.classes ?userData.gym.classes : []}
           />
         </div>
       </CNLayout>
