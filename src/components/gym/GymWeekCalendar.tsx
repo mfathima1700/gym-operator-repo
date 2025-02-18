@@ -341,13 +341,13 @@ export default function GymWeekCalendar({
 
             <div className="grid flex-auto grid-cols-1 grid-rows-1 ">
               {/* Horizontal lines */}
-              <div
+               <div
                 className="col-start-1 col-end-2 row-start-1 grid divide-y divide-gray-700"
-                style={{ gridTemplateRows: "repeat(32, minmax(3.5rem, 1fr))" }}
+                style={{ gridTemplateRows: "repeat(17, minmax(3.5rem, 1fr))" }}
               >
                 <div ref={containerOffset} className="row-end-1 h-7"></div>
                 {generateHourLabels()}
-              </div>
+              </div> 
 
               {/* Vertical lines */}
               <div className="col-start-1 col-end-2 row-start-1 hidden grid-cols-7 grid-rows-1 divide-x divide-gray-700 sm:grid sm:grid-cols-7">
@@ -365,14 +365,14 @@ export default function GymWeekCalendar({
               <ol
                 className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8 "
                 style={{
-                  gridTemplateRows: "1.75rem repeat(32, minmax(0, 1fr)) auto",
+                  gridTemplateRows: "3.5rem repeat(17, minmax(0, 1fr)) auto",
                 }}
               >
                 {classes.map((classObject, index) => {
                   if (!classObject.days || classObject.days.length === 0) {
                     return null; // This will skip rendering this classObject
                   }
-                  
+
                   const color = getRandomColor(); // Use predefined color or random color
                   const startRow = timeToGridRow(formatTime(classObject.startDate));
                   const durationRows = Math.floor(classObject.duration /30); // Convert duration to grid rows
