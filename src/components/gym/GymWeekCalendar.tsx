@@ -129,7 +129,7 @@ export default function GymWeekCalendar({
 
   const timeToGridRow = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
-    return (hours - 6) * 2 + Math.floor(minutes / 30) + 1; // Start from 6 AM
+    return (hours - 6)  + Math.floor(minutes / 60) + 1; // Start from 6 AM
   };
   
 
@@ -373,9 +373,13 @@ export default function GymWeekCalendar({
                     return null; // This will skip rendering this classObject
                   }
 
+                  classObject.days.forEach((day) => {
+                   
+                  });
+
                   const color = getRandomColor(); // Use predefined color or random color
                   const startRow = timeToGridRow(formatTime(classObject.startDate));
-                  const durationRows = Math.floor(classObject.duration /30); // Convert duration to grid rows
+                  const durationRows = Math.floor(classObject.duration /60); // Convert duration to grid rows
                   const gridRow = `${startRow} / span ${durationRows}`;
 
                   return (
