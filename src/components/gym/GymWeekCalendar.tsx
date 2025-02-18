@@ -11,15 +11,7 @@ import { AddClassDialog } from "./AddClassDialog";
 import { Drawer, DrawerTrigger } from "../ui/drawer";
 import { AddClassDrawer } from "./AddClassDrawer";
 
-const weekdays = [
-  { day: "M", date: 10, name: "Mon" },
-  { day: "T", date: 11, name: "Tue" },
-  { day: "W", date: 12, name: "Wed", isHighlighted: true },
-  { day: "T", date: 13, name: "Thu" },
-  { day: "F", date: 14, name: "Fri" },
-  { day: "S", date: 15, name: "Sat" },
-  { day: "S", date: 16, name: "Sun" },
-];
+
 
 
 
@@ -45,6 +37,16 @@ const events = [
     colStart: 6,
     color: "purple",
   },
+];
+
+const daysOfWeek = [
+  { day: 'M', name: 'Mon' },
+  { day: 'T', name: 'Tue' },
+  { day: 'W', name: 'Wed' },
+  { day: 'T', name: 'Thu' },
+  { day: 'F', name: 'Fri' },
+  { day: 'S', name: 'Sat' },
+  { day: 'S', name: 'Sun' },
 ];
 
 export default function GymWeekCalendar({
@@ -77,6 +79,8 @@ export default function GymWeekCalendar({
     }
   }, []);
 
+  
+
   const generateHourLabels = () => {
     const hours = Array.from({ length: 17 }, (_, i) => i + 6); // Generates an array [6, 7, ..., 22] (6 AM to 10 PM)
     return hours.map((hour) => (
@@ -99,11 +103,42 @@ export default function GymWeekCalendar({
     return (hours - 6) * 12 + minutes / 5 + 1; // Start from 6 AM
   };
 
+  
+
+  const today = new Date(); // Get the current date
+  const todayDay = today.getDay(); // Get current day (0-Sunday, 1-Monday, etc.)
+  const currentDate = today.getDate(); // Get today's date (day of the month)
+  const currentMonth = today.getMonth(); // Get current month (0-January, 1-February, etc.)
+  const currentYear = today.getFullYear();
+  const currentMonthName=  new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' }) // Current month name
+  const diffToMonday = todayDay === 0 ? -6 : 1 - todayDay;
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() + diffToMonday); 
+
+//   const [weekdays, setWeekdays] = useState<
+//   { day: string; date: number; name: string; isHighlighted?: boolean }[]
+// >([]);
+
+
+
+  const weekdays = daysOfWeek.map((day, index) => {
+    const date = new Date(startOfWeek);
+    date.setDate(startOfWeek.getDate() + index); // Add the day offset to get the correct date
+
+    return {
+      ...day,
+      date: date.getDate(),
+      isHighlighted: date.toDateString() === today.toDateString(),
+    };
+  });
+
   return (
     <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-700 px-6 py-4">
         <h1 className="text-base font-semibold text-gray-200">
-          <time dateTime="2022-01">January 2022</time>
+          <time dateTime={`${currentYear}-${new Date().getMonth() + 1}`} >
+          {`${currentMonthName} ${currentYear}`}
+            </time>
         </h1>
         <div className="flex items-center">
           <div className="relative flex items-center rounded-md shadow-xs md:items-stretch">
