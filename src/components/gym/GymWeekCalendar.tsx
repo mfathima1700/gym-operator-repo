@@ -7,9 +7,7 @@ import { ChevronRight, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { AddClassDialog } from "./AddClassDialog";
-import { Drawer, DrawerTrigger } from "../ui/drawer";
-import { AddClassDrawer } from "./AddClassDrawer";
+import { AddClassDialog } from "@/components/gym/AddClassDialog";
 
 const events = [
   {
@@ -73,8 +71,9 @@ type ClassType = {
   days: string[]; // ["Monday", "Wednesday", ...]
   room?: string;
   startDate: Date;
-  endDate?: Date;
+  endDate: Date;
   time: string; // e.g., "10:00"
+  colour: string;
 };
 
 export default function GymWeekCalendar({
@@ -121,30 +120,6 @@ export default function GymWeekCalendar({
     ));
   };
 
-  const getRandomColor = () => {
-    const colors = [
-      "blue",
-      "pink",
-      "green",
-      "indigo",
-      "purple",
-      "teal",
-      "orange",
-      "red",
-      "amber",
-      "emerald",
-      "lime",
-      "cyan",
-      "sky",
-      "rose",
-      "violet",
-      "fuchsia",
-    ];
-    const resultColour =  colors[Math.floor(Math.random() * colors.length)] || "lime";
-    console.log("colour " + resultColour);
-    return resultColour;
-  };
-
   const timeToGridRow = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours - 6 + Math.floor(minutes / 60) + 1; // Start from 6 AM
@@ -167,6 +142,10 @@ export default function GymWeekCalendar({
   startOfWeekFirst.setDate(today.getDate() + diffToMonday);
 
   const [startOfWeek, setStartOfWeek] = useState<Date>(() => startOfWeekFirst);
+  const endOfWeekFirst = new Date(startOfWeek);
+  endOfWeekFirst.setDate(startOfWeek.getDate() + 6);
+  console.log(endOfWeekFirst);
+  const [endOfWeek, setEndOfWeek] = useState<Date>(() => endOfWeekFirst);
 
   const [weekdays, setWeekdays] = useState<
     { day: string; date: number; name: string; isHighlighted?: boolean }[]
@@ -192,7 +171,13 @@ export default function GymWeekCalendar({
     const newStartOfWeek = new Date(startOfWeek);
     newStartOfWeek.setDate(startOfWeek.getDate() - 7);
     setStartOfWeek(newStartOfWeek);
+
     setWeekdays(updateWeekdays(newStartOfWeek));
+
+    const newEndOfWeek = new Date(endOfWeek);
+    newEndOfWeek.setDate(newStartOfWeek.getDate() + 6);
+    setEndOfWeek(newEndOfWeek);
+    console.log(newEndOfWeek);
   };
 
   // Function to go to the next week
@@ -200,7 +185,13 @@ export default function GymWeekCalendar({
     const newStartOfWeek = new Date(startOfWeek);
     newStartOfWeek.setDate(startOfWeek.getDate() + 7); // Move 7 days forward to get the next week
     setStartOfWeek(newStartOfWeek);
+
     setWeekdays(updateWeekdays(newStartOfWeek));
+
+    const newEndOfWeek = new Date(endOfWeek);
+    newEndOfWeek.setDate(newStartOfWeek.getDate() + 6);
+    setEndOfWeek(newEndOfWeek);
+    console.log(newEndOfWeek);
   };
 
   function formatTime(dateTime: string | Date): string {
@@ -225,7 +216,7 @@ export default function GymWeekCalendar({
   };
 
   return (
-    <div className="flex h-full flex-col ">
+    <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-700 px-6 py-4">
         <h1 className="text-base font-semibold text-gray-200">
           <time
@@ -398,8 +389,20 @@ export default function GymWeekCalendar({
                     return null; // Skip rendering this class if days array is empty or undefined
                   }
 
+                  const classStartDate = new Date(classObject.startDate);
+                  const classEndDate = new Date(classObject.endDate)
+                    
+
+                  // Ensure the class is within the current week
+                  if (!(classStartDate <= endOfWeek && classEndDate >= startOfWeek)) {
+                    return null;
+                  }
+
                   return classObject.days.map((day) => {
-                    const color = getRandomColor(); // Use predefined color or random color
+                    const colour = classObject.colour
+                      ? classObject.colour
+                      : "lime";
+                    console.log(colour);
                     const startRow = timeToGridRow(
                       formatTime(classObject.startDate)
                     );
@@ -410,21 +413,21 @@ export default function GymWeekCalendar({
                       <li
                         key={`${index}-${day}`} // Ensure uniqueness across multiple days
                         className={`relative mt-px flex 
-                          sm:col-start-${dayToColumn(day)} bg-${color}-950 hover:bg-${color}-100 rounded-lg `}
-                        style={{ gridRow}}
+                          sm:col-start-${dayToColumn(day)} bg-${colour}-950 hover:bg-${colour}-900 rounded-lg `}
+                        style={{ gridRow }}
                       >
                         <a
                           href="#"
                           className={`group absolute inset-1 flex flex-col  
-                         p-2 text-xs/5` }
+                         p-2 text-xs/5`}
                         >
                           <p
-                            className={`order-1 font-semibold text-${color}-400`}
+                            className={`order-1 font-semibold text-${colour ? colour : "lime"}-400`}
                           >
                             {classObject.name}
                           </p>
                           <p
-                            className={`text-${color}-100 group-hover:text-${color}-300`}
+                            className={`text-${colour ? colour : "lime"}-100 group-hover:text-${colour ? colour : "lime"}-300`}
                           >
                             <time
                               dateTime={classObject.startDate.toISOString()}

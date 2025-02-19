@@ -4,6 +4,8 @@ import { db } from "@/db";
 import { CREATE_CLASS_FAILED, CREATE_CLASS_SUCCESS } from "../constants/ClassConstants";
 import { IntensityRating, Occurance, SkillLevel } from "@prisma/client";
 
+
+
 interface classData {
     name: string,           // Class name
     description: string       // Description of the class
@@ -57,7 +59,8 @@ export async function createClass(data: classData, gymId: string) {
           days: data.days ?? [], // Ensure this is stored properly (e.g., array of weekdays)
           ...(data.room ? { room: data.room } : {}),
           skillLevel: data.skillLevel as SkillLevel,
-          time: data.startTime
+          time: data.startTime,
+         
         },
       });
 
