@@ -464,7 +464,7 @@ export default function MemberWeekCalendar({
 
                         <BookClassDialog  classData={classObject}
                             bookClassClick={handleClick}
-                        
+                            triggerRef={triggerRef}
                         />
                         </DialogTrigger>
                         </Dialog>
