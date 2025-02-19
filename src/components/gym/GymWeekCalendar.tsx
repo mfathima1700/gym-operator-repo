@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { AddClassDialog } from "@/components/gym/AddClassDialog";
+import { cn } from "@/lib/utils";
 
 const events = [
   {
@@ -215,6 +216,34 @@ export default function GymWeekCalendar({
     return index === -1 ? 1 : index + 1; // Default to 1 if invalid day
   };
 
+  const generateColourLI = (name: string): string => {
+    const hash = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const colors = ["bg-red-950 hover:bg-red-900", "bg-blue-950 hover:bg-blue-900",
+       "bg-emerald-950 hover:bg-emerald-900", "bg-amber-950 hover:bg-amber-900", 
+      "bg-cyan-950 hover:bg-cyan-900", "bg-violet-950 hover:bg-violet-900", 
+    "bg-fuchsia-950 hover:bg-fuchsia-900", "bg-rose-950 hover:bg-rose-900"];
+    return colors[hash % colors.length]; // Cycle through the color list based on hash
+  };
+
+  const generateColourP1 = (name: string): string => {
+    const hash = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const colors = ["text-red-400 ", "text-blue-400 ",
+       "text-emerald-950", "text-amber-400", 
+      "text-cyan-400", "text-violet-400", 
+    "text-fuchsia-400", "text-rose-400"];
+    return colors[hash % colors.length]; // Cycle through the color list based on hash
+  };
+
+  //text-lime-100 group-hover:text-lime-300
+  const generateColourP2 = (name: string): string => {
+    const hash = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const colors = ["text-red-100 group-hover:text-red-300", "text-blue-100 group-hover:text-blue-300",
+       "text-emerald-100 group-hover:text-emerald-300", "text-amber-100 group-hover:text-amber-300", 
+      "text-cyan-100 group-hover:text-cyan-300", "text-violet-100 group-hover:text-violet-300", 
+    "text-fuchsia-100 group-hover:text-fuchsia-300", "text-rose-100 group-hover:text-rose-300"];
+    return colors[hash % colors.length]; // Cycle through the color list based on hash
+  };
+
   return (
     <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-700 px-6 py-4">
@@ -378,7 +407,7 @@ export default function GymWeekCalendar({
 
               {/* Events */}
               <ol
-                className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8 "
+                className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
                 style={{
                   gridTemplateRows: "3.5rem repeat(17, minmax(0, 1fr)) auto",
                 }}
@@ -412,8 +441,9 @@ export default function GymWeekCalendar({
                     return (
                       <li
                         key={`${index}-${day}`} // Ensure uniqueness across multiple days
-                        className={`relative mt-px flex 
-                          sm:col-start-${dayToColumn(day)} bg-${colour}-950 hover:bg-${colour}-900 rounded-lg `}
+                        className={cn(`relative mt-px flex 
+                          sm:col-start-${dayToColumn(day)}  rounded-lg `, 
+                          generateColourLI(classObject.name))}
                         style={{ gridRow }}
                       >
                         <a
@@ -422,12 +452,13 @@ export default function GymWeekCalendar({
                          p-2 text-xs/5`}
                         >
                           <p
-                            className={`order-1 font-semibold text-${colour ? colour : "lime"}-400`}
+                            className={cn(`order-1 font-semibold text-lime-400`, generateColourP1(classObject.name))}
                           >
                             {classObject.name}
                           </p>
                           <p
-                            className={`text-${colour ? colour : "lime"}-100 group-hover:text-${colour ? colour : "lime"}-300`}
+                            className={cn(`text-lime-100 group-hover:text-lime-300`, 
+                              generateColourP2(classObject.name))}
                           >
                             <time
                               dateTime={classObject.startDate.toISOString()}
