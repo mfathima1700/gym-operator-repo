@@ -140,7 +140,7 @@ const data = {
     },
     {
       name: "Gym Schedule",
-      url: `/gym/${id}/schedule`,
+      url: `${ user.gymRole === "MEMBER" ? `/individual/gym/${id}` : `/owner/gym/${id}`}`,
       icon: Dumbbell,
     },
     {

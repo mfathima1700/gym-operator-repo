@@ -82,3 +82,70 @@ export async function createClass(data: classData, gymId: string) {
     };
   }
 }
+
+export async function updateClass(data: classData, classId: string) {
+  try {
+
+    const gymClass = await db.class.findUnique({
+      where: { id: classId },
+    });
+
+    if (!gymClass) {
+      throw new Error("class not found");
+    }
+
+    const startDateTime = new Date(data.startDate);
+    const [startHour, startMinute] = data.startTime.split(":").map(Number);
+    startDateTime.setHours(startHour, startMinute, 0, 0);
+
+    const endDateTime = new Date(data.endDate);
+    const [endHour, endMinute] = data.startTime.split(":").map(Number);
+    endDateTime.setHours(endHour, endMinute, 0, 0);
+
+
+    const updatedClass = await db.class.update({
+      where: { id:classId },
+        data: {
+          name: data.name,
+          ...(data.description ? { description: data.description } : {}),
+          capacity: parseInt(data.capacity),
+          duration: parseInt(data.duration),
+          intensity: data.intensity as IntensityRating, // Ensure it matches the enum
+          recurrence: data.recurrence as Occurance,
+          
+          ...(data.instructorId ? { instructorId: data.instructorId } : {}),
+          startDate: startDateTime,
+          endDate: endDateTime,
+         
+          days: data.days ?? [], // Ensure this is stored properly (e.g., array of weekdays)
+          ...(data.room ? { room: data.room } : {}),
+          skillLevel: data.skillLevel as SkillLevel,
+          time: data.startTime,
+         
+        },
+      });
+
+
+  } catch (error) {
+    console.log("UPDATE CLASS FAILED");
+    console.log(error);
+    return {
+      type: CREATE_CLASS_FAILED,
+      payload: error,
+    };
+  }
+}
+
+export async function bookClass(classId: string, userId:string) {
+  try {
+
+
+  } catch (error) {
+    console.log("BOOK CLASS FAILED");
+    console.log(error);
+    return {
+      type: CREATE_CLASS_FAILED,
+      payload: error,
+    };
+  }
+}

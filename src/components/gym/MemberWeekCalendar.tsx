@@ -3,12 +3,13 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
 import { useEffect, useRef, useState } from "react";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronRight, ChevronLeft, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { AddClassDialog } from "@/components/gym/AddClassDialog";
 import { cn } from "@/lib/utils";
+import { BookClassDialog } from "./BookClassDialog";
 
 const events = [
   {
@@ -77,18 +78,13 @@ type ClassType = {
   colour: string;
 };
 
-export default function GymWeekCalendar({
-  classData,
-  handleChange,
-  onSaveClick,
-  toggleDay,
+export default function MemberWeekCalendar({
+
+  handleClick,
   triggerRef,
   classes,
 }: {
-  classData: any;
-  handleChange: any;
-  onSaveClick: any;
-  toggleDay: any;
+  handleClick: any;
   triggerRef: any;
   classes: ClassType[];
 }) {
@@ -298,24 +294,6 @@ export default function GymWeekCalendar({
           </div>
           <div className="hidden md:ml-4 md:flex md:items-center">
             <div className="ml-6 h-6 w-px bg-gray-700" />
-            <Dialog>
-              <DialogTrigger asChild>
-                <button
-                  type="button"
-                  ref={triggerRef}
-                  className="ml-6 rounded-md bg-lime-600 px-3 py-2 text-sm font-semibold text-gray-200 shadow-xs hover:bg-lime-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600"
-                >
-                  Add class
-                </button>
-              </DialogTrigger>
-
-              <AddClassDialog
-                classData={classData}
-                handleChange={handleChange}
-                onSaveClick={onSaveClick}
-                toggleDay={toggleDay}
-              />
-            </Dialog>
           </div>
           <Menu as="div" className="relative ml-6 md:hidden">
             <MenuButton className="-mx-2 flex items-center rounded-full border border-transparent p-2 text-gray-400 hover:text-gray-500">
@@ -327,16 +305,6 @@ export default function GymWeekCalendar({
               transition
               className="absolute right-0 z-10 mt-3 w-36 origin-top-right divide-y divide-gray-100 overflow-hidden rounded-md bg-gray-200 ring-1 shadow-lg ring-black/5 focus:outline-hidden data-closed:scale-95 data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
             >
-              <div className="py-1">
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                  >
-                    Add Class
-                  </a>
-                </MenuItem>
-              </div>
               <div className="py-1">
                 <MenuItem>
                   <a
@@ -470,8 +438,10 @@ export default function GymWeekCalendar({
                           generateColourLI(classObject.name))}
                         style={{ gridRow }}
                       >
-                        <a
-                          href="#"
+                         <Dialog>
+                         <DialogTrigger asChild>
+                        <button
+                          onClick={handleClick}  ref={triggerRef}
                           className={`group absolute inset-1 flex flex-col  
                          p-2 text-xs/5`}
                         >
@@ -490,7 +460,14 @@ export default function GymWeekCalendar({
                               {formatTime(classObject.startDate)}
                             </time>
                           </p>
-                        </a>
+                        </button>
+
+                        <BookClassDialog  classData={classObject}
+                            bookClassClick={handleClick}
+                        
+                        />
+                        </DialogTrigger>
+                        </Dialog>
                       </li>
                     );
                   });
