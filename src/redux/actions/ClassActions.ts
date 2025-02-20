@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/db";
-import { CREATE_CLASS_FAILED, CREATE_CLASS_SUCCESS } from "../constants/ClassConstants";
+import { BOOK_CLASS_FAILED, CREATE_CLASS_FAILED, CREATE_CLASS_SUCCESS, EDIT_CLASS_FAILED, EDIT_CLASS_SUCCESS } from "../constants/ClassConstants";
 import { IntensityRating, Occurance, SkillLevel } from "@prisma/client";
 
 
@@ -125,12 +125,16 @@ export async function updateClass(data: classData, classId: string) {
         },
       });
 
+      return {
+        type: EDIT_CLASS_SUCCESS,
+        payload: updatedClass,
+      };
 
   } catch (error) {
     console.log("UPDATE CLASS FAILED");
     console.log(error);
     return {
-      type: CREATE_CLASS_FAILED,
+      type: EDIT_CLASS_FAILED,
       payload: error,
     };
   }
@@ -139,12 +143,14 @@ export async function updateClass(data: classData, classId: string) {
 export async function bookClass(classId: string, userId:string) {
   try {
 
+    
+
 
   } catch (error) {
     console.log("BOOK CLASS FAILED");
     console.log(error);
     return {
-      type: CREATE_CLASS_FAILED,
+      type: BOOK_CLASS_FAILED,
       payload: error,
     };
   }

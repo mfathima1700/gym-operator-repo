@@ -5,7 +5,9 @@ import { getUserById } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
+import { sendCancelEmail } from "@/redux/actions/EmailActions";
 
 function classNames(...classes: (string | false | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
@@ -35,10 +37,21 @@ export default function OwnerDashboard() {
     }
   }, [userState.user, userState.success, userState.error]);
 
+  function onSendEmailClick(e: React.MouseEvent) {
+    e.preventDefault();
+    dispatch(sendCancelEmail("test@test.com", {}));
+  }
+
   return (
     <>
       <CNLayout user={userData} id={id}>
-        <div></div>
+        <div>
+
+
+          <Button  onClick={onSendEmailClick}>
+            Send Email
+          </Button>
+        </div>
       </CNLayout>
     </>
   );

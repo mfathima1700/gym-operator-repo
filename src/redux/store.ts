@@ -13,6 +13,7 @@ import { create } from "domain";
 import { combineReducers, createStore, applyMiddleware, compose } from "redux";
 import promiseMiddleware from "redux-promise";
 import { createGymReducer, setUserDataReducer, updateUserSettingsReducer, updateOwnerSettingsReducer, getUserReducer } from "./reducers/GymReducer";
+import { sendCancelReducer } from "./reducers/EmailReducer";
 //import { composeWithDevTools } from "redux-devtools-extension";
 
 const rootReducer = combineReducers({
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   updateUserSettings: updateUserSettingsReducer,
   updateOwnerSettings: updateOwnerSettingsReducer,
   getUser: getUserReducer,
+  sendCancel:sendCancelReducer,
   // Add other reducers here
 });
 
