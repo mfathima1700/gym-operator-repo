@@ -32,6 +32,8 @@ import {
   signUpWithEmail,
   verifyEmail,
   setNewPassword,
+  createGoogleOAuthSession,
+  getGoogleOAuthSession,
 } from "@/lib/server/auth";
 import { getLoggedInUser } from "@/lib/server/appwrite";
 
@@ -75,13 +77,16 @@ export default async function registerUser(registerData: RegisterUser) {
 
   try {
 
-    const gym = await db.gym.findUnique({
-      where: { gymCode: code },
-    });
-
-    if (!gym) {
-      throw new Error("Invalid gym code");
+    if(gymRole == GymRole.MEMBER){
+      const gym = await db.gym.findUnique({
+        where: { gymCode: code },
+      });
+  
+      if (!gym) {
+        throw new Error("Invalid gym code");
+      }
     }
+    
 
     const success = await signUpWithEmail(registerData);
 
@@ -108,6 +113,46 @@ export default async function registerUser(registerData: RegisterUser) {
       payload: error,
     };
   }
+}
+
+export async function signUpWithGoogle(){
+
+  try{
+// how do I get them to select a user role? 
+  // need gym code, if member
+
+  const success = await createGoogleOAuthSession();
+  const user = await getGoogleOAuthSession();
+
+  const hashedPassword = saltAndHashPassword(user.password);
+  const userRole = UserRole.USER;
+  const gymRole = GymRole.OWNER;
+
+
+  // const mongoUser = await db.user.create({
+  //   data: {
+  //     user.email,
+  //     user.password,
+  //     hashedPassword,
+  //     gymRole,
+  //     userRole
+  //   },
+  // });
+  console.log("REGISTER WITH GOOGLE SUCESSFUL");
+    return {
+      type: SIGN_UP_SUCCESS,
+      payload: {},
+    };
+
+  }catch(error){
+    console.log(error);
+    console.log("REGISTER WITH GOOGLE FAILED");
+    return {
+      type: SIGN_UP_FAILED,
+      payload: error,
+    };
+  }
+  
 }
 
 export async function getSession() {
@@ -168,6 +213,28 @@ export async function signIn(userData: SignInUser) {
       payload: error,
     };
   }
+}
+
+export async function signInWithGoogle(){
+try{
+  const success = await createGoogleOAuthSession();
+  const googleUser = await getGoogleOAuthSession();
+  const user = await getUserByEmail(googleUser.email);
+
+  console.log("LOGIN WITH GOOGLE SUCCESSFUL");
+    return {
+      type: SIGN_IN_SUCCESS,
+      payload: user,
+    };
+
+}catch(error){
+console.log("LOGIN WITH GOOGLE FAILED");
+    console.log(error);
+    return {
+      type: SIGN_IN_FAILED,
+      payload: error,
+    };
+}
 }
 
 export async function verifyEmailAddress(secret: string, userId: string) {

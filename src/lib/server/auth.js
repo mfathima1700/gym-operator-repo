@@ -11,7 +11,7 @@ import {
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { GymRole, UserRole } from "@prisma/client";
-import { Client, Account } from "node-appwrite";
+import { Client, Account, OAuthProvider } from "node-appwrite";
 
 export async function signUpWithEmail(user) {
   const { email, password, gymRole, userRole } = user;
@@ -108,3 +108,38 @@ export async function setNewPassword(password, secret, userId) {
     throw error;
   }
 }
+
+export async function createGoogleOAuthSession() {
+  try {
+    const client = await createClient();
+    const account = new Account(client);
+
+    const successUrl = process.env.NEXT_PUBLIC_APPWRITE_SUCCESS_URL;
+    const failureUrl = process.env.NEXT_PUBLIC_APPWRITE_FAILURE_URL;
+
+    const result = await account.createOAuth2Session('google',  successUrl, failureUrl)
+
+
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getGoogleOAuthSession() {
+  try {
+    const session = await account.getSession("current");
+const accessToken = session.providerAccessToken;
+// Now make a fetch request to Google UserInfo API:
+const googleUser = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+    headers: { Authorization: `Bearer ${accessToken}` },
+}).then(res => res.json());
+
+return googleUser;
+    
+}catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+

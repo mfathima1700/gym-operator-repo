@@ -13,8 +13,8 @@ import { Label } from "@/components/ui/label";
 import {  } from "@/redux/actions/AuthActions";
 import { useFormStatus } from "react-dom";
 
-export default function LoginForm({ LoginAction, loginData, handleChange }:
-   { LoginAction: any, loginData: any, handleChange: any }) {
+export default function LoginForm({ LoginAction, loginData, handleChange, handleGoogle }:
+   { LoginAction: any, loginData: any, handleChange: any, handleGoogle:any }) {
   const { pending } = useFormStatus();
 
   return (
@@ -53,7 +53,7 @@ export default function LoginForm({ LoginAction, loginData, handleChange }:
      
             {pending ? "Loading..." : "Sign in"}
           </Button>
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" className="w-full" onClick={handleGoogle}>
             Login with Google
           </Button>
         </form>

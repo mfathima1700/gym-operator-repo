@@ -86,3 +86,4 @@ export async function checkSession() {
     throw error;
   }
 }
+
