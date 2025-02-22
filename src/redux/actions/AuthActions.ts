@@ -18,6 +18,8 @@ import {
   RESET_PASSWORD_FAILED,
   FORGET_PASSWORD_SUCCESS,
   FORGET_PASSWORD_FAILED,
+  GOOGLE_SIGN_UP_FAILED,
+  GOOGLE_SIGN_UP_SUCCESS,
 } from "../constants/AuthConstants";
 import { revalidatePath } from "next/cache";
 import { AppDispatch } from "../store";
@@ -76,17 +78,16 @@ export default async function registerUser(registerData: RegisterUser) {
   const code = registerData.gymCode;
 
   try {
-
-    if(gymRole == GymRole.MEMBER){
-      const gym = await db.gym.findUnique({
+    let gym;
+    if (gymRole == GymRole.MEMBER) {
+      gym = await db.gym.findUnique({
         where: { gymCode: code },
       });
-  
+
       if (!gym) {
         throw new Error("Invalid gym code");
       }
     }
-    
 
     const success = await signUpWithEmail(registerData);
 
@@ -97,6 +98,7 @@ export default async function registerUser(registerData: RegisterUser) {
         hashedPassword,
         gymRole,
         userRole,
+        ...(gymRole == GymRole.MEMBER && gym ? { gym: { connect: { id: gym.id } } } : {}),
       },
     });
 
@@ -115,44 +117,74 @@ export default async function registerUser(registerData: RegisterUser) {
   }
 }
 
-export async function signUpWithGoogle(){
+export async function signUpWithGoogle() {
+  try {
+    const success = await createGoogleOAuthSession(false);
 
-  try{
-// how do I get them to select a user role? 
-  // need gym code, if member
-
-  const success = await createGoogleOAuthSession();
-  const user = await getGoogleOAuthSession();
-
-  const hashedPassword = saltAndHashPassword(user.password);
-  const userRole = UserRole.USER;
-  const gymRole = GymRole.OWNER;
-
-
-  // const mongoUser = await db.user.create({
-  //   data: {
-  //     user.email,
-  //     user.password,
-  //     hashedPassword,
-  //     gymRole,
-  //     userRole
-  //   },
-  // });
-  console.log("REGISTER WITH GOOGLE SUCESSFUL");
-    return {
-      type: SIGN_UP_SUCCESS,
-      payload: {},
-    };
-
-  }catch(error){
+    // Any need for flags?
+    console.log("REGISTER WITH GOOGLE SUCESSFUL");
+    // return {
+    //   type: GOOGLE_SIGN_UP_SUCCESS,
+    //   payload: {},
+    // };
+  } catch (error) {
     console.log(error);
     console.log("REGISTER WITH GOOGLE FAILED");
+    // return {
+    //   type: GOOGLE_SIGN_UP_FAILED,
+    //   payload: error,
+    // };
+  }
+}
+
+
+export async function createGoogleUser(googleUser: RegisterUser) {
+  try {
+    const user = await getGoogleOAuthSession();
+
+    const hashedPassword = saltAndHashPassword(user.password);
+    const userRole = googleUser.userRole;
+    const gymRole = googleUser.gymRole;
+
+    const email = user.email;
+    const password = user.password;
+
+    let gym;
+    if (gymRole == GymRole.MEMBER) {
+      gym = await db.gym.findUnique({
+        where: { gymCode: googleUser.gymCode },
+      });
+
+      if (!gym) {
+        throw new Error("Invalid gym code");
+      }
+    }
+
+    const mongoUser = await db.user.create({
+      data: {
+        email,
+        password,
+        hashedPassword,
+        gymRole,
+        userRole,
+
+        ...(gymRole == GymRole.MEMBER && gym ? { gym: { connect: { id: gym.id } } } : {}),
+      },
+    });
+
+    console.log("CREATE GOOGLE USER SUCCESSFUL");
+    return {
+      type: SIGN_UP_SUCCESS,
+      payload: mongoUser,
+    };
+  } catch (error) {
+    console.log(error);
+    console.log("CREATE GOOGLE USER FAILED");
     return {
       type: SIGN_UP_FAILED,
       payload: error,
     };
   }
-  
 }
 
 export async function getSession() {
@@ -215,26 +247,44 @@ export async function signIn(userData: SignInUser) {
   }
 }
 
-export async function signInWithGoogle(){
-try{
-  const success = await createGoogleOAuthSession();
-  const googleUser = await getGoogleOAuthSession();
-  const user = await getUserByEmail(googleUser.email);
+export async function signInWithGoogle() {
+  try {
+    const success = await createGoogleOAuthSession(true);
 
-  console.log("LOGIN WITH GOOGLE SUCCESSFUL");
+    console.log("LOGIN WITH GOOGLE SUCCESSFUL");
+
+    // unnecessary?
+    // return {
+    //   type: SIGN_IN_SUCCESS,
+    //   payload: user,
+    // };
+  } catch (error) {
+    console.log("LOGIN WITH GOOGLE FAILED");
+    console.log(error);
+    // return {
+    //   type: SIGN_IN_FAILED,
+    //   payload: error,
+    // };
+  }
+}
+
+export async function getGoogleData() {
+  try {
+    const googleUser = await getGoogleOAuthSession();
+    const user = await getUserByEmail(googleUser.email);
+
+    console.log("GET GOOGLE DATA SUCCESSFUL");
     return {
       type: SIGN_IN_SUCCESS,
       payload: user,
     };
-
-}catch(error){
-console.log("LOGIN WITH GOOGLE FAILED");
+  } catch (error) {
     console.log(error);
     return {
       type: SIGN_IN_FAILED,
       payload: error,
     };
-}
+  }
 }
 
 export async function verifyEmailAddress(secret: string, userId: string) {
@@ -297,14 +347,14 @@ export async function resetPassword(
   }
 }
 
-export async function getUserByEmail(email:string){
+export async function getUserByEmail(email: string) {
   try {
     const user = await db.user.findUnique({
       where: { email }, // Look up user by email
       include: {
         gym: true, // Include gym details if needed
         memberships: true,
-         // Include memberships if needed
+        // Include memberships if needed
       },
     });
 
@@ -313,7 +363,8 @@ export async function getUserByEmail(email:string){
     }
 
     return user;
-}catch(error){
-  console.error("Error fetching user:", error);
+  } catch (error) {
+    console.error("Error fetching user:", error);
     throw error;
-}}
+  }
+}
