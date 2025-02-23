@@ -222,6 +222,15 @@ export async function signOutSession() {
   }
 }
 
+export async function googleSignOut(){
+
+  try{
+
+  }catch(error){
+    
+  }
+}
+
 interface SignInUser {
   email: string;
   password: string;
