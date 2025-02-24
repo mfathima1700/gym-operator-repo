@@ -100,6 +100,7 @@ export async function deleteClass(id: string) {
 
 // do i need to add googleCalendarID to the class for the prisma schema? 
 
+// booking not gym class
 export async function syncClasses(gymClasses: classData[]) {
   try {
 

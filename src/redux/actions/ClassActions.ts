@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/db";
-import { BOOK_CLASS_FAILED, CREATE_CLASS_FAILED, CREATE_CLASS_SUCCESS, EDIT_CLASS_FAILED, EDIT_CLASS_SUCCESS } from "../constants/ClassConstants";
+import { BOOK_CLASS_FAILED, BOOK_CLASS_SUCCESS, CANCEL_BOOKING_FAILED, CANCEL_BOOKING_SUCCESS, CANCEL_CLASS_FAILED, CANCEL_CLASS_SUCCESS, CREATE_CLASS_FAILED, CREATE_CLASS_SUCCESS, DELETE_CLASS_FAILED, DELETE_CLASS_SUCCESS, EDIT_CLASS_FAILED, EDIT_CLASS_SUCCESS, GET_BOOKINGS_FAILED, GET_BOOKINGS_SUCCESS } from "../constants/ClassConstants";
 import { IntensityRating, Occurance, SkillLevel } from "@prisma/client";
 
 
@@ -143,14 +143,128 @@ export async function updateClass(data: classData, classId: string) {
 export async function bookClass(classId: string, userId:string) {
   try {
 
-    
+    const booking = await db.booking.create({
+      data: {
+        userId: userId,
+        classId: classId,
+      },
+    });
 
+    console.log("BOOK CLASS SUCCESS");
+
+    return {
+      type: BOOK_CLASS_SUCCESS,
+      payload: booking,
+    };
 
   } catch (error) {
     console.log("BOOK CLASS FAILED");
     console.log(error);
     return {
       type: BOOK_CLASS_FAILED,
+      payload: error,
+    };
+  }
+}
+
+export async function cancelBooking(classId: string, userId:string) {
+  try {
+
+    const booking = await db.booking.deleteMany({
+      where: {
+        userId: userId,
+        classId: classId,
+      },
+    });
+
+    console.log("BOOK CLASS SUCCESS");
+
+    return {
+      type: CANCEL_BOOKING_SUCCESS,
+      payload: booking,
+    };
+
+  } catch (error) {
+    console.log("BOOK CLASS FAILED");
+    console.log(error);
+    return {
+      type: CANCEL_BOOKING_FAILED,
+      payload: error,
+    };
+  }
+}
+
+// cancel all bookings for that particular class
+export async function cancelClass(classId: string) {
+  try {
+
+    const deletedGymClass = await db.booking.deleteMany({
+      where: {
+        classId: classId, // your class's id
+      },
+    });
+
+    console.log("CANCEL CLASS SUCCESS");
+
+    return {
+      type: CANCEL_CLASS_SUCCESS,
+      payload: deletedGymClass,
+    };
+
+  } catch (error) {
+    console.log("CANCEL CLASS FAILED");
+    console.log(error);
+    return {
+      type: CANCEL_CLASS_FAILED,
+      payload: error,
+    };
+  }
+}
+
+
+export async function deleteClass(classId: string) {
+  try {
+
+    const deletedGymClass = await db.class.delete({
+      where: {
+        id: classId,
+      },
+    });
+
+    console.log("DELETE CLASS SUCCESS");
+
+    return {
+      type: DELETE_CLASS_SUCCESS,
+      payload: deletedGymClass,
+    };
+
+  } catch (error) {
+    console.log("DELETE CLASS FAILED");
+    console.log(error);
+    return {
+      type: DELETE_CLASS_FAILED,
+      payload: error,
+    };
+  }
+}
+
+export async function getBookings(id: string){
+  try {
+    const userBookings = await db.booking.findMany({
+      where: { userId: id },
+      include: { class: true },
+    });
+
+    return {
+      type: GET_BOOKINGS_SUCCESS,
+      payload: userBookings,
+    };
+
+  }catch(error){
+    console.log(error);
+
+    return {
+      type: GET_BOOKINGS_FAILED,
       payload: error,
     };
   }
