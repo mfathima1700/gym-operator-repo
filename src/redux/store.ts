@@ -14,6 +14,7 @@ import { combineReducers, createStore, applyMiddleware, compose } from "redux";
 import promiseMiddleware from "redux-promise";
 import { createGymReducer, setUserDataReducer, updateUserSettingsReducer, updateOwnerSettingsReducer, getUserReducer } from "./reducers/GymReducer";
 import { sendCancelReducer } from "./reducers/EmailReducer";
+import { bookClassReducer, cancelBookingReducer, cancelClassReducer, createClassReducer, deleteClassReducer, getBookingsReducer, updateClassReducer } from "./reducers/ClassReducer";
 //import { composeWithDevTools } from "redux-devtools-extension";
 
 const rootReducer = combineReducers({
@@ -31,6 +32,14 @@ const rootReducer = combineReducers({
   updateOwnerSettings: updateOwnerSettingsReducer,
   getUser: getUserReducer,
   sendCancel:sendCancelReducer,
+  getBookings:getBookingsReducer,
+  deleteClass: deleteClassReducer,
+  cancelClass:cancelClassReducer,
+  cancelBooking: cancelBookingReducer,
+  bookClass: bookClassReducer,
+  updateClassReducer:updateClassReducer,
+  createClass:createClassReducer,
+
   // Add other reducers here
 });
 
