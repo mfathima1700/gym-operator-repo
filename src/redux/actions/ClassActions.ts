@@ -41,6 +41,7 @@ export async function createClass(data: classData, gymId: string) {
     const [endHour, endMinute] = data.startTime.split(":").map(Number);
     endDateTime.setHours(endHour, endMinute, 0, 0);
 
+    endDateTime.setMinutes(endDateTime.getMinutes() + parseInt(data.duration));
 
     const newClass = await db.class.create({
         data: {
@@ -102,7 +103,8 @@ export async function updateClass(data: classData, classId: string) {
     const [endHour, endMinute] = data.startTime.split(":").map(Number);
     endDateTime.setHours(endHour, endMinute, 0, 0);
 
-
+    endDateTime.setMinutes(endDateTime.getMinutes() + parseInt(data.duration));
+    
     const updatedClass = await db.class.update({
       where: { id:classId },
         data: {
