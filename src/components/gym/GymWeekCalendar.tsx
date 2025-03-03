@@ -10,6 +10,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { AddClassDialog } from "@/components/gym/AddClassDialog";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { start } from "repl";
 
 const events = [
   {
@@ -50,13 +51,13 @@ const events = [
 ];
 
 const daysOfWeek = [
-  { day: "M", name: "Mon", nameDay:"monday"},
-  { day: "T", name: "Tue", nameDay:"tuesday"},
-  { day: "W", name: "Wed", nameDay:"wednesday"},
-  { day: "T", name: "Thu", nameDay:"thursday"},
-  { day: "F", name: "Fri", nameDay:"friday"}, 
-  { day: "S", name: "Sat", nameDay:"saturday"},
-  { day: "S", name: "Sun", nameDay:"sunday"},
+  { day: "M", name: "Mon", nameDay:"monday", num:0},
+  { day: "T", name: "Tue", nameDay:"tuesday", num:1},
+  { day: "W", name: "Wed", nameDay:"wednesday", num:2},
+  { day: "T", name: "Thu", nameDay:"thursday", num:3},
+  { day: "F", name: "Fri", nameDay:"friday", num:4}, 
+  { day: "S", name: "Sat", nameDay:"saturday", num:5},
+  { day: "S", name: "Sun", nameDay:"sunday", num:6},
 ];
 
 type ClassType = {
@@ -152,7 +153,7 @@ export default function GymWeekCalendar({
   const [endOfWeek, setEndOfWeek] = useState<Date>(() => endOfWeekFirst);
 
   const [weekdays, setWeekdays] = useState<
-    { day: string; date: number; name: string; isHighlighted?: boolean, nameDay:string }[]
+    { day: string; date: number; name: string; isHighlighted?: boolean, nameDay:string, num:number }[]
   >(() => updateWeekdays(startOfWeekFirst));
 
   function updateWeekdays(newStartOfWeek: Date) {
@@ -383,7 +384,7 @@ export default function GymWeekCalendar({
         <div className="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full ">
          
             <div className="grid grid-cols-7 text-sm/6 text-gray-900">
-              {weekdays.map(({ day, date, name, isHighlighted, nameDay }) => (
+              {weekdays.map(({ day, date, name, isHighlighted, nameDay, num }) => (
                 <div className="flex flex-col items-center py-3 gap-y-3" key={name}>
                   <div
                     key={date}
@@ -410,7 +411,8 @@ export default function GymWeekCalendar({
 
                       const classStartDate = new Date(classObject.startDate);
                       const classEndDate = new Date(classObject.endDate);
-
+                      const todaysDate = new Date(startOfWeek);
+                      todaysDate.setDate(startOfWeek.getDate() + num);
                       
 
                       // Ensure the class is within the current week
@@ -418,7 +420,9 @@ export default function GymWeekCalendar({
                         return null;
                       }
 
-                      if(classObject.startDate )
+                      if(!(todaysDate >= classObject.startDate  && todaysDate <= classEndDate)){
+                        return null
+                      }
 
                       
                         return (
