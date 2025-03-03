@@ -30,6 +30,7 @@ export function AddClassDialog({
   handleChange,
   onSaveClick,
   toggleDay,
+  
 }: {
   classData: any;
   handleChange: any;

@@ -26,11 +26,15 @@ export default function GymSchedule() {
   );
   const userState = useSelector((state: RootState) => state.getUser);
   const [userData, setUserData] = useState(() => ({
+    gymRole: "",
     gym: {
       id: "",
+     
       classes:[],
     },
   }));
+
+
 
   useEffect(() => {
     dispatch(getUserById(id));
@@ -113,6 +117,7 @@ export default function GymSchedule() {
             toggleDay={toggleDay} 
             triggerRef={triggerRef}
             classes={userData.gym.classes ?userData.gym.classes : []}
+            isOwner={userData?.gymRole === "OWNER" ? true : false}
           />
         </div>
       </CNLayout>
