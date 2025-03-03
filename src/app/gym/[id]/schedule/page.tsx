@@ -118,6 +118,7 @@ export default function GymSchedule() {
             triggerRef={triggerRef}
             classes={userData.gym.classes ?userData.gym.classes : []}
             isOwner={userData?.gymRole === "OWNER" ? true : false}
+            id={userData.gym.id}
           />
         </div>
       </CNLayout>

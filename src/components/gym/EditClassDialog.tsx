@@ -24,31 +24,54 @@ import { StartDateControl } from "./StartDateControl";
 import { EndDateControl } from "./EndDateConrol";
 import { format, parse } from "date-fns";
 import { cn } from "@/lib/utils";
+import { bookClass, cancelClass, deleteClass, updateClass } from "@/redux/actions/ClassActions";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 
 export function EditClassDialog({
   classData,
   handleChange,
-  onSaveClick,
+  id,
   toggleDay,
+  isOwner,
 }: {
   classData: any;
   handleChange: any;
-  onSaveClick: any;
+id:string,
   toggleDay: any;
+  isOwner: boolean;
 }) {
+  const dispatch = useDispatch<AppDispatch>();
+  
 
   function onCancelClick(e: React.MouseEvent) {
     e.preventDefault();
+
+    dispatch(cancelClass(classData.id));
 
   }
 
   function onDeleteClick(e: React.MouseEvent) {
     e.preventDefault();
+
+    dispatch(deleteClass(classData.id));
+  }
+
+  function onBookClick(e: React.MouseEvent) {
+    e.preventDefault();
+
+    dispatch(bookClass(classData.id, id ));
+  }
+
+  function onUpdateClick(e: React.MouseEvent) {
+    e.preventDefault();
+
+    dispatch(updateClass(classData, classData.id));
   }
   return (
     <DialogContent className="sm:max-w-[700px] w-full max-w-3xl max-h-[80vh] overflow-y-auto">
       <DialogHeader>
-        <DialogTitle>Add Class</DialogTitle>
+        <DialogTitle>Edit Class</DialogTitle>
         <DialogDescription>
           Make changes to your profile here. Click save when you're done.
         </DialogDescription>
@@ -62,13 +85,14 @@ export function EditClassDialog({
             value={classData.name}
             name="name"
             required
+            disabled={!isOwner}
             onChange={(e) => handleChange(e.target.name, e.target.value)}
           />
         </div>
         <div className="sm:col-span-3">
           <Label htmlFor="country">Instructor</Label>
           <Select
-            value={classData.instructorId}
+            value={classData.instructorId}  disabled={!isOwner}
             onValueChange={(value) => handleChange("instructorId", value)}
           >
             <SelectTrigger className="mt-2">
@@ -90,6 +114,7 @@ export function EditClassDialog({
           <Textarea
             id="description"
             rows={2}
+            disabled={!isOwner}
             className="mt-2"
             value={classData.description}
             name="description"
@@ -105,6 +130,7 @@ export function EditClassDialog({
           <Input
         type="time"
         placeholder="HH:MM"
+        disabled={!isOwner}
         value={classData.time}
         onChange={handleChange}
         maxLength={5}
@@ -126,7 +152,7 @@ export function EditClassDialog({
         <div className="sm:col-span-3">
           <Label htmlFor="country">Recurrance</Label>
           <Select
-            value={classData.recurrence}
+            value={classData.recurrence}  disabled={!isOwner}
             onValueChange={(value) => handleChange("recurrence", value)}
           >
             <SelectTrigger className="mt-2">
@@ -175,6 +201,7 @@ export function EditClassDialog({
             className="mt-2"
             value={classData.capacity}
             name="capacity"
+            disabled={!isOwner}
             type="number"
             onChange={(e) => handleChange(e.target.name, e.target.value)}
           />
@@ -182,7 +209,7 @@ export function EditClassDialog({
         <div className="sm:col-span-3">
           <Label htmlFor="country">Skill Level</Label>
           <Select
-            value={classData.skillLevel}
+            value={classData.skillLevel}  disabled={!isOwner}
             onValueChange={(value) => handleChange("skillLevel", value)}
           >
             <SelectTrigger className="mt-2">
@@ -198,7 +225,7 @@ export function EditClassDialog({
         <div className="sm:col-span-3">
           <Label htmlFor="country">Intensity</Label>
           <Select
-            value={classData.intensity}
+            value={classData.intensity}  disabled={!isOwner}
             onValueChange={(value) => handleChange("intensity", value)}
           >
             <SelectTrigger className="mt-2">
@@ -215,7 +242,7 @@ export function EditClassDialog({
         <div className="sm:col-span-3">
           <Label htmlFor="country">Duration</Label>
           <Select
-            value={classData.duration}
+            value={classData.duration}  disabled={!isOwner}
             onValueChange={(value) => handleChange("duration", value)}
           >
             <SelectTrigger className="mt-2">
@@ -239,6 +266,7 @@ export function EditClassDialog({
           <Input
             id="address"
             className="mt-2"
+            disabled={!isOwner}
             value={classData.room}
             name="room"
             onChange={(e) => handleChange(e.target.name, e.target.value)}
@@ -246,18 +274,34 @@ export function EditClassDialog({
         </div>
       </div>
       <DialogFooter>
-      <Button type="button" onClick={onCancelClick}>
-         Cancel
+       
+     
+
+{
+  isOwner ?   <div className="space-x-4"><Button variant="secondary" onClick={onCancelClick}>
+  Cancel
+ </Button>
+ 
+ <Button variant="destructive" onClick={onDeleteClick}>
+ Delete
+</Button>
+
+<Button type="button" onClick={onUpdateClick}>
+ Update
+</Button> </div>
+ 
+ :
+ <Button type="button" onClick={onBookClick}>
+         Book
         </Button>
 
-      <Button type="button" onClick={onDeleteClick}>
-         Delete
-        </Button>
+}
+      
 
-        <Button type="button" onClick={onSaveClick}>
-         Update
-        </Button>
+    
+       
       </DialogFooter>
     </DialogContent>
   );
 }
+

@@ -3,7 +3,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
 import { useEffect, useRef, useState } from "react";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronRight, ChevronLeft, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
@@ -11,53 +11,18 @@ import { AddClassDialog } from "@/components/gym/AddClassDialog";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { start } from "repl";
+import { EditClassDialog } from "./EditClassDialog";
 
-const events = [
-  {
-    title: "Breakfast",
-    startTime: "06:00",
-    duration: 60, // Duration in minutes
-    colStart: 1,
-    color: "blue",
-  },
-  {
-    title: "Flight to Paris",
-    startTime: "09:30",
-    duration: 90, // Duration in minutes
-    colStart: 3,
-    color: "pink",
-  },
-  {
-    title: "Team Meeting",
-    startTime: "08:00",
-    duration: 45, // Duration in minutes
-    colStart: 6,
-    color: "purple",
-  },
-  {
-    title: "Visit Louvre",
-    startTime: "07:00",
-    duration: 30, // Duration in minutes
-    colStart: 5,
-    color: "sky",
-  },
-  {
-    title: "Gym",
-    startTime: "10:00",
-    duration: 60, // Duration in minutes
-    colStart: 4,
-    color: "rose",
-  },
-];
+
 
 const daysOfWeek = [
-  { day: "M", name: "Mon", nameDay:"monday", num:0},
-  { day: "T", name: "Tue", nameDay:"tuesday", num:1},
-  { day: "W", name: "Wed", nameDay:"wednesday", num:2},
-  { day: "T", name: "Thu", nameDay:"thursday", num:3},
-  { day: "F", name: "Fri", nameDay:"friday", num:4}, 
-  { day: "S", name: "Sat", nameDay:"saturday", num:5},
-  { day: "S", name: "Sun", nameDay:"sunday", num:6},
+  { day: "M", name: "Mon", nameDay: "monday", num: 0 },
+  { day: "T", name: "Tue", nameDay: "tuesday", num: 1 },
+  { day: "W", name: "Wed", nameDay: "wednesday", num: 2 },
+  { day: "T", name: "Thu", nameDay: "thursday", num: 3 },
+  { day: "F", name: "Fri", nameDay: "friday", num: 4 },
+  { day: "S", name: "Sat", nameDay: "saturday", num: 5 },
+  { day: "S", name: "Sun", nameDay: "sunday", num: 6 },
 ];
 
 type ClassType = {
@@ -87,6 +52,7 @@ export default function GymWeekCalendar({
   triggerRef,
   classes,
   isOwner,
+  id
 }: {
   classData: any;
   handleChange: any;
@@ -95,6 +61,7 @@ export default function GymWeekCalendar({
   triggerRef: any;
   classes: ClassType[];
   isOwner: boolean;
+  id:string
 }) {
   const container = useRef<HTMLDivElement | null>(null);
   const containerNav = useRef<HTMLDivElement | null>(null);
@@ -112,23 +79,6 @@ export default function GymWeekCalendar({
         1440;
     }
   }, []);
-
-  const generateHourLabels = () => {
-    const hours = Array.from({ length: 17 }, (_, i) => i + 6); // Generates an array [6, 7, ..., 22] (6 AM to 10 PM)
-    return hours.map((hour) => (
-      <div key={hour}>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-          {hour % 12 === 0 ? 12 : hour % 12}
-          {hour < 12 ? "AM" : "PM"}
-        </div>
-      </div>
-    ));
-  };
-
-  const timeToGridRow = (time: string) => {
-    const [hours, minutes] = time.split(":").map(Number);
-    return hours - 6 + Math.floor(minutes / 60) + 1; // Start from 6 AM
-  };
 
   // get day, month, year, and month name
   const today = new Date();
@@ -153,7 +103,14 @@ export default function GymWeekCalendar({
   const [endOfWeek, setEndOfWeek] = useState<Date>(() => endOfWeekFirst);
 
   const [weekdays, setWeekdays] = useState<
-    { day: string; date: number; name: string; isHighlighted?: boolean, nameDay:string, num:number }[]
+    {
+      day: string;
+      date: number;
+      name: string;
+      isHighlighted?: boolean;
+      nameDay: string;
+      num: number;
+    }[]
   >(() => updateWeekdays(startOfWeekFirst));
 
   function updateWeekdays(newStartOfWeek: Date) {
@@ -206,20 +163,6 @@ export default function GymWeekCalendar({
     return `${hours}:${minutes}`;
   }
 
-  const dayToColumn = (day: string): number => {
-    const days = [
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday",
-      "sunday",
-    ];
-    const index = days.indexOf(day.toLowerCase()); // Ensure case insensitivity
-    return index === -1 ? 1 : index + 1; // Default to 1 if invalid day
-  };
-
   const generateColourLI = (name: string): string => {
     const hash = name
       .split("")
@@ -271,30 +214,6 @@ export default function GymWeekCalendar({
     ];
     return colors[hash % colors.length]; // Cycle through the color list based on hash
   };
-
-  function endsInWeek(classStartDate: Date, classEndDate: Date): boolean {
-    if (classEndDate <= endOfWeek && classEndDate >= startOfWeek) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  function startsInWeek(classStartDate: Date, classEndDate: Date): boolean {
-    if (classStartDate >= startOfWeek && classStartDate <= endOfWeek) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  function runningInWeek(classStartDate: Date, classEndDate: Date): boolean {
-    if (classStartDate <= startOfWeek && classEndDate >= endOfWeek) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   return (
     <div className="flex h-full flex-col">
@@ -382,10 +301,13 @@ export default function GymWeekCalendar({
         className="isolate flex flex-auto flex-col overflow-auto  "
       >
         <div className="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full ">
-         
-            <div className="grid grid-cols-7 text-sm/6 text-gray-900">
-              {weekdays.map(({ day, date, name, isHighlighted, nameDay, num }) => (
-                <div className="flex flex-col items-center py-3 gap-y-3" key={name}>
+          <div className="grid grid-cols-7 text-sm/6 text-gray-900">
+            {weekdays.map(
+              ({ day, date, name, isHighlighted, nameDay, num }) => (
+                <div
+                  className="flex flex-col items-center py-3 gap-y-3"
+                  key={name}
+                >
                   <div
                     key={date}
                     className="flex flex-row items-center gap-2 text-gray-500 bg-gray-900 rounded-lg px-6 py-2"
@@ -398,79 +320,97 @@ export default function GymWeekCalendar({
                           : "text-gray-300"
                       }`}
                     >
-                      {date} 
+                      {date}
                     </span>
                   </div>
 
-                  <ul className=" sm:pr-8  rounded-lg">
-                    {classes.flatMap((classObject, index) => {
+                  <ul className=" sm:pr-8  rounded-lg space-y-3 flex-grow">
+                    {classes.flatMap((classObject: ClassType, index) => {
                       // Ensure that we only process classObjects with valid days
                       if (!classObject.days || classObject.days.length === 0) {
                         return null; // Skip rendering this class if days array is empty or undefined
                       }
 
-                      const classStartDate = new Date(classObject.startDate);
-                      const classEndDate = new Date(classObject.endDate);
                       const todaysDate = new Date(startOfWeek);
                       todaysDate.setDate(startOfWeek.getDate() + num);
-                      
 
                       // Ensure the class is within the current week
                       if (!classObject.days.includes(nameDay)) {
                         return null;
                       }
 
-                      if(!(todaysDate >= classObject.startDate  && todaysDate <= classEndDate)){
-                        return null
+                      if (
+                        !(
+                          todaysDate >= classObject.startDate &&
+                          todaysDate <= classObject.endDate
+                        )
+                      ) {
+                        return null;
                       }
 
-                      
-                        return (
-                          <li
-                            key={`${index}-${day}`} // Ensure uniqueness across multiple days
-                            className={cn(
-                              `flex gap-x-4 py-5  rounded-lg `,
-                              generateColourLI(classObject.name)
-                            )}
-                          >
-                            <p>
-                              {classObject.name}
-                            </p>
-                            {/* <a
-                              href="#"
-                              className={`group absolute inset-1 flex flex-col  
-                         p-2 text-xs/5`}
+                      return (
+                        <li
+                          key={`${index}-${day}`} // Ensure uniqueness across multiple days
+                        >
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              
+                           
+                            <div
+                              className={cn(
+                                `flex gap-x-4 py-5  rounded-lg flex-grow w-full`,
+                                generateColourLI(classObject.name)
+                              )}
                             >
-                              <p
-                                className={cn(
-                                  `order-1 font-semibold text-lime-400`,
-                                  generateColourP1(classObject.name)
-                                )}
-                              >
-                                {classObject.name}
-                              </p>
-                              <p
-                                className={cn(
-                                  `text-lime-100 group-hover:text-lime-300`,
-                                  generateColourP2(classObject.name)
-                                )}
-                              >
-                                <time
-                                  dateTime={classObject.startDate.toISOString()}
+                              <div className={`flex-grow p-2 text-xs/5`}>
+                                <p
+                                  className={cn(
+                                    `text-lime-100 group-hover:text-lime-300`,
+                                    generateColourP2(classObject.name)
+                                  )}
                                 >
-                                  {formatTime(classObject.startDate)}
-                                </time>
-                              </p>
-                            </a> */}
-                          </li>
-                        );
-                      
+                                  <time
+                                    dateTime={classObject.startDate.toISOString()}
+                                  >
+                                    {formatTime(classObject.startDate)}
+                                  </time>
+                                </p>
+                                <p
+                                  className={cn(
+                                    `order-1 font-semibold text-lime-400`,
+                                    generateColourP1(classObject.name)
+                                  )}
+                                >
+                                  {classObject.name}
+                                </p>
+
+                                <p
+                                  className={cn(
+                                    `order-1 font-semibold text-lime-400 text-right`,
+                                    generateColourP2(classObject.name)
+                                  )}
+                                >
+                                  {classObject.duration} min
+                                </p>
+                              </div>
+                            </div>
+                            </DialogTrigger>
+                            <EditClassDialog
+                              classData={classObject}
+                              handleChange={handleChange}
+                                  id={id}
+                              toggleDay={toggleDay}
+                              isOwner={isOwner}
+                            />
+                          </Dialog>
+                        </li>
+                      );
                     })}
                   </ul>
                 </div>
-              ))}
-            </div>
-          
+              )
+            )}
+          </div>
         </div>
       </div>
     </div>
