@@ -13,13 +13,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export function EndDateControl({ date, onChange }: { date: Date; onChange: (date: Date) => void }) {
+export function EndDateControl({ date, onChange, isOwner }: { date: Date; onChange: (date: Date) => void; isOwner: boolean }) {
   //const [date, setDate] = React.useState<Date>()
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
+        disabled={!isOwner}
           variant={"outline"}
           className={cn(
             "w-full justify-start text-left font-normal",
@@ -32,6 +33,7 @@ export function EndDateControl({ date, onChange }: { date: Date; onChange: (date
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
+         disabled={!isOwner}
           mode="single"
           selected={date}
           onSelect={(selectedDate) => selectedDate && onChange(selectedDate)}

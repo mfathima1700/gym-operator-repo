@@ -15,7 +15,7 @@ const days = [
   { name: 'Sun', value: 'sunday' },
 ]
 
-export default function DaySelector({ selectedDays, toggleDay } : { selectedDays: string[], toggleDay: any }) {
+export default function DaySelector({ selectedDays, toggleDay, isOwner } : { selectedDays: string[], toggleDay: any, isOwner: boolean }) {
   //const [selectedDays, setSelectedDays] = useState<string[]>([])
 
   // const toggleDay = (day: string) => {
@@ -33,6 +33,7 @@ export default function DaySelector({ selectedDays, toggleDay } : { selectedDays
         {days.map((day) => (
           <Button
             key={day.value}
+            disabled={!isOwner}
             onClick={() => toggleDay(day.value)}
             variant={selectedDays.includes(day.value) ? "default" : 'outline'}
             className={cn(`relative flex h-10 w-10 items-center justify-center rounded-full ${

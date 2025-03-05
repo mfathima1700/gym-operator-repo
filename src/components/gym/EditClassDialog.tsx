@@ -170,6 +170,7 @@ id:string,
           <div className="mt-2">
             <StartDateControl
               date={classData.startDate}
+              isOwner={isOwner}
               onChange={(newDate) => {
                 //const existingTime = new Date(classData.startDate);
                 //newDate.setHours(existingTime.getHours(), existingTime.getMinutes());
@@ -182,6 +183,7 @@ id:string,
           <Label htmlFor="country">End Date</Label>
           <div className="mt-2">
             <EndDateControl
+             isOwner={isOwner}
               date={classData.endDate}
               onChange={(newDate) => {
                 //const existingTime = new Date(classData.endDate);
@@ -192,7 +194,7 @@ id:string,
           </div>
         </div>
         <div className="sm:col-span-4">
-          <DaySelector selectedDays={classData.days} toggleDay={toggleDay} />
+          <DaySelector selectedDays={classData.days} toggleDay={toggleDay} isOwner={isOwner} />
         </div>
         <div className="sm:w-[75px]">
           <Label htmlFor="address">Capacity</Label>
