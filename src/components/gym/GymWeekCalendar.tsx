@@ -13,8 +13,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { start } from "repl";
 import { EditClassDialog } from "./EditClassDialog";
 
-
-
 const daysOfWeek = [
   { day: "M", name: "Mon", nameDay: "monday", num: 0 },
   { day: "T", name: "Tue", nameDay: "tuesday", num: 1 },
@@ -52,7 +50,7 @@ export default function GymWeekCalendar({
   triggerRef,
   classes,
   isOwner,
-  id
+  id,
 }: {
   classData: any;
   handleChange: any;
@@ -61,7 +59,7 @@ export default function GymWeekCalendar({
   triggerRef: any;
   classes: ClassType[];
   isOwner: boolean;
-  id:string
+  id: string;
 }) {
   const container = useRef<HTMLDivElement | null>(null);
   const containerNav = useRef<HTMLDivElement | null>(null);
@@ -240,27 +238,33 @@ export default function GymWeekCalendar({
               <ChevronRight />
             </Button>
           </div>
-          <div className="hidden md:ml-4 md:flex md:items-center">
-            <div className="ml-6 h-6 w-px bg-gray-700" />
-            <Dialog>
-              <DialogTrigger asChild>
-                <button
-                  type="button"
-                  ref={triggerRef}
-                  className="ml-6 rounded-md bg-lime-600 px-3 py-2 text-sm font-semibold text-gray-200 shadow-xs hover:bg-lime-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600"
-                >
-                  Add class
-                </button>
-              </DialogTrigger>
 
-              <AddClassDialog
-                classData={classData}
-                handleChange={handleChange}
-                onSaveClick={onSaveClick}
-                toggleDay={toggleDay}
-              />
-            </Dialog>
-          </div>
+          {isOwner ? (
+            <div className="hidden md:ml-4 md:flex md:items-center">
+              <div className="ml-6 h-6 w-px bg-gray-700" />
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button
+                    type="button"
+                    ref={triggerRef}
+                    className="ml-6 rounded-md bg-lime-600 px-3 py-2 text-sm font-semibold text-gray-200 shadow-xs hover:bg-lime-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600"
+                  >
+                    Add class
+                  </button>
+                </DialogTrigger>
+
+                <AddClassDialog
+                  classData={classData}
+                  handleChange={handleChange}
+                  onSaveClick={onSaveClick}
+                  toggleDay={toggleDay}
+                />
+              </Dialog>
+            </div>
+          ) : (
+            <></>
+          )}
+
           <Menu as="div" className="relative ml-6 md:hidden">
             <MenuButton className="-mx-2 flex items-center rounded-full border border-transparent p-2 text-gray-400 hover:text-gray-500">
               <span className="sr-only">Open menu</span>
@@ -273,22 +277,23 @@ export default function GymWeekCalendar({
             >
               <div className="py-1">
                 <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                  >
-                    Add Class
-                  </a>
-                </MenuItem>
-              </div>
-              <div className="py-1">
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                  >
-                    Go to today
-                  </a>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <button
+                        ref={triggerRef}
+                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                      >
+                        Add Class
+                      </button>
+                    </DialogTrigger>
+
+                    <AddClassDialog
+                      classData={classData}
+                      handleChange={handleChange}
+                      onSaveClick={onSaveClick}
+                      toggleDay={toggleDay}
+                    />
+                  </Dialog>
                 </MenuItem>
               </div>
             </MenuItems>
@@ -324,8 +329,8 @@ export default function GymWeekCalendar({
                     </span>
                   </div>
 
-                  <ul className=" sm:pr-8  rounded-lg space-y-3 flex-grow">
-                    {classes.flatMap((classObject: ClassType, index) => {
+                  <ul className=" sm:pr-8 pl-4 rounded-lg space-y-3 flex-grow">
+                    {classes.sort((a, b) => a.startDate.getTime() - b.startDate.getTime()).flatMap((classObject: ClassType, index) => {
                       // Ensure that we only process classObjects with valid days
                       if (!classObject.days || classObject.days.length === 0) {
                         return null; // Skip rendering this class if days array is empty or undefined
@@ -354,51 +359,54 @@ export default function GymWeekCalendar({
                         >
                           <Dialog>
                             <DialogTrigger asChild>
-                              
-                           
-                            <div
-                              className={cn(
-                                `flex gap-x-4 py-5  rounded-lg flex-grow w-full`,
-                                generateColourLI(classObject.name)
-                              )}
-                            >
-                              <div className={`flex-grow p-2 text-xs/5`}>
-                                <p
-                                  className={cn(
-                                    `text-lime-100 group-hover:text-lime-300`,
-                                    generateColourP2(classObject.name)
-                                  )}
-                                >
-                                  <time
-                                    dateTime={classObject.startDate.toISOString()}
+                              <div
+                                className={cn(
+                                  `flex  flex-col gap-x-4 py-5  rounded-lg w-max`,
+                                  generateColourLI(classObject.name)
+                                )}
+                              >
+                                <div className={`flex-row p-2 gap-x-4 text-xs/5 flex-grow`}>
+                                  <p
+                                    className={cn(
+                                      ``,
+                                      generateColourP2(classObject.name)
+                                    )}
                                   >
-                                    {formatTime(classObject.startDate)}
-                                  </time>
-                                </p>
+                                    <time
+                                      dateTime={classObject.startDate.toISOString()}
+                                    >
+                                      {formatTime(classObject.startDate)}
+                                    </time>
+                                    <span
+                                    className={cn(
+                                      ` pl-4 font-semibold  text-right`,
+                                      generateColourP2(classObject.name)
+                                    )}
+                                  >
+                                    {classObject.duration} m
+                                  </span>
+                                  </p>
+                                  
+                                  
+                                </div>
+                                
+                                <div className="p-2 text-xs/5">
                                 <p
-                                  className={cn(
-                                    `order-1 font-semibold text-lime-400`,
-                                    generateColourP1(classObject.name)
-                                  )}
-                                >
-                                  {classObject.name}
-                                </p>
+                                    className={cn(
+                                      `order-1 font-semibold`,
+                                      generateColourP1(classObject.name)
+                                    )}
+                                  >
+                                    {classObject.name}
+                                  </p>
 
-                                <p
-                                  className={cn(
-                                    `order-1 font-semibold text-lime-400 text-right`,
-                                    generateColourP2(classObject.name)
-                                  )}
-                                >
-                                  {classObject.duration} min
-                                </p>
+                                </div>
                               </div>
-                            </div>
                             </DialogTrigger>
                             <EditClassDialog
                               classData={classObject}
                               handleChange={handleChange}
-                                  id={id}
+                              id={id}
                               toggleDay={toggleDay}
                               isOwner={isOwner}
                             />

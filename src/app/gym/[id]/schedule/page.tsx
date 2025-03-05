@@ -21,8 +21,14 @@ export default function GymSchedule() {
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : (params.id ?? "");
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const updateOwnerSettingsState = useSelector(
-    (state: RootState) => state.updateOwnerSettings
+  const createClassState = useSelector(
+    (state: RootState) => state.createClass
+  );
+  const updateClassState = useSelector(
+    (state: RootState) => state.updateClass
+  );
+  const deleteClassState = useSelector(
+    (state: RootState) => state.deleteClass
   );
   const userState = useSelector((state: RootState) => state.getUser);
   const [userData, setUserData] = useState(() => ({
@@ -38,7 +44,9 @@ export default function GymSchedule() {
 
   useEffect(() => {
     dispatch(getUserById(id));
-  }, [id]);
+  }, [id, createClassState.success, createClassState.error,
+     deleteClassState.success, deleteClassState.error,
+      updateClassState.success, updateClassState.error]);
 
   useEffect(() => {
     console.log(userState.user);

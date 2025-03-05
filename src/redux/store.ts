@@ -37,7 +37,7 @@ const rootReducer = combineReducers({
   cancelClass:cancelClassReducer,
   cancelBooking: cancelBookingReducer,
   bookClass: bookClassReducer,
-  updateClassReducer:updateClassReducer,
+  updateClass:updateClassReducer,
   createClass:createClassReducer,
 
   // Add other reducers here
