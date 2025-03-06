@@ -24,7 +24,12 @@ import { StartDateControl } from "./StartDateControl";
 import { EndDateControl } from "./EndDateConrol";
 import { format, parse } from "date-fns";
 import { cn } from "@/lib/utils";
-import { bookClass, cancelClass, deleteClass, updateClass } from "@/redux/actions/ClassActions";
+import {
+  bookClass,
+  cancelClass,
+  deleteClass,
+  updateClass,
+} from "@/redux/actions/ClassActions";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 
@@ -37,18 +42,16 @@ export function EditClassDialog({
 }: {
   classData: any;
   handleChange: any;
-id:string,
+  id: string;
   toggleDay: any;
   isOwner: boolean;
 }) {
   const dispatch = useDispatch<AppDispatch>();
-  
 
   function onCancelClick(e: React.MouseEvent) {
     e.preventDefault();
 
     dispatch(cancelClass(classData.id));
-
   }
 
   function onDeleteClick(e: React.MouseEvent) {
@@ -60,7 +63,7 @@ id:string,
   function onBookClick(e: React.MouseEvent) {
     e.preventDefault();
 
-    dispatch(bookClass(classData.id, id ));
+    dispatch(bookClass(classData.id, id));
   }
 
   function onUpdateClick(e: React.MouseEvent) {
@@ -92,7 +95,8 @@ id:string,
         <div className="sm:col-span-3">
           <Label htmlFor="country">Instructor</Label>
           <Select
-            value={classData.instructorId}  disabled={!isOwner}
+            value={classData.instructorId}
+            disabled={!isOwner}
             onValueChange={(value) => handleChange("instructorId", value)}
           >
             <SelectTrigger className="mt-2">
@@ -128,31 +132,28 @@ id:string,
         <div className="sm:col-span-3">
           <Label htmlFor="time">Time</Label>
           <Input
-        type="time"
-        placeholder="HH:MM"
-        disabled={!isOwner}
-        value={classData.time}
-        onChange={handleChange}
-        maxLength={5}
-        min="08:00"
-        max="20:00"
-        className={cn(
-          " mt-2 w-24 text-center  ",
-         
-        )}
-      />
+            type="time"
+            placeholder="HH:MM"
+            disabled={!isOwner}
+            value={classData.time}
+            onChange={handleChange}
+            maxLength={5}
+            min="08:00"
+            max="20:00"
+            className={cn(" mt-2 w-24 text-center  ")}
+          />
 
-{/* className={cn(
+          {/* className={cn(
           "w-24 text-center tracking-widest text-lg font-semibold ",
           !isValid ? "border-red-500 focus:ring-red-500" : ""
         )} */}
-
         </div>
-        
+
         <div className="sm:col-span-3">
           <Label htmlFor="country">Recurrance</Label>
           <Select
-            value={classData.recurrence}  disabled={!isOwner}
+            value={classData.recurrence}
+            disabled={!isOwner}
             onValueChange={(value) => handleChange("recurrence", value)}
           >
             <SelectTrigger className="mt-2">
@@ -183,7 +184,7 @@ id:string,
           <Label htmlFor="country">End Date</Label>
           <div className="mt-2">
             <EndDateControl
-             isOwner={isOwner}
+              isOwner={isOwner}
               date={classData.endDate}
               onChange={(newDate) => {
                 //const existingTime = new Date(classData.endDate);
@@ -194,7 +195,11 @@ id:string,
           </div>
         </div>
         <div className="sm:col-span-4">
-          <DaySelector selectedDays={classData.days} toggleDay={toggleDay} isOwner={isOwner} />
+          <DaySelector
+            selectedDays={classData.days}
+            toggleDay={toggleDay}
+            isOwner={isOwner}
+          />
         </div>
         <div className="sm:w-[75px]">
           <Label htmlFor="address">Capacity</Label>
@@ -211,7 +216,8 @@ id:string,
         <div className="sm:col-span-3">
           <Label htmlFor="country">Skill Level</Label>
           <Select
-            value={classData.skillLevel}  disabled={!isOwner}
+            value={classData.skillLevel}
+            disabled={!isOwner}
             onValueChange={(value) => handleChange("skillLevel", value)}
           >
             <SelectTrigger className="mt-2">
@@ -227,7 +233,8 @@ id:string,
         <div className="sm:col-span-3">
           <Label htmlFor="country">Intensity</Label>
           <Select
-            value={classData.intensity}  disabled={!isOwner}
+            value={classData.intensity}
+            disabled={!isOwner}
             onValueChange={(value) => handleChange("intensity", value)}
           >
             <SelectTrigger className="mt-2">
@@ -244,7 +251,8 @@ id:string,
         <div className="sm:col-span-3">
           <Label htmlFor="country">Duration</Label>
           <Select
-            value={classData.duration}  disabled={!isOwner}
+            value={classData.duration}
+            disabled={!isOwner}
             onValueChange={(value) => handleChange("duration", value)}
           >
             <SelectTrigger className="mt-2">
@@ -276,34 +284,35 @@ id:string,
         </div>
       </div>
       <DialogFooter>
-       
-     
+      <div className="space-x-4">
+        {isOwner ? (
+          <div className="space-x-4">
+            <Button variant="secondary" onClick={onCancelClick}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={onDeleteClick}>
+              Delete
+            </Button>
+            <Button type="button" onClick={onUpdateClick}>
+              Update
+            </Button>{" "}
+          </div>
+        ) : (
+          <></>
+        )}
 
-{
-  isOwner ?   <div className="space-x-4"><Button variant="secondary" onClick={onCancelClick}>
-  Cancel
- </Button>
- 
- <Button variant="destructive" onClick={onDeleteClick}>
- Delete
-</Button>
-
-<Button type="button" onClick={onUpdateClick}>
- Update
-</Button> </div>
- 
- :
- <Button type="button" onClick={onBookClick}>
-         Book
+        <Button
+          type="button"
+         
+          onClick={onBookClick}
+          disabled={
+            classData.bookings?.length >= classData.capacity ? true : false
+          }
+        >
+          Book
         </Button>
-
-}
-      
-
-    
-       
+        </div>
       </DialogFooter>
     </DialogContent>
   );
 }
-

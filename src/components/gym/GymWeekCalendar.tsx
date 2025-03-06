@@ -306,17 +306,12 @@ export default function GymWeekCalendar({
         className="isolate flex flex-auto flex-col overflow-auto  "
       >
         <div className="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full ">
-          <div className="grid grid-cols-7 text-sm/6 text-gray-900">
+          <div className="grid grid-cols-7 text-sm/6 text-gray-900 gap-4">
             {weekdays.map(
               ({ day, date, name, isHighlighted, nameDay, num }) => (
-                <div
-                  className="flex flex-col items-center py-3 gap-y-3"
-                  key={name}
-                >
-                  <div
-                    key={date}
-                    className="flex flex-row items-center gap-2 text-gray-500 bg-gray-900 rounded-lg px-6 py-2"
-                  >
+                <div className="flex flex-col items-center gap-y-3" key={name}>
+                  {/* Weekday Block */}
+                  <div className="flex flex-row items-center gap-2 text-gray-500 bg-gray-900 rounded-lg px-6 py-2 w-full justify-center">
                     {name}{" "}
                     <span
                       className={`flex size-8 items-center justify-center font-semibold ${
@@ -329,91 +324,97 @@ export default function GymWeekCalendar({
                     </span>
                   </div>
 
-                  <ul className=" sm:pr-8 pl-4 rounded-lg space-y-3 flex-grow">
-                    {classes.sort((a, b) => a.startDate.getTime() - b.startDate.getTime()).flatMap((classObject: ClassType, index) => {
-                      // Ensure that we only process classObjects with valid days
-                      if (!classObject.days || classObject.days.length === 0) {
-                        return null; // Skip rendering this class if days array is empty or undefined
-                      }
+                  {/* Classes List */}
+                  <ul className="w-full space-y-3">
+                    {classes
+                      .sort(
+                        (a, b) => a.startDate.getTime() - b.startDate.getTime()
+                      )
+                      .flatMap((classObject: ClassType, index) => {
+                        // Ensure that we only process classObjects with valid days
+                        if (
+                          !classObject.days ||
+                          classObject.days.length === 0
+                        ) {
+                          return null; // Skip rendering this class if days array is empty or undefined
+                        }
 
-                      const todaysDate = new Date(startOfWeek);
-                      todaysDate.setDate(startOfWeek.getDate() + num);
+                        const todaysDate = new Date(startOfWeek);
+                        todaysDate.setDate(startOfWeek.getDate() + num);
 
-                      // Ensure the class is within the current week
-                      if (!classObject.days.includes(nameDay)) {
-                        return null;
-                      }
+                        // Ensure the class is within the current week
+                        if (!classObject.days.includes(nameDay)) {
+                          return null;
+                        }
 
-                      if (
-                        !(
-                          todaysDate >= classObject.startDate &&
-                          todaysDate <= classObject.endDate
-                        )
-                      ) {
-                        return null;
-                      }
+                        if (
+                          !(
+                            todaysDate >= classObject.startDate &&
+                            todaysDate <= classObject.endDate
+                          )
+                        ) {
+                          return null;
+                        }
 
-                      return (
-                        <li
-                          key={`${index}-${day}`} // Ensure uniqueness across multiple days
-                        >
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <div
-                                className={cn(
-                                  `flex  flex-col gap-x-4 py-5  rounded-lg w-max`,
-                                  generateColourLI(classObject.name)
-                                )}
-                              >
-                                <div className={`flex-row p-2 gap-x-4 text-xs/5 flex-grow`}>
-                                  <p
-                                    className={cn(
-                                      ``,
-                                      generateColourP2(classObject.name)
-                                    )}
+                        return (
+                          <li
+                            key={`${index}-${day}`} // Ensure uniqueness across multiple days
+                          >
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <div
+                                  className={cn(
+                                    `flex flex-col gap-x-4 py-5 rounded-lg w-full`, // Use w-full to match width
+                                    generateColourLI(classObject.name)
+                                  )}
+                                >
+                                  <div
+                                    className={`flex-row p-2 gap-x-4 text-xs/5 flex-grow`}
                                   >
-                                    <time
-                                      dateTime={classObject.startDate.toISOString()}
+                                    <p
+                                      className={cn(
+                                        generateColourP2(classObject.name)
+                                      )}
                                     >
-                                      {formatTime(classObject.startDate)}
-                                    </time>
-                                    <span
-                                    className={cn(
-                                      ` pl-4 font-semibold  text-right`,
-                                      generateColourP2(classObject.name)
-                                    )}
-                                  >
-                                    {classObject.duration} m
-                                  </span>
-                                  </p>
-                                  
-                                  
-                                </div>
-                                
-                                <div className="p-2 text-xs/5">
-                                <p
-                                    className={cn(
-                                      `order-1 font-semibold`,
-                                      generateColourP1(classObject.name)
-                                    )}
-                                  >
-                                    {classObject.name}
-                                  </p>
+                                      <time
+                                        dateTime={classObject.startDate.toISOString()}
+                                      >
+                                        {formatTime(classObject.startDate)}
+                                      </time>
+                                      <span
+                                        className={cn(
+                                          `pl-4 font-semibold text-right`,
+                                          generateColourP2(classObject.name)
+                                        )}
+                                      >
+                                        {classObject.duration} m
+                                      </span>
+                                    </p>
+                                  </div>
 
+                                  <div className="p-2 pt-1 text-xs/5">
+                                    <p
+                                      className={cn(
+                                        `order-1 font-semibold`,
+                                        generateColourP1(classObject.name)
+                                      )}
+                                    >
+                                      {classObject.name}
+                                    </p>
+                                  </div>
                                 </div>
-                              </div>
-                            </DialogTrigger>
-                            <EditClassDialog
-                              classData={classObject}
-                              handleChange={handleChange}
-                              id={id}
-                              toggleDay={toggleDay}
-                              isOwner={isOwner}
-                            />
-                          </Dialog>
-                        </li>
-                      );
-                    })}
+                              </DialogTrigger>
+                              <EditClassDialog
+                                classData={classObject}
+                                handleChange={handleChange}
+                                id={id}
+                                toggleDay={toggleDay}
+                                isOwner={isOwner}
+                              />
+                            </Dialog>
+                          </li>
+                        );
+                      })}
                   </ul>
                 </div>
               )

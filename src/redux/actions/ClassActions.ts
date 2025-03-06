@@ -200,17 +200,19 @@ export async function cancelBooking(classId: string, userId:string) {
 export async function cancelClass(classId: string) {
   try {
 
-    const deletedGymClass = await db.booking.deleteMany({
-      where: {
-        classId: classId, // your class's id
-      },
-    });
+    // instead send out email to every boked person that this class is cancelled
+    // add this date to cancelledDates[] for this class
+    // const deletedGymClass = await db.booking.deleteMany({
+    //   where: {
+    //     classId: classId, // your class's id
+    //   },
+    // });
 
     console.log("CANCEL CLASS SUCCESS");
 
     return {
       type: CANCEL_CLASS_SUCCESS,
-      payload: deletedGymClass,
+      payload: {},
     };
 
   } catch (error) {
