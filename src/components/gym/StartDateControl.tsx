@@ -20,7 +20,7 @@ export function StartDateControl({ date, onChange, isOwner }: { date: Date; onCh
     <Popover>
       <PopoverTrigger asChild>
         <Button
-         disabled={!isOwner}
+          disabled={isOwner ? false: true}
           variant={"outline"}
           className={cn(
             "w-full justify-start text-left font-normal",
@@ -33,7 +33,7 @@ export function StartDateControl({ date, onChange, isOwner }: { date: Date; onCh
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
-         disabled={!isOwner}
+          disabled={isOwner ? false: true}
           mode="single"
           selected={date}
           onSelect={(selectedDate) => selectedDate && onChange(selectedDate)}

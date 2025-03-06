@@ -33,7 +33,7 @@ export default function DaySelector({ selectedDays, toggleDay, isOwner } : { sel
         {days.map((day) => (
           <Button
             key={day.value}
-            disabled={!isOwner}
+            disabled={isOwner ? false: true}
             onClick={() => toggleDay(day.value)}
             variant={selectedDays.includes(day.value) ? "default" : 'outline'}
             className={cn(`relative flex h-10 w-10 items-center justify-center rounded-full ${

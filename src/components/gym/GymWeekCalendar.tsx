@@ -185,7 +185,7 @@ export default function GymWeekCalendar({
     const colors = [
       "text-red-400 ",
       "text-blue-400 ",
-      "text-emerald-950",
+      "text-emerald-400",
       "text-amber-400",
       "text-cyan-400",
       "text-violet-400",

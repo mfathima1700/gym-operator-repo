@@ -96,9 +96,10 @@ export function AddClassDialog({
           <Label htmlFor="time">Time</Label>
           <Input
         type="time"
+        name="startTime"
         placeholder="HH:MM"
-        value={classData.time}
-        onChange={handleChange}
+        value={classData.startTime}
+        onChange={(e) => handleChange(e.target.name, e.target.value)}
         maxLength={5}
         min="08:00"
         max="20:00"
@@ -136,6 +137,7 @@ export function AddClassDialog({
           <div className="mt-2">
             <StartDateControl
               date={classData.startDate}
+              isOwner={true}
               onChange={(newDate) => {
                 //const existingTime = new Date(classData.startDate);
                 //newDate.setHours(existingTime.getHours(), existingTime.getMinutes());
@@ -148,6 +150,7 @@ export function AddClassDialog({
           <Label htmlFor="country">End Date</Label>
           <div className="mt-2">
             <EndDateControl
+             isOwner={true}
               date={classData.endDate}
               onChange={(newDate) => {
                 //const existingTime = new Date(classData.endDate);
@@ -158,7 +161,7 @@ export function AddClassDialog({
           </div>
         </div>
         <div className="sm:col-span-4">
-          <DaySelector selectedDays={classData.days} toggleDay={toggleDay} />
+          <DaySelector selectedDays={classData.days} toggleDay={toggleDay}  isOwner={true} />
         </div>
         <div className="sm:w-[75px]">
           <Label htmlFor="address">Capacity</Label>

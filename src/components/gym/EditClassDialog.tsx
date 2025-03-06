@@ -133,10 +133,11 @@ export function EditClassDialog({
           <Label htmlFor="time">Time</Label>
           <Input
             type="time"
+             name="startTime"
             placeholder="HH:MM"
             disabled={!isOwner}
-            value={classData.time}
-            onChange={handleChange}
+            value={classData.startTime}
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
             maxLength={5}
             min="08:00"
             max="20:00"
@@ -283,36 +284,30 @@ export function EditClassDialog({
           />
         </div>
       </div>
-      <DialogFooter>
-      <div className="space-x-4">
-        {isOwner ? (
-          <div className="space-x-4">
-            <Button variant="secondary" onClick={onCancelClick}>
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={onDeleteClick}>
-              Delete
-            </Button>
-            <Button type="button" onClick={onUpdateClick}>
-              Update
-            </Button>{" "}
-          </div>
-        ) : (
-          <></>
-        )}
+      <DialogFooter className="flex flex-row space-x-4 gap-x-2">
+  {isOwner ? (
+    <>
+      <Button variant="secondary" onClick={onCancelClick}>
+        Cancel
+      </Button>
+      <Button variant="destructive" onClick={onDeleteClick}>
+        Delete
+      </Button>
+      <Button type="button" onClick={onUpdateClick}>
+        Update
+      </Button>
+    </>
+  ) : null}
 
-        <Button
-          type="button"
-         
-          onClick={onBookClick}
-          disabled={
-            classData.bookings?.length >= classData.capacity ? true : false
-          }
-        >
-          Book
-        </Button>
-        </div>
-      </DialogFooter>
+  <Button
+    type="button"
+    onClick={onBookClick}
+    className="bg-lime-600 hover:bg-lime-500 focus-visible:outline-lime-600 text-white"
+    disabled={classData.bookings?.length >= classData.capacity}
+  >
+    Book
+  </Button>
+</DialogFooter>
     </DialogContent>
   );
 }
