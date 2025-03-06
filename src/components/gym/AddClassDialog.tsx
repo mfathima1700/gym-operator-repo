@@ -96,9 +96,9 @@ export function AddClassDialog({
           <Label htmlFor="time">Time</Label>
           <Input
         type="time"
-        name="startTime"
+        name="time"
         placeholder="HH:MM"
-        value={classData.startTime}
+        value={classData.time}
         onChange={(e) => handleChange(e.target.name, e.target.value)}
         maxLength={5}
         min="08:00"

@@ -133,10 +133,10 @@ export function EditClassDialog({
           <Label htmlFor="time">Time</Label>
           <Input
             type="time"
-             name="startTime"
+             name="time"
             placeholder="HH:MM"
             disabled={!isOwner}
-            value={classData.startTime}
+            value={classData.time}
             onChange={(e) => handleChange(e.target.name, e.target.value)}
             maxLength={5}
             min="08:00"
@@ -252,7 +252,7 @@ export function EditClassDialog({
         <div className="sm:col-span-3">
           <Label htmlFor="country">Duration</Label>
           <Select
-            value={classData.duration}
+            value={classData.duration.toString()}
             disabled={!isOwner}
             onValueChange={(value) => handleChange("duration", value)}
           >

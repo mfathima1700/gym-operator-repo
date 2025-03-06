@@ -68,7 +68,7 @@ export default function GymSchedule() {
     days: string[]; // Explicitly specify the type here
     room: string;
     skillLevel: string;
-    startTime: string;
+    time: string;
   };
 
   const initalState = {
@@ -84,7 +84,7 @@ export default function GymSchedule() {
     days: [], // Days selected for the class (array of weekdays)    // Any required equipment
     room: "", // Room in which the class will take place
     skillLevel: "BEGINNER",
-    startTime: "08:00"
+    time: "08:00"
   }
 
   const [classData, setClassData] = useState<ClassData>(() => initalState);

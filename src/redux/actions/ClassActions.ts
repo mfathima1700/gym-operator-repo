@@ -19,7 +19,7 @@ interface classData {
     days: string[],               // Days selected for the class (array of weekdays)   // Any required equipment
     room?: string, 
     skillLevel: string,
-    startTime:string,
+    time:string,
   }
 
 export async function createClass(data: classData, gymId: string) {
@@ -34,11 +34,11 @@ export async function createClass(data: classData, gymId: string) {
     }
 
     const startDateTime = new Date(data.startDate);
-    const [startHour, startMinute] = data.startTime.split(":").map(Number);
+    const [startHour, startMinute] = data.time.split(":").map(Number);
     startDateTime.setHours(startHour, startMinute, 0, 0);
 
     const endDateTime = new Date(data.endDate);
-    const [endHour, endMinute] = data.startTime.split(":").map(Number);
+    const [endHour, endMinute] = data.time.split(":").map(Number);
     endDateTime.setHours(endHour, endMinute, 0, 0);
 
     endDateTime.setMinutes(endDateTime.getMinutes() + parseInt(data.duration));
@@ -60,7 +60,7 @@ export async function createClass(data: classData, gymId: string) {
           days: data.days ?? [], // Ensure this is stored properly (e.g., array of weekdays)
           ...(data.room ? { room: data.room } : {}),
           skillLevel: data.skillLevel as SkillLevel,
-          time: data.startTime,
+          time: data.time,
          
         },
       });
@@ -96,11 +96,11 @@ export async function updateClass(data: classData, classId: string) {
     }
 
     const startDateTime = new Date(data.startDate);
-    const [startHour, startMinute] = data.startTime.split(":").map(Number);
+    const [startHour, startMinute] = data.time.split(":").map(Number);
     startDateTime.setHours(startHour, startMinute, 0, 0);
 
     const endDateTime = new Date(data.endDate);
-    const [endHour, endMinute] = data.startTime.split(":").map(Number);
+    const [endHour, endMinute] = data.time.split(":").map(Number);
     endDateTime.setHours(endHour, endMinute, 0, 0);
 
     endDateTime.setMinutes(endDateTime.getMinutes() + parseInt(data.duration));
@@ -122,7 +122,7 @@ export async function updateClass(data: classData, classId: string) {
           days: data.days ?? [], // Ensure this is stored properly (e.g., array of weekdays)
           ...(data.room ? { room: data.room } : {}),
           skillLevel: data.skillLevel as SkillLevel,
-          time: data.startTime,
+          time: data.time,
          
         },
       });
