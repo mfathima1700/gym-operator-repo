@@ -20,33 +20,31 @@ export default function GymSchedule() {
   const router = useRouter();
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : (params.id ?? "");
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const createClassState = useSelector(
-    (state: RootState) => state.createClass
-  );
-  const updateClassState = useSelector(
-    (state: RootState) => state.updateClass
-  );
-  const deleteClassState = useSelector(
-    (state: RootState) => state.deleteClass
-  );
+
+  const createClassState = useSelector((state: RootState) => state.createClass);
+  const updateClassState = useSelector((state: RootState) => state.updateClass);
+  const deleteClassState = useSelector((state: RootState) => state.deleteClass);
   const userState = useSelector((state: RootState) => state.getUser);
   const [userData, setUserData] = useState(() => ({
     gymRole: "",
     gym: {
       id: "",
-     
-      classes:[],
+
+      classes: [],
     },
   }));
 
-
-
   useEffect(() => {
     dispatch(getUserById(id));
-  }, [id, createClassState.success, createClassState.error,
-     deleteClassState.success, deleteClassState.error,
-      updateClassState.success, updateClassState.error]);
+  }, [
+    id,
+    createClassState.success,
+    createClassState.error,
+    deleteClassState.success,
+    deleteClassState.error,
+    updateClassState.success,
+    updateClassState.error,
+  ]);
 
   useEffect(() => {
     console.log(userState.user);
@@ -55,76 +53,13 @@ export default function GymSchedule() {
     }
   }, [userState.user, userState.success, userState.error]);
 
-  type ClassData = {
-    name: string;
-    description: string;
-    instructorId: string;
-    startDate: Date;
-    endDate: Date;
-    capacity: string;
-    intensity: string;
-    recurrence: string;
-    duration: string;
-    days: string[]; // Explicitly specify the type here
-    room: string;
-    skillLevel: string;
-    time: string;
-  };
-
-  const initalState = {
-    name: "", // Class name
-    description: "", // Description of the class
-    instructorId: "", // Selected instructor
-    startDate: new Date(), // Start date
-    endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)), // End date
-    capacity: "30", // Max capacity of class
-    intensity: "LOW", // Intensity level: BEGINNER, INTERMEDIATE, ADVANCED
-    recurrence: "WEEKLY", // Recurrence: one-off, weekly, biweekly
-    duration: "60", // Duration in minutes
-    days: [], // Days selected for the class (array of weekdays)    // Any required equipment
-    room: "", // Room in which the class will take place
-    skillLevel: "BEGINNER",
-    time: "08:00"
-  }
-
-  const [classData, setClassData] = useState<ClassData>(() => initalState);
-
-  const handleChange = (field: string, value: any) => {
-    setClassData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  function onSaveClick(e: React.MouseEvent) {
-    //e.preventDefault();
-    triggerRef.current?.click();
-    console.log(classData);
-    dispatch(createClass(classData, userData.gym.id));
-    setClassData(initalState);
-  }
-
-  const toggleDay = (day: string) => {
-    setClassData((prev) => ({
-      ...prev,
-      days: prev.days.includes(day)
-        ? prev.days.filter((d) => d !== day) // Remove if already selected
-        : [...prev.days, day], // Add if not selected
-    }));
-  };
-
   return (
     <>
       <CNLayout user={userData} id={id}>
         <div className="py-8 space-y-8">
           <ClassOptions />
           <GymWeekCalendar
-            classData={classData}
-            handleChange={handleChange}
-            onSaveClick={onSaveClick}
-            toggleDay={toggleDay} 
-            triggerRef={triggerRef}
-            classes={userData.gym.classes ?userData.gym.classes : []}
+            classes={userData.gym.classes ? userData.gym.classes : []}
             isOwner={userData?.gymRole === "OWNER" ? true : false}
             id={userData.gym.id}
           />

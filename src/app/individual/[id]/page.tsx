@@ -7,6 +7,19 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import * as React from "react"
+import { format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+ 
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
 function classNames(...classes: (string | false | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
 }
@@ -35,10 +48,16 @@ export default function IndividualDashboard() {
     }
   }, [userState.user, userState.success, userState.error]);
 
+  const [date, setDate] = React.useState<Date>()
   return (
     <>
       <CNLayout user={userData} id={id}>
-        <div></div>
+        <div>
+
+        
+
+
+        </div>
       </CNLayout>
     </>
   );

@@ -24,19 +24,86 @@ import { StartDateControl } from "./StartDateControl";
 import { EndDateControl } from "./EndDateConrol";
 import { format, parse } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { createClass } from "@/redux/actions/ClassActions";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 
 export function AddClassDialog({
-  classData,
-  handleChange,
-  onSaveClick,
-  toggleDay,
-  
+  //classData,
+  //handleChange,
+  //onSaveClick,
+  //toggleDay,
+  triggerRef,
+  gymId,
 }: {
-  classData: any;
-  handleChange: any;
-  onSaveClick: any;
-  toggleDay: any;
+  //classData: any;
+  //handleChange: any;
+  //onSaveClick: any;
+  //toggleDay: any;
+  triggerRef:any
+  gymId: string;
 }) {
+  const dispatch = useDispatch<AppDispatch>();
+  
+  type ClassData = {
+    name: string;
+    description: string;
+    instructorId: string;
+    startDate: Date;
+    endDate: Date;
+    capacity: string;
+    intensity: string;
+    recurrence: string;
+    duration: string;
+    days: string[]; // Explicitly specify the type here
+    room: string;
+    skillLevel: string;
+    time: string;
+  };
+
+  const initalState = {
+    name: "", // Class name
+    description: "", // Description of the class
+    instructorId: "", // Selected instructor
+    startDate: new Date(), // Start date
+    endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)), // End date
+    capacity: "30", // Max capacity of class
+    intensity: "LOW", // Intensity level: BEGINNER, INTERMEDIATE, ADVANCED
+    recurrence: "WEEKLY", // Recurrence: one-off, weekly, biweekly
+    duration: "60", // Duration in minutes
+    days: [], // Days selected for the class (array of weekdays)    // Any required equipment
+    room: "", // Room in which the class will take place
+    skillLevel: "BEGINNER",
+    time: "08:00"
+  }
+  
+const [classData, setClassData] = useState<ClassData>(() => initalState);
+
+  const handleChange = (field: string, value: any) => {
+    setClassData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  function onSaveClick(e: React.MouseEvent) {
+    //e.preventDefault();
+    triggerRef.current?.click();
+    console.log(classData);
+    dispatch(createClass(classData, gymId));
+    setClassData(initalState);
+  }
+
+  const toggleDay = (day: string) => {
+    setClassData((prev) => ({
+      ...prev,
+      days: prev.days.includes(day)
+        ? prev.days.filter((d) => d !== day) // Remove if already selected
+        : [...prev.days, day], // Add if not selected
+    }));
+  };
+
   return (
     <DialogContent className="sm:max-w-[700px] w-full max-w-3xl max-h-[80vh] overflow-y-auto">
       <DialogHeader>
@@ -138,11 +205,7 @@ export function AddClassDialog({
             <StartDateControl
               date={classData.startDate}
               isOwner={true}
-              onChange={(newDate) => {
-                //const existingTime = new Date(classData.startDate);
-                //newDate.setHours(existingTime.getHours(), existingTime.getMinutes());
-                handleChange("startDate", newDate);
-              }}
+             handleChange={handleChange}
             />
           </div>
         </div>
@@ -152,11 +215,7 @@ export function AddClassDialog({
             <EndDateControl
              isOwner={true}
               date={classData.endDate}
-              onChange={(newDate) => {
-                //const existingTime = new Date(classData.endDate);
-                //newDate.setHours(existingTime.getHours(), existingTime.getMinutes());
-                handleChange("endDate", newDate);
-              }}
+              handleChange={handleChange}
             />
           </div>
         </div>

@@ -13,7 +13,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export function EndDateControl({ date, onChange, isOwner }: { date: Date; onChange: (date: Date) => void; isOwner: boolean }) {
+export function EndDateControl({ date, handleChange, isOwner }: { date: Date; handleChange: any; isOwner: boolean }) {
   //const [date, setDate] = React.useState<Date>()
 
   return (
@@ -36,7 +36,10 @@ export function EndDateControl({ date, onChange, isOwner }: { date: Date; onChan
          disabled={isOwner ? false: true}
           mode="single"
           selected={date}
-          onSelect={(selectedDate) => selectedDate && onChange(selectedDate)}
+          onSelect={(selectedDate) => { 
+            if (selectedDate) {
+             handleChange("endDate", new Date(selectedDate))
+          }}}
           initialFocus
         />
       </PopoverContent>

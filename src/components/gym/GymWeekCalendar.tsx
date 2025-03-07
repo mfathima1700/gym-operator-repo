@@ -43,24 +43,21 @@ type ClassType = {
 };
 
 export default function GymWeekCalendar({
-  classData,
-  handleChange,
-  onSaveClick,
-  toggleDay,
-  triggerRef,
+
+ 
   classes,
   isOwner,
   id,
 }: {
-  classData: any;
-  handleChange: any;
-  onSaveClick: any;
-  toggleDay: any;
-  triggerRef: any;
+
+ 
   classes: ClassType[];
   isOwner: boolean;
   id: string;
 }) {
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const editTriggerRef = useRef<HTMLButtonElement>(null);
+
   const container = useRef<HTMLDivElement | null>(null);
   const containerNav = useRef<HTMLDivElement | null>(null);
   const containerOffset = useRef<HTMLDivElement | null>(null);
@@ -242,7 +239,7 @@ export default function GymWeekCalendar({
           {isOwner ? (
             <div className="hidden md:ml-4 md:flex md:items-center">
               <div className="ml-6 h-6 w-px bg-gray-700" />
-              <Dialog>
+              <Dialog modal={false}>
                 <DialogTrigger asChild>
                   <button
                     type="button"
@@ -254,10 +251,8 @@ export default function GymWeekCalendar({
                 </DialogTrigger>
 
                 <AddClassDialog
-                  classData={classData}
-                  handleChange={handleChange}
-                  onSaveClick={onSaveClick}
-                  toggleDay={toggleDay}
+                triggerRef={triggerRef}
+                gymId={id}
                 />
               </Dialog>
             </div>
@@ -277,7 +272,7 @@ export default function GymWeekCalendar({
             >
               <div className="py-1">
                 <MenuItem>
-                  <Dialog>
+                  <Dialog modal={false}>
                     <DialogTrigger asChild>
                       <button
                         ref={triggerRef}
@@ -288,10 +283,8 @@ export default function GymWeekCalendar({
                     </DialogTrigger>
 
                     <AddClassDialog
-                      classData={classData}
-                      handleChange={handleChange}
-                      onSaveClick={onSaveClick}
-                      toggleDay={toggleDay}
+                    triggerRef={triggerRef}
+                       gymId={id}
                     />
                   </Dialog>
                 </MenuItem>
@@ -360,9 +353,10 @@ export default function GymWeekCalendar({
                           <li
                             key={`${index}-${day}`} // Ensure uniqueness across multiple days
                           >
-                            <Dialog>
+                            <Dialog modal={false}>
                               <DialogTrigger asChild>
-                                <div
+                                <button
+                                 ref={editTriggerRef}
                                   className={cn(
                                     `flex flex-col gap-x-4 py-5 rounded-lg w-full`, // Use w-full to match width
                                     generateColourLI(classObject.name)
@@ -376,7 +370,7 @@ export default function GymWeekCalendar({
                                         generateColourP2(classObject.name)
                                       )}
                                     >
-                                      <time
+                                      <time className="text-left"
                                         dateTime={classObject.startDate.toISOString()}
                                       >
                                         {formatTime(classObject.startDate)}
@@ -395,20 +389,19 @@ export default function GymWeekCalendar({
                                   <div className="p-2 pt-1 text-xs/5">
                                     <p
                                       className={cn(
-                                        `order-1 font-semibold`,
+                                        `order-1 font-semibold text-left`,
                                         generateColourP1(classObject.name)
                                       )}
                                     >
                                       {classObject.name}
                                     </p>
                                   </div>
-                                </div>
+                                </button>
                               </DialogTrigger>
                               <EditClassDialog
-                                classData={classObject}
-                                handleChange={handleChange}
+                                gymClass={classObject}
                                 id={id}
-                                toggleDay={toggleDay}
+                                editTriggerRef={editTriggerRef}
                                 isOwner={isOwner}
                               />
                             </Dialog>
