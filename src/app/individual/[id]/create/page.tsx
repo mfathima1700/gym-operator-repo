@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { updateUser } from "@/redux/actions/GymActions";
+import { getUserById, updateUser } from "@/redux/actions/GymActions";
 
 function classNames(...classes: (string | false | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
@@ -44,6 +44,25 @@ export default function CreateAccountOwner() {
     }));
   }
 
+  const userState = useSelector((state: RootState) => state.getUser);
+    const [userData, setUserData] = useState(() => ({
+      gym: {
+        id: "",
+        classes:[],
+      },
+    }));
+  
+    useEffect(() => {
+      dispatch(getUserById(id));
+    }, [id]);
+  
+    useEffect(() => {
+      console.log(userState.user);
+      if (userState.user) {
+        setUserData(userState.user);
+      }
+    }, [userState.user, userState.success, userState.error]);
+
   // function handleDateChange(date: Date) {
   //   setCreateData((prevState) => ({
   //     ...prevState,
@@ -53,7 +72,7 @@ export default function CreateAccountOwner() {
 
   return (
     <>
-      <CNLayout>
+      <CNLayout user={userData} id={id}>
         <div className="mx-auto py-8 ">
           <IndividualAccountCard
             handleChange={handleChange}
