@@ -11,7 +11,7 @@ function classNames(...classes: (string | false | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function BillingsSettings() {
+export default function IndividualFailurePage() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const params = useParams();
