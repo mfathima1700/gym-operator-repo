@@ -1,7 +1,7 @@
 "use client";
 
 import CNLayout from "@/components/layout/cn-layout";
-import { createCheckoutSession, redirectToCheckout } from "@/redux/actions/BillingActions";
+import { createCheckoutOwnerSession, redirectToCheckout } from "@/redux/actions/BillingActions";
 import { getUserById } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useParams, useRouter } from "next/navigation";
@@ -45,7 +45,7 @@ export default function OwnerCheckoutPage() {
 
   const handleCheckout = async () => {
     try {
-      const sessionId = await dispatch(createCheckoutSession());
+      const sessionId = await dispatch(createCheckoutOwnerSession( id));
       await dispatch(redirectToCheckout(sessionId));
     } catch (error) {
       console.error(error);
