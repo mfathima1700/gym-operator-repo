@@ -1,7 +1,7 @@
 import React from 'react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 
-function SuccessMessage() {
+function SuccessMessage({id, owner}: {id: string, owner: boolean}) {
   return (
     <div>
         <div
@@ -18,7 +18,7 @@ function SuccessMessage() {
                 </h3>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur amet labore.
+                  Thank you for your purchase! Your payment has been successfully processed. Your subscription is now active. A confirmation email has been sent to your inbox.
                   </p>
                 </div>
               </div>
@@ -27,7 +27,7 @@ function SuccessMessage() {
               <button
                 type="button"
                 
-                className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="inline-flex w-full justify-center rounded-md bg-lime-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-lime-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600"
               >
                 Go back to dashboard
               </button>

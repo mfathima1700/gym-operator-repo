@@ -1,5 +1,6 @@
 "use client";
 
+import SuccessMessage from "@/components/billing/SuccessMessage";
 import CNLayout from "@/components/layout/cn-layout";
 import { getUserById } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -42,8 +43,8 @@ export default function IndividualSuccessPage() {
   return (
     <>
       <CNLayout user={userData} id={id}>
-        <div >
-          
+        <div className="mx-auto">
+          <SuccessMessage />
         </div>
       </CNLayout>
     </>

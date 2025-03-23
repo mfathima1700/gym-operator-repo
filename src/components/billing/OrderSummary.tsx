@@ -98,6 +98,10 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
                     <p className="text-base font-medium text-red-600">{message}</p>
                     )
             }
+
+<p className="text-sm text-gray-500">
+    By subscribing, you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
+  </p>
           </div>
         </div>
       </div>

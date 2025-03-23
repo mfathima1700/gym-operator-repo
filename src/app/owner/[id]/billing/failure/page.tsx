@@ -1,5 +1,6 @@
 "use client";
 
+import FailureMessage from "@/components/billing/FailureMessage";
 import CNLayout from "@/components/layout/cn-layout";
 import { getUserById } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -42,7 +43,8 @@ export default function OwnerFailurePage() {
   return (
     <>
       <CNLayout user={userData} id={id}>
-        <div >
+        <div className="mx-auto">
+          <FailureMessage />
           
         </div>
       </CNLayout>
