@@ -2,14 +2,7 @@ import React from "react";
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import { CheckCircleIcon, TrashIcon } from "@heroicons/react/20/solid";
 
-const products = [
-  {
-    id: 1,
-    title: "Basic Tee",
-    price: "$32.00",
-  },
-  // More products...
-];
+
 
 function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, message: string, owner: boolean}) {
   return (
@@ -37,14 +30,14 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
                         <a
                           className="font-medium text-gray-700 hover:text-gray-800"
                         >
-                          {owner ? "Gym Membership Subscription" : "Gym Ownership Subscription" }
+                          {owner ? "Gym Ownership Subscription" :  "Gym Membership Subscription" }
                         </a>
                       </h4>
                       <p className="mt-1 text-sm text-gray-500">
-                       {owner ? "Gym Membership" : "Gym Ownership" }
+                       {owner ? "Member management" : "Booking classes" }
                       </p>
                       <p className="mt-1 text-sm text-gray-500">
-                      {owner ? "Gym Membership" : "Gym Ownership" }
+                      {owner ? "Payment processing" : "Payment management" }
                       </p>
                     </div>
 
@@ -53,13 +46,16 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
 
                   <div className="flex flex-1 items-end justify-between pt-2">
                     <p className="mt-1 text-sm font-medium text-gray-900">
-                    { owner ? `£50.00` : `£25.00`}
+                    { owner ? `£50.00` : `£25.00`} 
+                    
+                    
                     </p>
 
                     <div className="ml-4">
                       <div className="grid grid-cols-1">
                         <select
                           id="quantity"
+                          disabled={true}
                           name="quantity"
                           aria-label="Quantity"
                           className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
@@ -82,7 +78,10 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
           
             <div className="flex items-center justify-between">
               <dt className="text-base font-medium">Total</dt>
-              <dd className="text-base font-medium text-gray-900">{ owner ? `£50.00` : `£25.00`}</dd>
+              <dd className="text-base font-medium text-gray-900">{ owner ? `£50.00` : `£25.00`}{" "}
+                <span className="font-normal text-gray-500">
+                    /month
+                    </span></dd>
             </div>
           </dl>
 

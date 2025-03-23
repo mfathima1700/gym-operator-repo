@@ -75,9 +75,11 @@ export default function OwnerCheckoutPage() {
   return (
     <>
       <CNLayout user={userData} id={id}>
-        <div className="max-w-lg ">
+        <div className="flex justify-center">
+        <div className="max-w-xl ">
           <OrderSummary  handleCheckout={handleCheckout} message={checkoutState.error?.message}   owner={true}/>
          
+        </div>
         </div>
       </CNLayout>
     </>

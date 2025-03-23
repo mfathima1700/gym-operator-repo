@@ -1,5 +1,6 @@
 "use client";
 
+import OrderSummary from "@/components/billing/OrderSummary";
 import CNLayout from "@/components/layout/cn-layout";
 import { createCheckoutIndividualSession } from "@/redux/actions/BillingActions";
 import { getUserById } from "@/redux/actions/GymActions";
@@ -76,8 +77,11 @@ export default function IndividualCheckoutPage() {
   return (
     <>
       <CNLayout user={userData} id={id}>
-        <div >
-          
+        <div className="flex justify-center">
+        <div className="max-w-xl ">
+          <OrderSummary  handleCheckout={handleCheckout} message={checkoutState.error?.message}   owner={false}/>
+         
+        </div>
         </div>
       </CNLayout>
     </>
