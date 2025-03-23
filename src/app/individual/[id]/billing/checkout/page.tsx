@@ -1,8 +1,10 @@
 "use client";
 
 import CNLayout from "@/components/layout/cn-layout";
+import { createCheckoutIndividualSession } from "@/redux/actions/BillingActions";
 import { getUserById } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
+import { loadStripe } from "@stripe/stripe-js";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +23,10 @@ export default function IndividualCheckoutPage() {
     (state: RootState) => state.updateOwnerSettings
   );
   const userState = useSelector((state: RootState) => state.getUser);
+  const checkoutState = useSelector(
+      (state: RootState) => state.checkout
+    );
+    const stripePromise = loadStripe(process.env.NEXT_PUBLIC_PUBKISHABLE_KEY as string);
   const [userData, setUserData] = useState(() => ({
     gym: {
       id: "",
@@ -38,6 +44,34 @@ export default function IndividualCheckoutPage() {
       setUserData(userState.user);
     }
   }, [userState.user, userState.success, userState.error]);
+
+   useEffect(() => {
+      if(checkoutState.sessionId){
+        getResult(checkoutState.sessionId);
+      }
+    }, [checkoutState.sessionId,  checkoutState.error]);
+  
+    const getResult = async (sessionId: string) => {
+      const stripe = await stripePromise;
+      if (stripe) {
+        const result = await stripe.redirectToCheckout({ sessionId });
+        if (result.error) {
+          console.error(result.error);
+        }
+      }
+    }
+  
+    const handleCheckout = async () => {
+      try {
+        dispatch(createCheckoutIndividualSession( id));
+        //await dispatch(redirectToCheckout(sessionId));
+        
+      
+  
+      } catch (error) {
+        console.error(error);
+      }
+    };
   
   return (
     <>
