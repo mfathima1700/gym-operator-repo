@@ -1,12 +1,14 @@
 "use client";
 
 import CNLayout from "@/components/layout/cn-layout";
-import { createCheckoutOwnerSession, redirectToCheckout } from "@/redux/actions/BillingActions";
+import { createCheckoutOwnerSession } from "@/redux/actions/BillingActions";
 import { getUserById } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { loadStripe } from '@stripe/stripe-js';
+import { Button } from "@/components/ui/button";
 
 function classNames(...classes: (string | false | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
@@ -24,6 +26,7 @@ export default function OwnerCheckoutPage() {
   const checkoutState = useSelector(
     (state: RootState) => state.checkout
   );
+  const stripePromise = loadStripe(process.env.NEXT_PUBLIC_PUBKISHABLE_KEY as string);
   const userState = useSelector((state: RootState) => state.getUser);
   const [userData, setUserData] = useState(() => ({
     gym: {
@@ -43,10 +46,29 @@ export default function OwnerCheckoutPage() {
     }
   }, [userState.user, userState.success, userState.error]);
 
+  useEffect(() => {
+    if(checkoutState.sessionId){
+      getResult(checkoutState.sessionId);
+    }
+  }, [checkoutState.sessionId,  checkoutState.error]);
+
+  const getResult = async (sessionId: string) => {
+    const stripe = await stripePromise;
+    if (stripe) {
+      const result = await stripe.redirectToCheckout({ sessionId });
+      if (result.error) {
+        console.error(result.error);
+      }
+    }
+  }
+
   const handleCheckout = async () => {
     try {
-      const sessionId = await dispatch(createCheckoutOwnerSession( id));
-      await dispatch(redirectToCheckout(sessionId));
+      dispatch(createCheckoutOwnerSession( id));
+      //await dispatch(redirectToCheckout(sessionId));
+      
+    
+
     } catch (error) {
       console.error(error);
     }
@@ -57,10 +79,10 @@ export default function OwnerCheckoutPage() {
       <CNLayout user={userData} id={id}>
         <div >
         <div>
-      <button onClick={handleCheckout} disabled={checkoutState.loading}>
+      <Button onClick={handleCheckout} disabled={checkoutState.loading}>
         {checkoutState.loading ? 'Processing...' : 'Pay Now'}
-      </button>
-      {checkoutState.error && <p style={{ color: 'red' }}>{checkoutState.error}</p>}
+      </Button>
+      {checkoutState.error && <p style={{ color: 'red' }}>{checkoutState.error?.message}</p>}
     </div>
         </div>
       </CNLayout>
