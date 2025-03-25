@@ -62,6 +62,7 @@ export async function getUserById(id: string) {
     const user = await db.user.findUnique({
       where: { id }, // Look up user by email
       include: {
+        goals: true,
         gym: {
           include: {
             classes: true, // ater this based on date time so only the ones now are fetched -> long wait times

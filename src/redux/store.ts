@@ -16,6 +16,7 @@ import { createGymReducer, setUserDataReducer, updateUserSettingsReducer, update
 import { sendCancelReducer } from "./reducers/EmailReducer";
 import { bookClassReducer, cancelBookingReducer, cancelClassReducer, createClassReducer, deleteClassReducer, getBookingsReducer, updateClassReducer } from "./reducers/ClassReducer";
 import { checkoutReducer } from "./reducers/BillingReducer";
+import { createGoalReducer, deleteGoalReducer, editGoalReducer } from "./reducers/GoalReducer";
 //import { composeWithDevTools } from "redux-devtools-extension";
 
 const rootReducer = combineReducers({
@@ -40,7 +41,10 @@ const rootReducer = combineReducers({
   bookClass: bookClassReducer,
   updateClass:updateClassReducer,
   createClass:createClassReducer,
-  checkout:checkoutReducer
+  checkout:checkoutReducer,
+  deleteGoal: deleteGoalReducer, 
+  editGoal: editGoalReducer, 
+  createGoal: createGoalReducer,
   // Add other reducers here
 });
 

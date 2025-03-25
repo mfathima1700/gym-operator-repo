@@ -21,50 +21,50 @@ datasource db {
 // membership level
 
 model User {
-  id            String          @id @default(auto()) @map("_id") @db.ObjectId
-  email         String          @unique
-  name          String?
-  password      String
-  hashedPassword String?
-  createdAt     DateTime        @default(now())
-  gender        GenderStatus?
-  gymRole       GymRole
-  bookings      Booking[]
-  gym           Gym?            @relation("UserGym") // One-to-one relationship with Gym
-  memberships   Membership[]
-  dateOfBirth   DateTime?
-  goals         Goal[]
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  Authenticator Authenticator[]
-  updatedAt     DateTime        @updatedAt
-  userRole      UserRole
-  isTrainer     Boolean? @default(false)  
-  phoneNumber     String?         // New field
-  country         String?         // New field
-  emailNotifications     String? @default("everything") // New field
-  pushNotifications String?        @default("everything")
- classesTaught   Class[] @relation("InstructorClasses")
+  id                 String          @id @default(auto()) @map("_id") @db.ObjectId
+  email              String          @unique
+  name               String?
+  password           String
+  hashedPassword     String?
+  createdAt          DateTime        @default(now())
+  gender             GenderStatus?
+  gymRole            GymRole
+  bookings           Booking[]
+  gym                Gym?            @relation("UserGym") // One-to-one relationship with Gym
+  memberships        Membership[]
+  dateOfBirth        DateTime?
+  goals              Goal[]
+  emailVerified      DateTime?
+  image              String?
+  accounts           Account[]
+  sessions           Session[]
+  Authenticator      Authenticator[]
+  updatedAt          DateTime        @updatedAt
+  userRole           UserRole
+  isTrainer          Boolean?        @default(false)
+  phoneNumber        String? // New field
+  country            String? // New field
+  emailNotifications String?         @default("everything") // New field
+  pushNotifications  String?         @default("everything")
+  classesTaught      Class[]         @relation("InstructorClasses")
 }
 
 model Gym {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  ownerId     String       @unique @db.ObjectId // Ensure uniqueness for one-to-one
-  owner       User         @relation("UserGym", fields: [ownerId], references: [id]) // One-to-one relationship with User
-  memberships Membership[]
-  classes     Class[]
-  createdAt   DateTime     @default(now())
-  gymCode     String?      @unique @default(uuid())
-  country     String?
-  city         String?
-  postcode        String?
-  streetAddress  String?
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  ownerId       String       @unique @db.ObjectId // Ensure uniqueness for one-to-one
+  owner         User         @relation("UserGym", fields: [ownerId], references: [id]) // One-to-one relationship with User
+  memberships   Membership[]
+  classes       Class[]
+  createdAt     DateTime     @default(now())
+  gymCode       String?      @unique @default(uuid())
+  country       String?
+  city          String?
+  postcode      String?
+  streetAddress String?
   state         String?
   description   String?
-  logo         String?
+  logo          String?
 }
 
 // Membership model
@@ -83,24 +83,24 @@ model Membership {
 
 // Class model
 model Class {
-  id              String          @id @default(auto()) @map("_id") @db.ObjectId
-  name            String
-  description     String?
-  gymId           String          @db.ObjectId
-  gym             Gym             @relation(fields: [gymId], references: [id])
-  bookings        Booking[]
-  capacity        Int?
-  intensity       IntensityRating?
-  skillLevel      SkillLevel?
-  instructorId    String?  @db.ObjectId  
-  instructor      User?    @relation("InstructorClasses", fields: [instructorId], references: [id]) // ✅ Fix the relation name
-  recurrence      Occurance?          // e.g., "one-off", "weekly", "biweekly"
-  duration        Int?             // Duration in minutes
-  days            String[]        // Array of selected weekdays
-  room            String?         // Optional: Room name or reference
-  startDate       DateTime?
-  endDate         DateTime?
-  time            String?
+  id           String           @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  description  String?
+  gymId        String           @db.ObjectId
+  gym          Gym              @relation(fields: [gymId], references: [id])
+  bookings     Booking[]
+  capacity     Int?
+  intensity    IntensityRating?
+  skillLevel   SkillLevel?
+  instructorId String?          @db.ObjectId
+  instructor   User?            @relation("InstructorClasses", fields: [instructorId], references: [id]) // ✅ Fix the relation name
+  recurrence   Occurance? // e.g., "one-off", "weekly", "biweekly"
+  duration     Int? // Duration in minutes
+  days         String[] // Array of selected weekdays
+  room         String? // Optional: Room name or reference
+  startDate    DateTime?
+  endDate      DateTime?
+  time         String?
 }
 
 // instructor
@@ -119,7 +119,7 @@ model Booking {
   class       Class    @relation(fields: [classId], references: [id])
   bookingDate DateTime @default(now())
 
-   @@unique([userId, classId])  // ✅ Ensures one booking per user per class
+  @@unique([userId, classId]) // ✅ Ensures one booking per user per class
 }
 
 // Enums for roles and membership status
@@ -164,21 +164,15 @@ enum Occurance {
 }
 
 model Goal {
-  id         String     @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String     @db.ObjectId // Reference to the User model
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String   @db.ObjectId // Reference to the User model
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title      String // Title of the goal (e.g., "Lose 5 kg", "Run a 5k")
   notes      String? // Optional details about the goal
   targetDate DateTime // Deadline or target date for achieving the goal
-  status     GoalStatus @default(IN_PROGRESS) // Goal status
-  createdAt  DateTime   @default(now()) // Automatically set on creation
-  updatedAt  DateTime   @updatedAt // Automatically updated on changes
-}
-
-enum GoalStatus {
-  IN_PROGRESS
-  COMPLETED
-  CANCELLED
+  completed  Boolean  @default(false)
+  createdAt  DateTime @default(now()) // Automatically set on creation
+  updatedAt  DateTime @updatedAt // Automatically updated on changes
 }
 
 model Account {
