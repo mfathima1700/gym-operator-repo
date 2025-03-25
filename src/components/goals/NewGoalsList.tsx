@@ -68,12 +68,8 @@ export default function NewGoalsList(): JSX.Element {
               </div>
             </CardHeader>
             <CardContent className="pt-4">
-              <Label
-               
-                className="min-h-[120px] font-normal text-gray-500"
-               
-              >
-{comment.content}
+              <Label className="min-h-[120px] font-normal text-gray-500">
+                {comment.content}
               </Label>
             </CardContent>
           </Card>

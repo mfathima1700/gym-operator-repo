@@ -8,6 +8,8 @@ import { getUserById } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useParams, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
+import { Button } from "@/components/ui/button";
+import { MailOpen, PlusCircle, PlusIcon } from "lucide-react";
 
 export default function Goals() {
   const dispatch = useDispatch<AppDispatch>();
@@ -43,12 +45,19 @@ export default function Goals() {
         <div className="flex flex-col md:flex-row w-full gap-4">
           {/* Left Column */}
           <div className="w-full md:w-1/2  p-4">
-            <h2 className="text-xl font-bold mb-4">Goals in Progress</h2>
+            <h2 className="text-xl font-semibold mb-4 text-white">Goals in Progress</h2>
             <NewGoalsList />
           </div>
 
-          <div className="w-full md:w-1/2  p-4">
-            <h2 className="text-xl font-bold mb-4">Completed Goals</h2>
+          <div className="w-full md:w-1/2 p-4">
+            {/* Title and Button Row */}
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-white">Completed Goals</h2>
+              <Button>
+                <PlusIcon />
+                Add Goal
+              </Button>
+            </div>
 
             <OldGoalsList />
           </div>
