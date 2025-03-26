@@ -10,9 +10,9 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
       <div className="mt-10 lg:mt-0">
         <h2 className="text-lg font-medium text-white">Checkout</h2>
 
-        <div className="mt-4 rounded-lg border border-gray-200 bg-white shadow-xs">
+        <div className="mt-4 rounded-lg border border-gray-800  shadow-xs">
           <h3 className="sr-only">Items in your cart</h3>
-          <ul role="list" className="divide-y divide-gray-200">
+          <ul role="list" className="divide-y divide-gray-800">
           
               <div  className="flex px-4 py-6 sm:px-6">
                 <div className="shrink-0">
@@ -28,15 +28,15 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
                     <div className="min-w-0 flex-1">
                       <h4 className="text-sm">
                         <a
-                          className="font-medium text-gray-700 hover:text-gray-800"
+                          className="font-medium text-gray-200"
                         >
                           {owner ? "Gym Ownership Subscription" :  "Gym Membership Subscription" }
                         </a>
                       </h4>
-                      <p className="mt-1 text-sm text-gray-500">
+                      <p className="mt-1 text-sm text-gray-600">
                        {owner ? "Member management" : "Booking classes" }
                       </p>
-                      <p className="mt-1 text-sm text-gray-500">
+                      <p className="mt-1 text-sm text-gray-600">
                       {owner ? "Payment processing" : "Payment management" }
                       </p>
                     </div>
@@ -45,7 +45,7 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
                   </div>
 
                   <div className="flex flex-1 items-end justify-between pt-2">
-                    <p className="mt-1 text-sm font-medium text-gray-900">
+                    <p className="mt-1 text-sm font-medium text-gray-200">
                     { owner ? `£50.00` : `£25.00`} 
                     
                     
@@ -65,7 +65,7 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
                         </select>
                         <ChevronDownIcon
                           aria-hidden="true"
-                          className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+                          className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-900 sm:size-4"
                         />
                       </div>
                     </div>
@@ -74,22 +74,22 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
               </div>
             
           </ul>
-          <dl className="space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6">
+          <dl className="space-y-6 border-t border-gray-800 px-4 py-6 sm:px-6">
           
             <div className="flex items-center justify-between">
               <dt className="text-base font-medium">Total</dt>
-              <dd className="text-base font-medium text-gray-900">{ owner ? `£50.00` : `£25.00`}{" "}
-                <span className="font-normal text-gray-500">
+              <dd className="text-base font-medium text-gray-200">{ owner ? `£50.00` : `£25.00`}{" "}
+                <span className="font-normal text-gray-600">
                     /month
                     </span></dd>
             </div>
           </dl>
 
-          <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
+          <div className="border-t border-gray-800 px-4 py-6 sm:px-6">
             <button
              onClick={handleCheckout}
 
-              className="w-full rounded-md border border-transparent bg-lime-600 px-4 py-3 text-base font-medium text-white shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 focus:outline-hidden"
+              className="w-full rounded-md border border-transparent bg-lime-600 px-4 py-3 text-base font-medium text-white shadow-xs hover:bg-lime-700 focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 focus:ring-offset-gray-50 focus:outline-hidden"
             >
               Pay Now
             </button>
@@ -99,8 +99,9 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
                     )
             }
 
-<p className="text-sm text-gray-500">
-    By subscribing, you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
+<p className="text-sm text-gray-600 mt-4">
+    By subscribing, you agree to our <a href="/terms" className="hover:underline">Terms of Service
+    </a> and <a href="/privacy" className="hover:underline">Privacy Policy</a>.
   </p>
           </div>
         </div>

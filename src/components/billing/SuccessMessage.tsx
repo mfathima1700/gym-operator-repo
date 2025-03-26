@@ -6,19 +6,20 @@ function SuccessMessage({id, owner}: {id: string, owner: boolean}) {
     <div>
         <div
             
-            className=" rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl   sm:my-8 sm:w-full sm:max-w-sm sm:p-6 "
+            className=" rounded-lg  border border-gray-800 px-4 pt-5 pb-4 text-left shadow-xl   sm:my-8 sm:w-full sm:max-w-sm sm:p-6 "
           >
             <div>
-              <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-green-100">
-                <CheckIcon aria-hidden="true" className="size-6 text-green-600" />
+              <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-green-950">
+                <CheckIcon aria-hidden="true" className="size-6 text-green-200" />
               </div>
               <div className="mt-3 text-center sm:mt-5">
-                <h3 className="text-base font-semibold text-gray-900">
+                <h3 className="text-base font-semibold text-white">
                   Payment successful
                 </h3>
                 <div className="mt-2">
-                  <p className="text-sm text-gray-500">
-                  Thank you for your purchase! Your payment has been successfully processed. Your subscription is now active. A confirmation email has been sent to your inbox.
+                  <p className="text-sm text-gray-600">
+                  {`Thank you for your purchase! Your payment for the Gym ${owner ? "Owner" : "Member"} Subscription has been successfully processed.
+                   It is now active. A confirmation email has been sent to your inbox.`}
                   </p>
                 </div>
               </div>
@@ -26,7 +27,7 @@ function SuccessMessage({id, owner}: {id: string, owner: boolean}) {
             <div className="mt-5 sm:mt-6">
               <button
                 type="button"
-                
+                onClick={() => window.location.href = `/${owner ? "owner" : "individual"}/${id}/`}
                 className="inline-flex w-full justify-center rounded-md bg-lime-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-lime-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600"
               >
                 Go back to dashboard

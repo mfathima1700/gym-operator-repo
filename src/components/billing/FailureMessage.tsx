@@ -5,19 +5,22 @@ function FailureMessage({id, owner}: {id: string, owner: boolean}) {
   return (
     <div> <div
                 
-                className=" rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl   sm:my-8 sm:w-full sm:max-w-sm sm:p-6 "
+                className=" rounded-lg border border-gray-800 px-4 pt-5 pb-4 text-left shadow-xl   sm:my-8 sm:w-full sm:max-w-sm sm:p-6 "
               >
                 <div>
-                  <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-red-100">
-                    <XMarkIcon aria-hidden="true" className="size-6 text-red-600" />
+                  <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-red-900">
+                    <XMarkIcon aria-hidden="true" className="size-6 text-red-200" />
                   </div>
                   <div className="mt-3 text-center sm:mt-5">
-                    <h3 className="text-base font-semibold text-gray-900">
+                    <h3 className="text-base font-semibold text-white">
                       Payment failed
                     </h3>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500">
-                      Unfortunately, your payment was not successful. Please check your payment details and try again. If the issue persists, contact your bank or try a different payment method. No charges were made to your account.
+                      <p className="text-sm text-gray-600">
+                      {`Unfortunately, your payment for the Gym ${owner ? "Owner" : "Member"} Subscription was not successful.
+                       Please check your payment details and try again. 
+                       If the issue persists, contact your bank or try a different payment method.
+                        No charges were made to your account.`}
                       </p>
                     </div>
                   </div>
