@@ -1,6 +1,9 @@
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "../ui/label";
+import { updateGoalComplete, updateGoalIncomplete } from "@/redux/actions/GoalActions";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 
 
 type GoalData = {
@@ -13,6 +16,19 @@ type GoalData = {
 };
   
   export default function OldGoalsList({goals}: {goals: GoalData[]}): JSX.Element {
+    const dispatch = useDispatch<AppDispatch>();
+  
+    const handleCheckboxChange = (checked: boolean, goalId:string) => {
+      console.log("Checkbox state:", checked)
+  
+      if(checked){
+        dispatch(updateGoalComplete(goalId));
+      }else{
+        dispatch(updateGoalIncomplete(goalId));
+      }
+      // Add your custom logic here
+    }
+    
     return (
       <div>
         <ul role="list" >
@@ -22,7 +38,8 @@ type GoalData = {
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="line-through">{goal.title}</CardTitle>
               <div className="flex items-center space-x-2">
-                <Checkbox id="terms" />
+                <Checkbox id="terms"  checked={goal.completed}  
+                onCheckedChange={(checked) => handleCheckboxChange(checked === true, goal.id)}/>
               </div>
             </CardHeader>
             <CardContent className="pt-2">

@@ -79,7 +79,7 @@ export async function deleteClass(goalId: string) {
   }
 }
 
-export async function updateClass(data: goalData, goalId: string) {
+export async function updateGoal(data: goalData, goalId: string) {
   try {
     const goal = await db.goal.findUnique({
       where: { id: goalId },
@@ -98,6 +98,70 @@ export async function updateClass(data: goalData, goalId: string) {
         ...(data.notes ? { description: data.notes } : {}),
         completed: data.completed,
         targetDate: targetDateTime,
+      },
+    });
+
+    return {
+      type: EDIT_GOAL_SUCCESS,
+      payload: updatedGoal,
+    };
+  } catch (error) {
+    console.log("UPDATE GOAL FAILED");
+    console.log(error);
+    return {
+      type: EDIT_GOAL_FAILED,
+      payload: error,
+    };
+  }
+}
+
+export async function updateGoalComplete(goalId: string) {
+  try {
+    const goal = await db.goal.findUnique({
+      where: { id: goalId },
+    });
+
+    if (!goal) {
+      throw new Error("goal not found");
+    }
+
+
+    const updatedGoal = await db.goal.update({
+      where: { id: goalId },
+      data: {
+        completed: true,
+      },
+    });
+
+    return {
+      type: EDIT_GOAL_SUCCESS,
+      payload: updatedGoal,
+    };
+  } catch (error) {
+    console.log("UPDATE GOAL FAILED");
+    console.log(error);
+    return {
+      type: EDIT_GOAL_FAILED,
+      payload: error,
+    };
+  }
+}
+
+export async function updateGoalIncomplete(goalId: string) {
+  try {
+    const goal = await db.goal.findUnique({
+      where: { id: goalId },
+    });
+
+    if (!goal) {
+      throw new Error("goal not found");
+    }
+
+
+    const updatedGoal = await db.goal.update({
+      where: { id: goalId },
+      data: {
+        completed: false,
       },
     });
 
