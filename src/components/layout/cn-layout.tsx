@@ -34,7 +34,6 @@ interface CNLayoutProps {
 export default function CNLayout({ children, user, id }: CNLayoutProps) {
    const dispatch = useDispatch<AppDispatch>()
   const router = useRouter();
-  const sessionState = useSelector((state: RootState) => state.getSession);
 
 
   // broken
@@ -64,7 +63,7 @@ export default function CNLayout({ children, user, id }: CNLayoutProps) {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href={ sessionState?.user?.gymRole === "MEMBER" ? `/individual/${id}` : `/owner/${id}`}>Dashboard</BreadcrumbLink>
+                  <BreadcrumbLink href={ user?.gymRole === "MEMBER" ? `/individual/${id}` : `/owner/${id}`}>Dashboard</BreadcrumbLink>
                 </BreadcrumbItem>
                 {/* <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>

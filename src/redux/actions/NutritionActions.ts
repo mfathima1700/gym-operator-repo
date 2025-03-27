@@ -8,6 +8,7 @@ import {
 } from "../constants/NutritionConstants";
 import axios from "axios";
 
+/*
 export async function getExerciseData(activity: string, weight: number) {
   try {
 
@@ -53,7 +54,38 @@ const options = {
       payload: error,
     };
   }
-}
+}*/
+
+export async function getExerciseData(activity: string, weight: number) {
+    try {
+  
+  const options = {
+      method: 'GET',
+      url: 'https://exercises-by-api-ninjas.p.rapidapi.com/v1/exercises',
+      params: {name: activity},
+      headers: {
+        'x-rapidapi-key': '40ce7cd81emsh47e0fc34c5755bap1db808jsn0c1c32594799',
+        'x-rapidapi-host': 'exercises-by-api-ninjas.p.rapidapi.com'
+      }
+    };
+  
+      const response = await axios.request(options)
+  
+      console.log("GET API NINJA STUFF SUCCESS");
+      console.log(response.data);
+  
+      return {
+        type: GET_EXERCISE_SUCCESS,
+        payload: response.data,
+      };
+    } catch (error) {
+      console.log("GET API NINJA STUFF FAILED");
+      return {
+        type: GET_EXERCISE_FAILED,
+        payload: error,
+      };
+    }
+  }
 
 export async function getNutritionData(query: string) {
   try {

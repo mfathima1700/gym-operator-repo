@@ -35,26 +35,34 @@ export async function createGym(
 }*/
 
 async function joinGym(userId: string, gymCode: string) {
-  const gym = await db.gym.findUnique({
-    where: { gymCode },
-  });
-
-  if (!gym) {
-    throw new Error("Invalid gym code");
-  }
-
-  //const objectId = new ObjectId(userId);
-
-  await db.user.update({
-    where: { id: userId },//objectId.toString() },
-    data: {
-      gym: {
-        connect: { id: gym.id },
+  try{
+    const gym = await db.gym.findUnique({
+      where: { gymCode },
+    });
+  
+    if (!gym) {
+      throw new Error("Invalid gym code");
+    }
+  
+    //const objectId = new ObjectId(userId);
+  
+    await db.user.update({
+      where: { id: userId },//objectId.toString() },
+      data: {
+        gym: {
+          connect: { id: gym.id },
+        },
       },
-    },
-  });
+    });
+  
+    return { message: "Successfully joined gym!" };
+  }catch(error){
+    console.log("FAILED TO JOIN GYM");
+    console.log(error);
+    return { message: "Failed to join gym!" };
 
-  return { message: "Successfully joined gym!" };
+  }
+  
 }
 
 export async function getUserById(id: string) {
@@ -79,7 +87,7 @@ export async function getUserById(id: string) {
 
     //console.log(user);
 
-    console.error("USER DATA SUCCESS");
+    console.log("USER DATA SUCCESS");
 
     return {
       type: GET_USER_DATA_SUCCESS,
@@ -87,8 +95,8 @@ export async function getUserById(id: string) {
     };
 
   } catch (error) {
-    console.error("FAILED TO GET USER DATA");
-    console.error(error);
+    console.log("FAILED TO GET USER DATA");
+    console.log(error);
     return {
       type: GET_USER_DATA_FAILED,
       payload: error,
@@ -145,7 +153,7 @@ export async function createGym(data: createOwnerData, id: string) {
     };
   } catch (error) {
   console.log("FAILED TO CREATE GYM")
-    console.error("Error updating user and gym:", error);
+    console.log("Error updating user and gym:", error);
     return {
       type: CREATE_GYM_FAILED,
       payload: error,

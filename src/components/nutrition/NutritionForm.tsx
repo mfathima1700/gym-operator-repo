@@ -21,6 +21,7 @@ export default function NutritionForm({
   const [data, setData] = useState(() => ({
     activity: "",
     weight: 0,
+    duration:60,
     quantity: 1,
     item: "",
   }));
@@ -72,6 +73,17 @@ export default function NutritionForm({
                 value={data.weight}
                 onChange={(e) => handleChange(e.target.name, e.target.value)}
                 name="weight"
+              />
+            </div>
+
+            <div className="sm:col-span-1 grid gap-2">
+              <Label htmlFor="first-name">Duration</Label>
+              <Input
+                id="first-name"
+                type="number"
+                value={data.duration}
+                onChange={(e) => handleChange(e.target.name, e.target.value)}
+                name="duration"
               />
             </div>
 

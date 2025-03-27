@@ -26,10 +26,12 @@ export default function Login() {
   useEffect(() => {
     if (signInState?.success && signInState?.user != null) {
       console.log(signInState.user);
-      if (signInState?.user?.GymRole === "OWNER") {
-        router.push(`/owner/${signInState?.user?.id}`);
-      } else if (signInState?.user?.GymRole === "MEMBER") {
-        router.push(`/individual/${signInState?.user?.id}`);
+      if (signInState?.user?.gymRole === "OWNER") {
+       // router.push(`/owner/${signInState?.user?.id}`);
+       window.location.href = `/owner/${signInState?.user?.id}`;
+      } else if (signInState?.user?.gymRole === "MEMBER") {
+        //router.push(`/individual/${signInState?.user?.id}`);
+        window.location.href = `/individual/${signInState?.user?.id}`;
       }
     }
   }, [signInState.user, signInState.error, signInState.success]);

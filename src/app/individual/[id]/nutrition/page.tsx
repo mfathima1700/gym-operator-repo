@@ -1,17 +1,11 @@
 "use client";
 
 import CNLayout from "@/components/layout/cn-layout";
-import OldGoalsList from "@/components/goals/OldGoalsList";
-import NewGoalsList from "@/components/goals/NewGoalsList";
 import { useEffect, useRef, useState } from "react";
 import { getUserById } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useParams, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { Button } from "@/components/ui/button";
-import { MailOpen, PlusCircle, PlusIcon } from "lucide-react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import AddGoalDialog from "@/components/goals/AddGoalDialog";
 import NutritionForm from "@/components/nutrition/NutritionForm";
 
 export default function Goals() {
@@ -44,30 +38,36 @@ export default function Goals() {
   }, [userState.user, userState.success, userState.error]);
 
   useEffect(() => {
-    if(nutritionState.data){
-        console.log(nutritionState.data);
+    if (nutritionState.data) {
+      console.log(nutritionState.data);
     }
 
-    if(exerciseState.data){
-        console.log(exerciseState.data);
+    if (exerciseState.data) {
+      console.log(exerciseState.data);
     }
 
-    if(nutritionState.error){
-        console.log(nutritionState.error);
+    if (nutritionState.error) {
+      console.log(nutritionState.error);
     }
 
-    if(exerciseState.error){
-        console.log(exerciseState.error);
+    if (exerciseState.error) {
+      console.log(exerciseState.error);
     }
-   
-   
-  }, [nutritionState.data, nutritionState.error, exerciseState.data, exerciseState.error]);
+  }, [
+    nutritionState.data,
+    nutritionState.error,
+    exerciseState.data,
+    exerciseState.error,
+  ]);
 
   return (
     <>
       <CNLayout user={userData} id={id}>
         <div>
-          <NutritionForm  exerciseData={exerciseState.data} nutritionData={nutritionState.data}/>
+          <NutritionForm
+            exerciseData={exerciseState.data}
+            nutritionData={nutritionState.data}
+          />
         </div>
       </CNLayout>
     </>
