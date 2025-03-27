@@ -24,28 +24,28 @@ import {
 } from "@/components/ui/sidebar"
 
 
-
-export function AppSidebar({  user, id, ...props }: React.ComponentProps<typeof Sidebar> & { id?: string; user?: {
-  name:string, 
-  email: string,
-  image:string,
-  gymRole:string
+interface User{
   id:string
-  gym:{
-    name:string,
-    logo:string,
-    description:string
-  }
-} }) {
+    name: string,
+    email: string,
+    image:string,
+    gymRole:string
+   
+    gym:{
+      name:string,
+      logo:string,
+      description:string
+    }
+}
+
+export function AppSidebar({  user, id, ...props }: React.ComponentProps<typeof Sidebar> & { id?: string; user: any }) {
 
   // This is sample data.
 const data = {
   user: {
-    id: user?.id ? user.id : "",
     name: user?.name ? user.name : "Unnamed user",
     email: user?.email ? user.email : "Email not set",
     image: user?.image ? user.image : "https://avatars.githubusercontent.com/u/10198767?v=4",
-    gymRole: user?.gymRole ? user.gymRole : "MEMBER"
   },
   teams: [
     {
@@ -194,7 +194,7 @@ if(user?.gymRole === "OWNER"){
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser dataUser={data.user} id={id ? id :  ""} isOwner={user?.gymRole === "OWNER"} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

@@ -223,7 +223,7 @@ export async function updateUserSettings(data: userSettingsData, id: string) {
         //dateOfBirth: data.dob,
         phoneNumber: data.phoneNumber,
         country: data.country,
-        image: data.image,
+        //image: data.image,
         emailNotifications: data.emailNotifications,
         pushNotifications: data.pushNotifications,
         updatedAt: new Date(), // Ensure `updatedAt` updates automatically
@@ -291,7 +291,7 @@ export async function updateOwnerSettings(
         name: data.name,
         //dateOfBirth: data.dob,
         phoneNumber: data.phoneNumber,
-        image: imageBuffer,
+        //image: "",
         emailNotifications: data.emailNotifications,
         pushNotifications: data.pushNotifications,
         updatedAt: new Date(),
@@ -316,7 +316,7 @@ export async function updateOwnerSettings(
           streetAddress: gymData.streetAddress,
           state: gymData.state,
           description: gymData.description,
-          logo: logoBuffer,
+          //logo: logoBuffer,
         },
       });
     }
