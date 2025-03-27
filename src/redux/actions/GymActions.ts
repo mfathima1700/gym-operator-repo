@@ -342,3 +342,23 @@ export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSe
 
   }
 }
+
+export async function convertUserToInstructor(userId: string, gymId: string){
+try{
+  const user = await db.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  //await db.instructor.create({ data: { userId, gymId } });
+
+
+}catch(error){
+
+
+}
+
+}
