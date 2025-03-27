@@ -27,7 +27,7 @@ export default function OwnerSettings() {
     //  dob: new Date(),
     email: "",
     phoneNumber: "",
-    image: "",
+    image: undefined,
     emailNotifications: "everything", // Represents whether the user wants to receive email offers
     pushNotifications: "everything",
    
@@ -41,7 +41,7 @@ export default function OwnerSettings() {
     state: "",
     description: "",
     gymName: "",
-    logo: "",
+    logo: undefined,
     gymCode: "",
   }));
 
@@ -65,7 +65,7 @@ export default function OwnerSettings() {
         name: userState.user.name || "",
         email: userState.user.email || "",
         phoneNumber: userState.user.phoneNumber || "",
-        image: userState.user.image || "",
+        image: userState.user.image || undefined,
         emailNotifications: userState.user.emailNotifications || "everything",
         pushNotifications: userState.user.pushNotifications || "everything",
       }));
@@ -83,7 +83,7 @@ export default function OwnerSettings() {
         state: userState.user.gym.state || "",
         description: userState.user.gym.description || "",
         gymName: userState.user.gym.name || "",
-        logo: userState.user.gym.logo || "",
+        logo: userState.user.gym.logo || undefined,
         gymCode: userState.user.gym.gymCode || "",
       }));
     }

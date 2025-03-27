@@ -1,3 +1,4 @@
+import { CLEAR_ERRORS } from "../constants/ErrorConstants";
 import { CREATE_GYM_FAILED, CREATE_GYM_SUCCESS, GET_USER_DATA_FAILED, GET_USER_DATA_SUCCESS, SET_USER_FAILED, SET_USER_SUCCESS, UPDATE_OWNER_SETTINGS_FAILED, UPDATE_OWNER_SETTINGS_SUCCESS, UPDATE_USER_SETTINGS_FAILED, UPDATE_USER_SETTINGS_SUCCESS } from "../constants/GymConstants";
 
 
@@ -61,6 +62,8 @@ const updateUserSettingsReducer = (
         error: action.payload,
         success: false,
       };
+      // case CLEAR_ERRORS:
+      //   return  { error: null, success: false }
     default:
       return state;
   }
@@ -83,6 +86,8 @@ const updateOwnerSettingsReducer = (
         error: action.payload,
         success: false,
       };
+      // case CLEAR_ERRORS:
+      //   return  { error: null, success: false, user:null }
     default:
       return state;
   }

@@ -35,34 +35,32 @@ export async function createGym(
 }*/
 
 async function joinGym(userId: string, gymCode: string) {
-  try{
+  try {
     const gym = await db.gym.findUnique({
       where: { gymCode },
     });
-  
+
     if (!gym) {
       throw new Error("Invalid gym code");
     }
-  
+
     //const objectId = new ObjectId(userId);
-  
+
     await db.user.update({
-      where: { id: userId },//objectId.toString() },
+      where: { id: userId }, //objectId.toString() },
       data: {
         gym: {
           connect: { id: gym.id },
         },
       },
     });
-  
+
     return { message: "Successfully joined gym!" };
-  }catch(error){
+  } catch (error) {
     console.log("FAILED TO JOIN GYM");
     console.log(error);
     return { message: "Failed to join gym!" };
-
   }
-  
 }
 
 export async function getUserById(id: string) {
@@ -74,7 +72,7 @@ export async function getUserById(id: string) {
         gym: {
           include: {
             classes: true, // ater this based on date time so only the ones now are fetched -> long wait times
-          }
+          },
         }, // Include gym details if needed
         memberships: true,
         // Include memberships if needed
@@ -93,7 +91,6 @@ export async function getUserById(id: string) {
       type: GET_USER_DATA_SUCCESS,
       payload: user,
     };
-
   } catch (error) {
     console.log("FAILED TO GET USER DATA");
     console.log(error);
@@ -117,15 +114,15 @@ export async function createGym(data: createOwnerData, id: string) {
     //const objectId = new ObjectId(id);
 
     const user = await db.user.findUnique({
-      where: { id: id }//objectId.toString() },
+      where: { id: id }, //objectId.toString() },
     });
 
     if (!user) {
       throw new Error("User not found");
     }
 
-    //user.gymRole === GymRole.MEMBER || 
-    if(user.gymRole === "MEMBER"){
+    //user.gymRole === GymRole.MEMBER ||
+    if (user.gymRole === "MEMBER") {
       throw new Error("User not a gym owner");
     }
 
@@ -145,14 +142,14 @@ export async function createGym(data: createOwnerData, id: string) {
       },
     });
 
-  console.log("CREATED GYM")
+    console.log("CREATED GYM");
 
     return {
       type: CREATE_GYM_SUCCESS,
       payload: gym,
     };
   } catch (error) {
-  console.log("FAILED TO CREATE GYM")
+    console.log("FAILED TO CREATE GYM");
     console.log("Error updating user and gym:", error);
     return {
       type: CREATE_GYM_FAILED,
@@ -169,8 +166,7 @@ interface createUserData {
 
 export async function updateUser(data: createUserData, id: string) {
   try {
-    const user = 
-    await db.user.findUnique({
+    const user = await db.user.findUnique({
       where: { id: id },
     });
 
@@ -186,13 +182,13 @@ export async function updateUser(data: createUserData, id: string) {
       },
     });
 
-    console.log("UPDATED USER")
+    console.log("UPDATED USER");
     return {
       type: SET_USER_SUCCESS,
       payload: updatedUser,
     };
   } catch (error) {
-    console.log("FAILED TO UPDATE USER")
+    console.log("FAILED TO UPDATE USER");
     return {
       type: SET_USER_FAILED,
       payload: error,
@@ -202,17 +198,16 @@ export async function updateUser(data: createUserData, id: string) {
 
 interface userSettingsData {
   name: string;
- // dob: Date;
+  // dob: Date;
   phoneNumber?: string;
   country?: string;
-  image?: string;
+  image?: any;
   emailNotifications?: string;
   pushNotifications?: string;
 }
 
 export async function updateUserSettings(data: userSettingsData, id: string) {
   try {
-
     const user = await db.user.findUnique({
       where: { id: id },
     });
@@ -235,16 +230,12 @@ export async function updateUserSettings(data: userSettingsData, id: string) {
       },
     });
 
-
     console.log("UPDATE MEMBER SUCCESS");
     return {
       type: UPDATE_USER_SETTINGS_SUCCESS,
       payload: updatedUser,
     };
-
-    
-
-  }catch (error) {
+  } catch (error) {
     console.log("UPDATE USER FAILED");
     console.log(error);
     return {
@@ -256,10 +247,10 @@ export async function updateUserSettings(data: userSettingsData, id: string) {
 
 interface ownerSettingsData {
   name: string;
- // dob: Date;
+  // dob: Date;
   phoneNumber?: string;
   country?: string;
-  image?: string;
+  image?: any;
   emailNotifications?: string;
   pushNotifications?: string;
 }
@@ -272,13 +263,16 @@ interface gymSettingsData {
   state?: string;
   description?: string;
   gymName?: string;
-  logo?: string;
+  logo?: any;
   gymCode?: string;
 }
 
-export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSettingsData, id: string) {
+export async function updateOwnerSettings(
+  data: ownerSettingsData,
+  gymData: gymSettingsData,
+  id: string
+) {
   try {
-
     const user = await db.user.findUnique({
       where: { id: id },
     });
@@ -287,21 +281,23 @@ export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSe
       throw new Error("User not found");
     }
 
+    const imageBuffer  = Buffer.from(new Uint8Array(await data.image.arrayBuffer())); 
+    const logoBuffer  = Buffer.from(new Uint8Array(await gymData.logo.arrayBuffer()));
+    
     // Update the User
     const updatedUser = await db.user.update({
       where: { id: user.id },
       data: {
         name: data.name,
         //dateOfBirth: data.dob,
-         phoneNumber: data.phoneNumber,
-         image: data.image,
-         emailNotifications: data.emailNotifications,
-         pushNotifications: data.pushNotifications,
-         updatedAt: new Date(),
+        phoneNumber: data.phoneNumber,
+        image: imageBuffer,
+        emailNotifications: data.emailNotifications,
+        pushNotifications: data.pushNotifications,
+        updatedAt: new Date(),
       },
     });
 
-    
     // Find the Gym associated with this User
     const gym = await db.gym.findUnique({
       where: { ownerId: updatedUser.id },
@@ -314,11 +310,13 @@ export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSe
         data: {
           name: gymData.gymName,
           country: gymData.country,
+          gymCode:gymData.gymCode,
           city: gymData.city,
           postcode: gymData.postcode,
           streetAddress: gymData.streetAddress,
           state: gymData.state,
           description: gymData.description,
+          logo: logoBuffer,
         },
       });
     }
@@ -328,37 +326,71 @@ export async function updateOwnerSettings(data: ownerSettingsData,gymData: gymSe
       type: UPDATE_OWNER_SETTINGS_SUCCESS,
       payload: updatedUser,
     };
-
-  }catch (error) {
+  } catch (error) {
     console.log("UPDATE OWNER FAILED");
 
-    if(error !== null){
+    if (error !== null) {
       console.log(error);
     }
     return {
       type: UPDATE_OWNER_SETTINGS_FAILED,
       payload: error,
     };
-
   }
 }
 
-export async function convertUserToInstructor(userId: string, gymId: string){
-try{
-  const user = await db.user.findUnique({
-    where: { id: userId },
-  });
+export async function convertUserToInstructor(userId: string, gymId: string) {
+  try {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+    });
 
-  if (!user) {
-    throw new Error("User not found");
-  }
+    if (!user) {
+      throw new Error("User not found");
+    }
 
-  //await db.instructor.create({ data: { userId, gymId } });
-
-
-}catch(error){
-
-
+    //await db.instructor.create({data: {userId: userId,gymId: gymId,},});
+  } catch (error) {}
 }
 
+export async function deleteOwner(userId: string) {
+  try {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    //await db.instructor.create({ data: { userId, gymId } });
+  } catch (error) {}
+}
+
+export async function deleteMember(userId: string) {
+  try {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    //await db.instructor.create({ data: { userId, gymId } });
+  } catch (error) {}
+}
+
+export async function deleteGym(gymId: string) {
+  try {
+    const gym = await db.gym.findUnique({
+      where: { id: gymId },
+    });
+
+    if (!gym) {
+      throw new Error("Gym not found");
+    }
+
+    //await db.instructor.create({ data: { userId, gymId } });
+  } catch (error) {}
 }

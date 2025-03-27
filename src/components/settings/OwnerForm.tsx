@@ -25,23 +25,34 @@ export default function OwnerForm({
   onSaveClick,
   gymData,
   handleGymChange,
-  setGymData
+  setGymData,
 }: {
   handleChange: any;
   ownerData: any;
   onSaveClick: any;
   gymData: any;
   handleGymChange: any;
-  setGymData:any
+  setGymData: any;
 }) {
   function generateGymCode(e: React.MouseEvent): void {
-e.preventDefault()
+    e.preventDefault();
     const num = Array.from({ length: 16 }, () =>
       Math.floor(Math.random() * 10)
     ).join("");
-    setGymData((prevState: any) => ({...prevState,"gymCode": num}))
+    setGymData((prevState: any) => ({ ...prevState, gymCode: num }));
   }
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
+    // Show preview
+    const previewUrl = URL.createObjectURL(file);
+
+    // Convert to Buffer (binary data)
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = new Uint8Array(arrayBuffer);
+    setGymData((prevState: any) => ({ ...prevState, logo: buffer }));
+  };
 
   return (
     <form className="space-y-12">
@@ -100,17 +111,34 @@ e.preventDefault()
             <div className="col-span-full">
               <Label>Logo</Label>
               <div className="mt-2 flex flex-col items-center justify-center border-2 border-dashed border-gray-800 p-6 rounded-lg">
-                <ImageIcon className="size-12 text-gray-500" />
-                <Label
-                  htmlFor="file-upload"
-                  className="mt-2 cursor-pointer text-sm font-semibold text-primary"
-                >
-                  Upload a file
-                </Label>
-                <input id="file-upload" type="file" className="hidden" />
-                <p className="text-xs text-gray-500 mt-2">
-                  PNG, JPG, GIF up to 10MB
-                </p>
+                {gymData.logo ? (
+                  <>
+                    <img
+                      src={gymData.logo}
+                      alt="Logo Preview"
+                      className="h-20 w-20 object-cover rounded-full mb-2"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <ImageIcon className="size-12 text-gray-500" />
+                    <Label
+                      htmlFor="file-upload"
+                      className="mt-2 cursor-pointer text-sm font-semibold text-primary hover:underline"
+                    >
+                      Upload a file
+                    </Label>
+                    <input
+                      id="file-upload"
+                      type="file"
+                      className="hidden"
+                      onChange={handleFileUpload}
+                    />
+                    <p className="text-xs text-gray-500 mt-2">
+                      PNG, JPG, GIF up to 10MB
+                    </p>
+                  </>
+                )}
               </div>
             </div>
             <div className="sm:col-span-3">
@@ -213,6 +241,7 @@ e.preventDefault()
                 onChange={(e) => handleChange(e.target.name, e.target.value)}
               />
             </div>
+
             <div className="col-span-full grid gap-2">
               <Label htmlFor="photo">Photo</Label>
               <div className="mt-2 flex items-center gap-x-3">
@@ -300,17 +329,19 @@ e.preventDefault()
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold">Deactivate account</h2>
           <p className="text-sm text-gray-500">
-          Deactivating your account will permanently remove your gym owner profile and all associated data from the system. 
-          This action is irreversible and will delete your personal information, gym details, memberships, bookings, payment records, and any other related data.
+            Deactivating your account will permanently remove your gym owner
+            profile and all associated data from the system. This action is
+            irreversible and will delete your personal information, gym details,
+            memberships, bookings, payment records, and any other related data.
           </p>
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-6">
             <div className="sm:col-span-3 ">
               {/* <Label htmlFor="first-name">First Name</Label> */}
               <Dialog>
-              <DialogTrigger asChild>
-              <Button variant="destructive">Delete Account</Button>
-              </DialogTrigger>
-              <DeleteDialog />
+                <DialogTrigger asChild>
+                  <Button variant="destructive">Delete Account</Button>
+                </DialogTrigger>
+                <DeleteDialog />
               </Dialog>
             </div>
           </div>

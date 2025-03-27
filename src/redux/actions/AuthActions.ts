@@ -373,7 +373,7 @@ export async function getUserByEmail(email: string) {
 
     return user;
   } catch (error) {
-    console.error("Error fetching user:", error);
-    throw error;
+    console.log("Error fetching user:", error);
+    return error;
   }
 }

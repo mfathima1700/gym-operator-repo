@@ -17,6 +17,7 @@ import {
   FORGET_PASSWORD_SUCCESS,
   FORGET_PASSWORD_FAILED,
 } from "../constants/AuthConstants";
+import { CLEAR_ERRORS } from "../constants/ErrorConstants";
 
 interface AuthState {
   user: any | null;
@@ -100,6 +101,8 @@ const signOutReducer = (
         loading: false,
         error: action.payload,
       };
+      //  case CLEAR_ERRORS:
+      //         return  { loading: false, error: null, success: false }
     default:
       return state;
   }

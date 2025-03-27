@@ -34,7 +34,7 @@ model User {
   dateOfBirth        DateTime?
   goals              Goal[]
   emailVerified      DateTime?
-  image              String?
+  image              Bytes?
   accounts           Account[]
   sessions           Session[]
   Authenticator      Authenticator[]
@@ -64,7 +64,7 @@ model Gym {
   streetAddress String?
   state         String?
   description   String?
-  logo          String?
+  logo          Bytes?
   instructors   Instructor[]
 }
 
