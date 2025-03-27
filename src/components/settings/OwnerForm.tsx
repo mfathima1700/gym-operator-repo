@@ -16,6 +16,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent } from "@/components/ui/card";
 import { UserCircle, ImageIcon, ChevronDown } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogTrigger } from "../ui/dialog";
+import DeleteDialog from "./DeleteDialog";
 
 export default function OwnerForm({
   handleChange,
@@ -23,19 +25,23 @@ export default function OwnerForm({
   onSaveClick,
   gymData,
   handleGymChange,
+  setGymData
 }: {
   handleChange: any;
   ownerData: any;
   onSaveClick: any;
   gymData: any;
   handleGymChange: any;
+  setGymData:any
 }) {
-  function generateGymCode(): void {
+  function generateGymCode(e: React.MouseEvent): void {
+e.preventDefault()
     const num = Array.from({ length: 16 }, () =>
       Math.floor(Math.random() * 10)
     ).join("");
-    handleGymChange("gymCode", num);
+    setGymData((prevState: any) => ({...prevState,"gymCode": num}))
   }
+
 
   return (
     <form className="space-y-12">
@@ -70,7 +76,7 @@ export default function OwnerForm({
                   name="gymCode"
                   readOnly={true}
                 />
-                <Button variant="outline" onClick={(e) => generateGymCode()}>
+                <Button variant="outline" onClick={(e) => generateGymCode(e)}>
                   Regenerate
                 </Button>
               </div>
@@ -259,7 +265,7 @@ export default function OwnerForm({
           </div>
 
           {/* Push Notifications */}
-          <div className="mt-10 ">
+          {/* <div className="mt-10 ">
             <Label className="text-white">Push notifications</Label>
             <p className="mt-1 text-sm text-gray-400">
               These are delivered via SMS to your mobile phone.
@@ -286,6 +292,27 @@ export default function OwnerForm({
                 <Label htmlFor="push-nothing">Critical Updates only</Label>
               </div>
             </RadioGroup>
+          </div> */}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-lg font-semibold">Deactivate account</h2>
+          <p className="text-sm text-gray-500">
+          Deactivating your account will permanently remove your gym owner profile and all associated data from the system. 
+          This action is irreversible and will delete your personal information, gym details, memberships, bookings, payment records, and any other related data.
+          </p>
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-6">
+            <div className="sm:col-span-3 ">
+              {/* <Label htmlFor="first-name">First Name</Label> */}
+              <Dialog>
+              <DialogTrigger asChild>
+              <Button variant="destructive">Delete Account</Button>
+              </DialogTrigger>
+              <DeleteDialog />
+              </Dialog>
+            </div>
           </div>
         </CardContent>
       </Card>

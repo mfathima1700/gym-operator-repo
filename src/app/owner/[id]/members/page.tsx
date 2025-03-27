@@ -44,7 +44,7 @@ export default function Members() {
   
   return (
     <>
-      <CNLayout user={userData} id={id}>
+      <CNLayout user={userData} id={id} name={"Members"}>
         <div className="py-8 space-y-8">
           {/* <MemberOptions /> */}
           <CNMemberOptions/>

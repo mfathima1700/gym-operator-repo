@@ -76,7 +76,7 @@ export default function IndividualCheckoutPage() {
   
   return (
     <>
-      <CNLayout user={userData} id={id}>
+      <CNLayout user={userData} id={id} name={"Checkout"}>
         <div className="flex justify-center">
         <div className="max-w-xl ">
           <OrderSummary  handleCheckout={handleCheckout} message={checkoutState.error?.message}   owner={false}/>

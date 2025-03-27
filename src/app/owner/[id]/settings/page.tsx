@@ -113,11 +113,12 @@ export default function OwnerSettings() {
 
   return (
     <>
-      <CNLayout user={userState.user} id={id}>
+      <CNLayout user={userState.user} id={id} name={"Settings"}>
         <div>
           <OwnerForm
             handleChange={handleChange}
             ownerData={ownerData}
+            setGymData={setGymData}
             onSaveClick={onSaveClick}
             gymData={gymData}
             handleGymChange={handleGymChange}

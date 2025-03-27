@@ -51,7 +51,7 @@ export default function IndividualDashboard() {
   const [date, setDate] = React.useState<Date>()
   return (
     <>
-      <CNLayout user={userData} id={id}>
+      <CNLayout user={userData} id={id} name={"Dashboard"}>
         <div>
 
         

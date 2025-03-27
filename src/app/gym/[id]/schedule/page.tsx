@@ -55,7 +55,7 @@ export default function GymSchedule() {
 
   return (
     <>
-      <CNLayout user={userData} id={id}>
+      <CNLayout user={userData} id={id} name={"Gym Schedule"}>
         <div className="py-8 space-y-8">
           <ClassOptions />
           <GymWeekCalendar

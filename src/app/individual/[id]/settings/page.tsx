@@ -82,7 +82,7 @@ import { useDispatch, useSelector } from "react-redux";
     
    return (
      <>
-       <CNLayout  user={userData} id={id}>
+       <CNLayout  user={userData} id={id} name={"Settings"}>
          <div >
           <IndividualForm handleChange={handleChange} userData={userData} onSaveClick={onSaveClick} gymName={gymName}/>
            

@@ -61,7 +61,7 @@ export default function Goals() {
 
   return (
     <>
-      <CNLayout user={userData} id={id}>
+      <CNLayout user={userData} id={id} name={"Goals"}>
         <div className="flex flex-col md:flex-row w-full gap-4">
           {/* Left Column */}
           <div className="w-full md:w-1/2  p-4">

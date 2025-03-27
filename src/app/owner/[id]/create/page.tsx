@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import { createGym } from "@/redux/actions/GymActions";
+import { createGym, getUserById } from "@/redux/actions/GymActions";
 
 function classNames(...classes: (string | false | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
@@ -19,12 +19,14 @@ export default function CreateAccountOwner() {
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id ?? "";
   const createGymState = useSelector((state: RootState) => state.createGym);
-
+  const userState = useSelector((state: RootState) => state.getUser);
   useEffect(() => {
     if (createGymState?.success) {
       router.push(`/owner/${id}`);
     }
   }, [createGymState.error, createGymState.success]);
+  const [userData, setUserData] = useState(() => ({}));
+
 
   const [createData, setCreateData] = useState(() => ({
     gymName: "",
@@ -49,9 +51,21 @@ export default function CreateAccountOwner() {
     }));
   }
 
+   useEffect(() => {
+      dispatch(getUserById(id));
+    }, [id]);
+  
+    useEffect(() => {
+      console.log(userState.user);
+      if (userState.user) {
+        setUserData(userState.user);
+      }
+    }, [userState.user, userState.success, userState.error]);
+    
+
   return (
     <>
-      <CNLayout>
+      <CNLayout name={"Create Account"} user={userData} id={id} >
         <div className="mx-auto py-8 ">
           <OwnerAccountCard
             handleChange={handleChange}

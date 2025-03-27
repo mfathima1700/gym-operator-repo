@@ -29,9 +29,10 @@ interface CNLayoutProps {
   children: ReactNode; // This ensures you can pass any valid React component(s)
   user: any;
   id:string
+  name:string
 }
 
-export default function CNLayout({ children, user, id }: CNLayoutProps) {
+export default function CNLayout({ children, user, id, name }: CNLayoutProps) {
    const dispatch = useDispatch<AppDispatch>()
   const router = useRouter();
 
@@ -63,7 +64,7 @@ export default function CNLayout({ children, user, id }: CNLayoutProps) {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href={ user?.gymRole === "MEMBER" ? `/individual/${id}` : `/owner/${id}`}>Dashboard</BreadcrumbLink>
+                  <BreadcrumbLink >{name ? name : "Dashboard"}</BreadcrumbLink>
                 </BreadcrumbItem>
                 {/* <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>

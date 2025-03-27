@@ -72,7 +72,7 @@ export default function CreateAccountOwner() {
 
   return (
     <>
-      <CNLayout user={userData} id={id}>
+      <CNLayout user={userData} id={id} name={"Create Account"}>
         <div className="mx-auto py-8 ">
           <IndividualAccountCard
             handleChange={handleChange}

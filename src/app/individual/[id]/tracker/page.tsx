@@ -62,7 +62,7 @@ export default function Goals() {
 
   return (
     <>
-      <CNLayout user={userData} id={id}>
+      <CNLayout user={userData} id={id} name={"Fitness & Nutrition Tracker"}>
         <div>
           <NutritionForm
             exerciseData={exerciseState.data}

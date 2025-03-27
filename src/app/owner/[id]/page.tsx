@@ -44,7 +44,7 @@ export default function OwnerDashboard() {
 
   return (
     <>
-      <CNLayout user={userData} id={id}>
+      <CNLayout user={userData} id={id} name={"Dashboard"}>
         <div>
 
 

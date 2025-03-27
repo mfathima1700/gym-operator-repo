@@ -15,6 +15,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { CheckboxWithText } from "@/components/ui/checkbox-with-text";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogTrigger } from "../ui/dialog";
+import DeleteDialog from "./DeleteDialog";
 
 export default function IndividualForm({
   handleChange,
@@ -164,7 +166,7 @@ export default function IndividualForm({
             </div>
 
             {/* Push Notifications */}
-            <div className="mt-10 ">
+            {/* <div className="mt-10 ">
               <Label className="text-white">Push notifications</Label>
               <p className="mt-1 text-sm text-gray-400">
                 These are delivered via SMS to your mobile phone.
@@ -189,8 +191,31 @@ export default function IndividualForm({
                   <Label htmlFor="push-nothing">Critical Updates only</Label>
                 </div>
               </RadioGroup>
-            </div>
+            </div> */}
          
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-lg font-semibold">Deactivate account</h2>
+          <p className="text-sm text-gray-500">
+            Deactivating your account allows you to permanently remove your account,
+            including all associated data, from the system. This action is
+            irreversible and will delete personal information, bookings, payment
+            information and any other related data.
+          </p>
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-6">
+            <div className="sm:col-span-3">
+              {/* <Label htmlFor="first-name">First Name</Label> */}
+              <Dialog>
+              <DialogTrigger asChild>
+              <Button variant="destructive">Delete Account</Button>
+              </DialogTrigger>
+              <DeleteDialog />
+              </Dialog>
+            </div>
+          </div>
         </CardContent>
       </Card>
 

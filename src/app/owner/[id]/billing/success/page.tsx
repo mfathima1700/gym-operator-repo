@@ -42,9 +42,9 @@ export default function OwnerSuccessPage() {
   
   return (
     <>
-      <CNLayout user={userData} id={id}>
+      <CNLayout user={userData} id={id} name={"Checkout Success"}>
         <div className="mx-auto">
-          <SuccessMessage />
+          <SuccessMessage  id={id} owner={true}/>
         </div>
       </CNLayout>
     </>

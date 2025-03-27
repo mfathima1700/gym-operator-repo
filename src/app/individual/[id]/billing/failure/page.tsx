@@ -42,9 +42,9 @@ export default function IndividualFailurePage() {
   
   return (
     <>
-      <CNLayout user={userData} id={id}>
+      <CNLayout user={userData} id={id} name={"Checkout Failure"}>
         <div className="mx-auto">
-          <FailureMessage />
+          <FailureMessage id={id} owner={false} />
         </div>
       </CNLayout>
     </>
