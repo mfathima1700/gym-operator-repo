@@ -2,6 +2,8 @@
 
 import { db } from "@/db";
 import {
+  ALTER_MEMBER_FAILED,
+  ALTER_MEMBER_SUCCESS,
   CREATE_GYM_FAILED,
   CREATE_GYM_SUCCESS,
   GET_GYM_DATA_FAILED,
@@ -75,6 +77,7 @@ export async function getUserById(id: string) {
           },
         }, // Include gym details if needed
         memberships: true,
+        instructorProfile: true,
         // Include memberships if needed
       },
     });
@@ -83,13 +86,35 @@ export async function getUserById(id: string) {
       throw new Error("User not found");
     }
 
-    //console.log(user);
+    let updatedUser;
 
+    if(user.gym){
+      const gymMembers = await db.user.findMany({
+        where: {
+          gymId: user?.gym?.id, // Filter users by gymId
+          gymRole: 'MEMBER' // Optional: filter only members (not owners/instructors)
+        },
+        include: {
+          instructorProfile: true,
+        }
+      });
+
+      console.log(gymMembers);
+
+      updatedUser = user && gymMembers 
+  ? {
+      ...user,
+      gym: user.gym ? { ...user.gym, members: gymMembers } : undefined
+    }
+  : user;
+    }else{
+      updatedUser = user;
+    }
     console.log("USER DATA SUCCESS");
 
     return {
       type: GET_USER_DATA_SUCCESS,
-      payload: user,
+      payload: updatedUser,
     };
   } catch (error) {
     console.log("FAILED TO GET USER DATA");
@@ -339,18 +364,75 @@ export async function updateOwnerSettings(
   }
 }
 
-export async function convertUserToInstructor(userId: string, gymId: string) {
+export async function convertToInstructor(userId: string, gymId: string) {
   try {
     const user = await db.user.findUnique({
       where: { id: userId },
+      include: {
+        instructorProfile: true,
+      },
+    });
+
+    const gym = await db.gym.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user || !gym) {
+      throw new Error("User or gym not found");
+    }
+
+    if(!user.instructorProfile){
+      const instructor = await db.instructor.create({data: {userId: userId,gymId: gymId,},});
+
+      return {
+        type: ALTER_MEMBER_SUCCESS,
+        payload: instructor,
+      };
+    }
+
+    throw new Error("User already an instructor");
+  } catch (error) {
+    console.log("FAILED TO CONVERT TO INSTRUCTOR");
+    return {
+      type: ALTER_MEMBER_FAILED,
+      payload: error,
+    };
+
+  }
+}
+
+export async function convertToMember(userId: string, gymId: string) {
+  try {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      include: {
+        instructorProfile: true,
+      },
     });
 
     if (!user) {
       throw new Error("User not found");
     }
+    if(!user.instructorProfile){
+      throw new Error("User not an instructor");
+    }
 
-    //await db.instructor.create({data: {userId: userId,gymId: gymId,},});
-  } catch (error) {}
+   const updatedUser =  await db.instructor.delete({
+      where: { userId: userId },
+    });
+
+    return {
+      type: ALTER_MEMBER_SUCCESS,
+      payload: updatedUser,
+    };
+
+  } catch (error) {
+    console.log("FAILED TO CONVERT TO MEMBER");
+    return {
+      type: ALTER_MEMBER_FAILED,
+      payload: error,
+    };
+  }
 }
 
 export async function deleteOwner(userId: string) {

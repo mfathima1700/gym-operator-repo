@@ -57,11 +57,13 @@ export default function GymSchedule() {
     <>
       <CNLayout user={userData} id={id} name={"Gym Schedule"}>
         <div className="py-8 space-y-8">
-          <ClassOptions />
+          {/* <ClassOptions /> */}
+
+          
           <GymWeekCalendar
-            classes={userData.gym.classes ? userData.gym.classes : []}
+            classes={userData?.gym?.classes ? userData.gym.classes : []}
             isOwner={userData?.gymRole === "OWNER" ? true : false}
-            id={userData.gym.id}
+            id={userData?.gym?.id}
           />
         </div>
       </CNLayout>

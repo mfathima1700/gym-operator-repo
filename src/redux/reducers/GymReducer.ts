@@ -1,5 +1,5 @@
 import { CLEAR_ERRORS } from "../constants/ErrorConstants";
-import { CREATE_GYM_FAILED, CREATE_GYM_SUCCESS, GET_USER_DATA_FAILED, GET_USER_DATA_SUCCESS, SET_USER_FAILED, SET_USER_SUCCESS, UPDATE_OWNER_SETTINGS_FAILED, UPDATE_OWNER_SETTINGS_SUCCESS, UPDATE_USER_SETTINGS_FAILED, UPDATE_USER_SETTINGS_SUCCESS } from "../constants/GymConstants";
+import { ALTER_MEMBER_FAILED, ALTER_MEMBER_SUCCESS, CREATE_GYM_FAILED, CREATE_GYM_SUCCESS, GET_USER_DATA_FAILED, GET_USER_DATA_SUCCESS, SET_USER_FAILED, SET_USER_SUCCESS, UPDATE_OWNER_SETTINGS_FAILED, UPDATE_OWNER_SETTINGS_SUCCESS, UPDATE_USER_SETTINGS_FAILED, UPDATE_USER_SETTINGS_SUCCESS } from "../constants/GymConstants";
 
 
 interface basicDataState {
@@ -123,6 +123,30 @@ const getUserReducer = (
   }
 };
 
+const alterMemberReducer = (
+  state = { error: null, success: false, user:null },
+  action: any
+): userDataState => {
+  switch (action.type) {
+    case ALTER_MEMBER_SUCCESS:
+      return {
+        ...state,
+        user:action.payload,
+        success: true,
+        error: null,
+      };
+    case ALTER_MEMBER_FAILED:
+      return {
+        ...state,
+        user:null,
+        error: action.payload,
+        success: false,
+      };
+    default:
+      return state;
+  }
+};
+
 export {
-    createGymReducer,setUserDataReducer, updateUserSettingsReducer, updateOwnerSettingsReducer, getUserReducer
+    createGymReducer,setUserDataReducer, updateUserSettingsReducer, updateOwnerSettingsReducer, getUserReducer, alterMemberReducer
 };

@@ -12,7 +12,7 @@ import {
 import { create } from "domain";
 import { combineReducers, createStore, applyMiddleware, compose } from "redux";
 import promiseMiddleware from "redux-promise";
-import { createGymReducer, setUserDataReducer, updateUserSettingsReducer, updateOwnerSettingsReducer, getUserReducer } from "./reducers/GymReducer";
+import { createGymReducer, setUserDataReducer, updateUserSettingsReducer, updateOwnerSettingsReducer, getUserReducer, alterMemberReducer } from "./reducers/GymReducer";
 import { sendCancelReducer } from "./reducers/EmailReducer";
 import { bookClassReducer, cancelBookingReducer, cancelClassReducer, createClassReducer, deleteClassReducer, getBookingsReducer, updateClassReducer } from "./reducers/ClassReducer";
 import { checkoutReducer } from "./reducers/BillingReducer";
@@ -48,6 +48,7 @@ const rootReducer = combineReducers({
   createGoal: createGoalReducer,
   nutrition: nutritionReducer,
   exercise: exerciseReducer,
+  alterMember:alterMemberReducer
   // Add other reducers here
 });
 

@@ -261,7 +261,7 @@ export default function CNMemberOptions() {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <DropdownMenu>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
               Gender <ChevronDown />
@@ -286,7 +286,7 @@ export default function CNMemberOptions() {
                 )
               })}
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
         </div>
       </div>
       
