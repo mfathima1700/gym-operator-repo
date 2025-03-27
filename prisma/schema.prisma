@@ -40,13 +40,13 @@ model User {
   Authenticator      Authenticator[]
   updatedAt          DateTime        @updatedAt
   userRole           UserRole
-  isTrainer          Boolean?        @default(false)
   phoneNumber        String?
   country            String?
   emailNotifications String?         @default("everything")
   pushNotifications  String?         @default("everything")
   gymId              String?         @db.ObjectId
   gym                Gym?
+  instructorProfile  Instructor?     @relation("UserInstructor")
 }
 
 model Gym {
@@ -73,7 +73,10 @@ model Instructor {
   gymId     String   @db.ObjectId
   gym       Gym      @relation(fields: [gymId], references: [id]) // ✅ Fixed relation
   classes   Class[]
+  isTrainer Boolean? @default(false)
   createdAt DateTime @default(now())
+  userId    String   @unique @db.ObjectId // 1:1 with User
+  user      User     @relation("UserInstructor", fields: [userId], references: [id])
 }
 
 // Membership model
