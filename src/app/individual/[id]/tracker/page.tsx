@@ -6,7 +6,7 @@ import { getUserById } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useParams, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import NutritionForm from "@/components/nutrition/NutritionForm";
+import NutritionForm from "@/components/tracker/NutritionForm";
 
 export default function Goals() {
   const dispatch = useDispatch<AppDispatch>();

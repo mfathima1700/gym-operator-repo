@@ -7,12 +7,8 @@ import {
 Trophy, 
 ChartColumnIncreasing,
 Dumbbell,
-  BookOpen,
-  Bot,
-  BicepsFlexed, 
-  Command,
-  Settings2,
-  SquareTerminal,
+  Apple,
+  UsersRound,
 } from "lucide-react"
 
 import { NavMain } from "@/components/ui/nav-main"
@@ -33,6 +29,7 @@ export function AppSidebar({  user, id, ...props }: React.ComponentProps<typeof 
   name:string, 
   email: string,
   image:string,
+  gymRole:string
   gym:{
     name:string,
     logo:string,
@@ -57,23 +54,18 @@ const data = {
   projects: [
     {
       name: "Home",
-      url: `/individual/${id}`, // "/owner"
+      url:  user?.gymRole === "OWNER" ? `/owner/${id}` : `/individual/${id}`, // "/owner"
       icon: House,
     },
     {
       name: "Gym Schedule",
-      url: `gym/${id}/schedule}`,
+      url: `/gym/${id}/schedule`,
       icon: Dumbbell,
     },
     {
-      name: "Schedule",
+      name: "My Classes",
       url: `/individual/${id}/schedule`,
       icon: CalendarDays,
-    },
-    {
-      name: "Training Sessions",
-      url: `/individual/${id}/sessions`,
-      icon: BicepsFlexed,
     },
     {
       name: "Goals",
@@ -81,9 +73,9 @@ const data = {
       icon: Trophy,
     },
     {
-      name: "Progress",
-      url: `/individual/${id}/progress`,
-      icon: ChartColumnIncreasing,
+      name: "Fitness & Nutrition Tracker",
+      url: `/individual/${id}/tracker`,
+      icon: Apple,
     },
 
   ],
@@ -176,6 +168,18 @@ const data = {
     ],
   },
 ],*/
+
+if(user?.gymRole === "OWNER"){
+
+  data.projects.push({
+    name: "Members",
+    url: `/owner/${id}/members`,
+    icon: UsersRound,
+  });
+}
+
+
+
 
   return (
     <Sidebar collapsible="icon" {...props}>
