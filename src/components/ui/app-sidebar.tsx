@@ -30,6 +30,7 @@ export function AppSidebar({  user, id, ...props }: React.ComponentProps<typeof 
   email: string,
   image:string,
   gymRole:string
+  id:string
   gym:{
     name:string,
     logo:string,
@@ -40,9 +41,11 @@ export function AppSidebar({  user, id, ...props }: React.ComponentProps<typeof 
   // This is sample data.
 const data = {
   user: {
+    id: user?.id ? user.id : "",
     name: user?.name ? user.name : "Unnamed user",
     email: user?.email ? user.email : "Email not set",
-    avatar: user?.image ? user.image : "https://avatars.githubusercontent.com/u/10198767?v=4",
+    image: user?.image ? user.image : "https://avatars.githubusercontent.com/u/10198767?v=4",
+    gymRole: user?.gymRole ? user.gymRole : "MEMBER"
   },
   teams: [
     {
