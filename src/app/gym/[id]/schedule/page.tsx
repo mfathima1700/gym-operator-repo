@@ -29,7 +29,7 @@ export default function GymSchedule() {
     gymRole: "",
     gym: {
       id: "",
-
+      members: [],
       classes: [],
     },
   }));
@@ -61,6 +61,7 @@ export default function GymSchedule() {
 
           
           <GymWeekCalendar
+          members={userData?.gym?.members ? userData.gym.members : []}
             classes={userData?.gym?.classes ? userData.gym.classes : []}
             isOwner={userData?.gymRole === "OWNER" ? true : false}
             id={userData?.gym?.id}

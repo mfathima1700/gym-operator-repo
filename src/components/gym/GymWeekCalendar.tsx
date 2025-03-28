@@ -42,15 +42,21 @@ type ClassType = {
   colour: string;
 };
 
+type UserType = {
+  id: string;
+  name: string;
+  instructorId?: string;
+};
+
 export default function GymWeekCalendar({
 
- 
+ members,
   classes,
   isOwner,
   id,
 }: {
 
- 
+ members: UserType[];
   classes: ClassType[];
   isOwner: boolean;
   id: string;
