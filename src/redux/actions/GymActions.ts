@@ -76,6 +76,11 @@ export async function getUserById(id: string) {
             classes: true, // ater this based on date time so only the ones now are fetched -> long wait times
           },
         }, // Include gym details if needed
+        // memberships: {
+        //   select: {
+        //     gymId: true,
+        //   }
+        // }
       },
     });
     if (!user) {
@@ -84,13 +89,15 @@ export async function getUserById(id: string) {
 
     let updatedUser;
 
-  //   if(user.gym){
-  //     const gymMembers = await db.user.findMany({
-  //       where: {
-  //         gym: {
-  //           id: user.gym.id
+  //   if(user.memberships.length > 0){
+  //     const gymMembers = await db.gym.findUnique({
+  //       where: { id: user.memberships[0].gymId },
+  //       include: {
+  //         memberships: {
+  //           include: {
+  //             user: true, // Get user details
+  //           },
   //         },
-  //         gymRole: 'MEMBER' // Optional: filter only members (not owners/instructors)
   //       },
   //     });
 
@@ -104,7 +111,7 @@ export async function getUserById(id: string) {
   // : user;
   //   }else{
       updatedUser = user;
-   // }
+    //}
     console.log("USER DATA SUCCESS");
 
     return {

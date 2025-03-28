@@ -46,7 +46,7 @@ model User {
   country            String? // New field
   emailNotifications String?         @default("everything") // New field
   pushNotifications  String?         @default("everything")
-  //classesTaught      Class[]         @relation("InstructorClasses")
+  classesTaught      Class[]         @relation("InstructorClasses")
 }
 
 model Gym {
@@ -92,8 +92,8 @@ model Class {
   capacity    Int?
   intensity   IntensityRating?
   skillLevel  SkillLevel?
-  //instructorId String?          @db.ObjectId
-  //instructor   User?            @relation("InstructorClasses", fields: [instructorId], references: [id]) // ✅ Fix the relation name
+  instructorId String?          @db.ObjectId
+  instructor   User?            @relation("InstructorClasses", fields: [instructorId], references: [id]) // ✅ Fix the relation name
   recurrence  Occurance? // e.g., "one-off", "weekly", "biweekly"
   duration    Int? // Duration in minutes
   days        String[] // Array of selected weekdays

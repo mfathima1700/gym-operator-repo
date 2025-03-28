@@ -28,10 +28,22 @@ export default function Login() {
       console.log(signInState.user);
       if (signInState?.user?.gymRole === "OWNER") {
        // router.push(`/owner/${signInState?.user?.id}`);
-       window.location.href = `/owner/${signInState?.user?.id}`;
+
+       if(signInState?.user?.gym){
+        window.location.href = `/owner/${signInState?.user?.id}`;
+       }else{
+        window.location.href = `/owner/${signInState?.user?.id}/create`;
+       }
+      
       } else if (signInState?.user?.gymRole === "MEMBER") {
         //router.push(`/individual/${signInState?.user?.id}`);
-        window.location.href = `/individual/${signInState?.user?.id}`;
+
+        if(signInState?.user?.firstName){
+          window.location.href = `/individual/${signInState?.user?.id}`;
+        }else{
+          window.location.href = `/individual/${signInState?.user?.id}/create`;
+        }
+       
       }
     }
   }, [signInState.user, signInState.error, signInState.success]);
