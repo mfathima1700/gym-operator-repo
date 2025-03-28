@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/popover";
 import { ClassesCards } from "@/components/dashboard/ClassesCards";
 import { GoalsCard } from "@/components/dashboard/GoalsCard";
-import { ClassesBarChart } from "@/components/dashboard/ClassesbarChart";
+import { ClassesBarChart } from "@/components/dashboard/ClassesBarChart";
 import { GoalsBarChart } from "@/components/dashboard/GoalsBarChart";
 
 function classNames(...classes: (string | false | undefined)[]): string {
@@ -39,7 +39,7 @@ export default function IndividualDashboard() {
     goals: [],
     gym: {
       id: "",
-     name:"",
+      name: "",
     },
     bookings: [],
   }));
@@ -62,10 +62,18 @@ export default function IndividualDashboard() {
         <div>
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
             <div className="*:data-[slot=card]:shadow-xs grid grid-cols-2 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
-            <ClassesCards bookings={userData.bookings} />
-            <GoalsCard goals={  userData.goals} />
-            <ClassesBarChart />
-            <GoalsBarChart />
+              <ClassesCards bookings={userData.bookings} />
+              <GoalsCard goals={userData.goals} />
+              <ClassesBarChart
+                bookingNb={
+                  userData.bookings.length ? userData.bookings.length : 0
+                }
+              />
+              <GoalsBarChart
+                completedNb={
+                  userData.goals.length > 0 ? userData.goals.length : 0
+                }
+              />
             </div>
           </div>
         </div>

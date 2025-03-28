@@ -53,11 +53,13 @@ export function GoalsCard({ goals }: { goals: Goal[] }) {
                   >
                     {goal.notes}
                   </Label>
+                  <div className="flex justify-end col-span-1">
+
                   <Checkbox
                     id={`-${goal.id}`}
                     checked={goal.completed}
-                    className="col-span-1"
                   />
+                  </div>
                 </div>
               ))}
             </div>

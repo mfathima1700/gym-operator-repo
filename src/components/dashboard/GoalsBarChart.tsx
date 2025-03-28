@@ -17,14 +17,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-]
+
 
 const chartConfig = {
   desktop: {
@@ -33,14 +26,23 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function GoalsBarChart() {
+export function GoalsBarChart({completedNb }: { completedNb: number }) {
+
+  const chartData = [
+    { month: "October", desktop: 0 },
+    { month: "November", desktop: 0 },
+    { month: "December", desktop: 0 },
+    { month: "January", desktop: 0 },
+    { month: "February", desktop: 0 },
+    { month: "March", desktop: completedNb },
+  ]
 
    { /* nb. classes booked per month - start date? 
     */}
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Label</CardTitle>
+        <CardTitle>Goals Completed</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
@@ -77,10 +79,11 @@ export function GoalsBarChart() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        {`Increased by ${completedNb * 100}% this month`} 
+          <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+        Showing nb. of goals completed in the last 6 months
         </div>
       </CardFooter>
     </Card>
