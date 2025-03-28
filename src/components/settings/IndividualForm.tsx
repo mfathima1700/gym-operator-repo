@@ -64,8 +64,6 @@ export default function IndividualForm({
               />
             </div>
 
-            
-
             {/* Gym */}
             <div className="sm:col-span-3 grid gap-2">
               <Label htmlFor="gym">Gym</Label>
@@ -82,7 +80,10 @@ export default function IndividualForm({
 
             <div className="sm:col-span-3">
               <Label htmlFor="country">Country</Label>
-              <Select value={userData.country}   onValueChange={(value) => handleChange("country", value)}>
+              <Select
+                value={userData.country}
+                onValueChange={(value) => handleChange("country", value)}
+              >
                 <SelectTrigger className="mt-2">
                   <SelectValue placeholder="Select country" />
                 </SelectTrigger>
@@ -94,6 +95,47 @@ export default function IndividualForm({
                   <SelectItem value="fa">France</SelectItem>
                   <SelectItem value="de">Germany</SelectItem>
                   <SelectItem value="au">Australia</SelectItem>
+                  <SelectItem value="es">Spain</SelectItem>
+                  <SelectItem value="it">Italy</SelectItem>
+                  <SelectItem value="nl">Netherlands</SelectItem>
+                  <SelectItem value="se">Sweden</SelectItem>
+                  <SelectItem value="no">Norway</SelectItem>
+                  <SelectItem value="dk">Denmark</SelectItem>
+                  <SelectItem value="fi">Finland</SelectItem>
+                  <SelectItem value="jp">Japan</SelectItem>
+                  <SelectItem value="cn">China</SelectItem>
+                  <SelectItem value="in">India</SelectItem>
+                  <SelectItem value="br">Brazil</SelectItem>
+                  <SelectItem value="za">South Africa</SelectItem>
+                  <SelectItem value="nz">New Zealand</SelectItem>
+                  <SelectItem value="ch">Switzerland</SelectItem>
+                  <SelectItem value="ru">Russia</SelectItem>
+                  <SelectItem value="kr">South Korea</SelectItem>
+                  <SelectItem value="ar">Argentina</SelectItem>
+                  <SelectItem value="sg">Singapore</SelectItem>
+                  <SelectItem value="ae">United Arab Emirates</SelectItem>
+                  <SelectItem value="sa">Saudi Arabia</SelectItem>
+                  <SelectItem value="ie">Ireland</SelectItem>
+                  <SelectItem value="pt">Portugal</SelectItem>
+                  <SelectItem value="gr">Greece</SelectItem>
+                  <SelectItem value="pl">Poland</SelectItem>
+                  <SelectItem value="tr">Turkey</SelectItem>
+                  <SelectItem value="hk">Hong Kong</SelectItem>
+                  <SelectItem value="th">Thailand</SelectItem>
+                  <SelectItem value="my">Malaysia</SelectItem>
+                  <SelectItem value="id">Indonesia</SelectItem>
+                  <SelectItem value="ph">Philippines</SelectItem>
+                  <SelectItem value="eg">Egypt</SelectItem>
+                  <SelectItem value="il">Israel</SelectItem>
+                  <SelectItem value="cl">Chile</SelectItem>
+                  <SelectItem value="co">Colombia</SelectItem>
+                  <SelectItem value="pk">Pakistan</SelectItem>
+                  <SelectItem value="vn">Vietnam</SelectItem>
+                  <SelectItem value="cz">Czech Republic</SelectItem>
+                  <SelectItem value="hu">Hungary</SelectItem>
+                  <SelectItem value="at">Austria</SelectItem>
+                  <SelectItem value="be">Belgium</SelectItem>
+                  <SelectItem value="ro">Romania</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -127,46 +169,44 @@ export default function IndividualForm({
       {/* Notifications Section */}
       <Card>
         <CardContent className="p-6">
-          
-            <h2 className="text-lg font-semibold text-white">Notifications</h2>
+          <h2 className="text-lg font-semibold text-white">Notifications</h2>
+          <p className="mt-1 text-sm text-gray-400">
+            We'll always let you know about important changes, but you pick what
+            else you want to hear about.
+          </p>
+
+          <div className="mt-10 ">
+            <Label className="text-white">By email</Label>
             <p className="mt-1 text-sm text-gray-400">
-              We'll always let you know about important changes, but you pick
-              what else you want to hear about.
+              These are delivered to your inbox. You can unsubscribe at any
+              time.
             </p>
+            <RadioGroup
+              className="mt-6 space-y-3"
+              defaultValue={userData.emailNotifications}
+              onValueChange={(value) =>
+                handleChange("emailNotifications", value)
+              }
+            >
+              <div className="flex items-center gap-x-3">
+                <RadioGroupItem value="everything" id="email-everything" />
+                <Label htmlFor="email-everything">Everything</Label>
+              </div>
+              <div className="flex items-center gap-x-3">
+                <RadioGroupItem value="critical-and-classes" id="push-email" />
+                <Label htmlFor="push-email">
+                  Upcoming Classes and Critical Updates
+                </Label>
+              </div>
+              <div className="flex items-center gap-x-3">
+                <RadioGroupItem value="critical-only" id="push-nothing" />
+                <Label htmlFor="push-nothing">Critical Updates only</Label>
+              </div>
+            </RadioGroup>
+          </div>
 
-            <div className="mt-10 ">
-              <Label className="text-white">By email</Label>
-              <p className="mt-1 text-sm text-gray-400">
-                These are delivered to your inbox. You can unsubscribe at any
-                time.
-              </p> 
-              <RadioGroup
-                className="mt-6 space-y-3"
-                defaultValue={userData.emailNotifications}
-                onValueChange={(value) => handleChange("emailNotifications", value)}
-              >
-                <div className="flex items-center gap-x-3">
-                  <RadioGroupItem value="everything" id="email-everything" />
-                  <Label htmlFor="email-everything">Everything</Label>
-                </div>
-                <div className="flex items-center gap-x-3">
-                  <RadioGroupItem
-                    value="critical-and-classes"
-                    id="push-email"
-                  />
-                  <Label htmlFor="push-email">
-                    Upcoming Classes and Critical Updates
-                  </Label>
-                </div>
-                <div className="flex items-center gap-x-3">
-                  <RadioGroupItem value="critical-only" id="push-nothing" />
-                  <Label htmlFor="push-nothing">Critical Updates only</Label>
-                </div>
-              </RadioGroup>
-            </div>
-
-            {/* Push Notifications */}
-            {/* <div className="mt-10 ">
+          {/* Push Notifications */}
+          {/* <div className="mt-10 ">
               <Label className="text-white">Push notifications</Label>
               <p className="mt-1 text-sm text-gray-400">
                 These are delivered via SMS to your mobile phone.
@@ -192,7 +232,6 @@ export default function IndividualForm({
                 </div>
               </RadioGroup>
             </div> */}
-         
         </CardContent>
       </Card>
 
@@ -200,19 +239,19 @@ export default function IndividualForm({
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold">Deactivate account</h2>
           <p className="text-sm text-gray-500">
-            Deactivating your account allows you to permanently remove your account,
-            including all associated data, from the system. This action is
-            irreversible and will delete personal information, bookings, payment
-            information and any other related data.
+            Deactivating your account allows you to permanently remove your
+            account, including all associated data, from the system. This action
+            is irreversible and will delete personal information, bookings,
+            payment information and any other related data.
           </p>
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-6">
             <div className="sm:col-span-3">
               {/* <Label htmlFor="first-name">First Name</Label> */}
               <Dialog>
-              <DialogTrigger asChild>
-              <Button variant="destructive">Delete Account</Button>
-              </DialogTrigger>
-              <DeleteDialog />
+                <DialogTrigger asChild>
+                  <Button variant="destructive">Delete Account</Button>
+                </DialogTrigger>
+                <DeleteDialog />
               </Dialog>
             </div>
           </div>

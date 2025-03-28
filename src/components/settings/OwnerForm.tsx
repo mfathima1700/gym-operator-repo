@@ -158,6 +158,47 @@ export default function OwnerForm({
                   <SelectItem value="fa">France</SelectItem>
                   <SelectItem value="de">Germany</SelectItem>
                   <SelectItem value="au">Australia</SelectItem>
+                  <SelectItem value="es">Spain</SelectItem>
+                  <SelectItem value="it">Italy</SelectItem>
+                  <SelectItem value="nl">Netherlands</SelectItem>
+                  <SelectItem value="se">Sweden</SelectItem>
+                  <SelectItem value="no">Norway</SelectItem>
+                  <SelectItem value="dk">Denmark</SelectItem>
+                  <SelectItem value="fi">Finland</SelectItem>
+                  <SelectItem value="jp">Japan</SelectItem>
+                  <SelectItem value="cn">China</SelectItem>
+                  <SelectItem value="in">India</SelectItem>
+                  <SelectItem value="br">Brazil</SelectItem>
+                  <SelectItem value="za">South Africa</SelectItem>
+                  <SelectItem value="nz">New Zealand</SelectItem>
+                  <SelectItem value="ch">Switzerland</SelectItem>
+                  <SelectItem value="ru">Russia</SelectItem>
+                  <SelectItem value="kr">South Korea</SelectItem>
+                  <SelectItem value="ar">Argentina</SelectItem>
+                  <SelectItem value="sg">Singapore</SelectItem>
+                  <SelectItem value="ae">United Arab Emirates</SelectItem>
+                  <SelectItem value="sa">Saudi Arabia</SelectItem>
+                  <SelectItem value="ie">Ireland</SelectItem>
+                  <SelectItem value="pt">Portugal</SelectItem>
+                  <SelectItem value="gr">Greece</SelectItem>
+                  <SelectItem value="pl">Poland</SelectItem>
+                  <SelectItem value="tr">Turkey</SelectItem>
+                  <SelectItem value="hk">Hong Kong</SelectItem>
+                  <SelectItem value="th">Thailand</SelectItem>
+                  <SelectItem value="my">Malaysia</SelectItem>
+                  <SelectItem value="id">Indonesia</SelectItem>
+                  <SelectItem value="ph">Philippines</SelectItem>
+                  <SelectItem value="eg">Egypt</SelectItem>
+                  <SelectItem value="il">Israel</SelectItem>
+                  <SelectItem value="cl">Chile</SelectItem>
+                  <SelectItem value="co">Colombia</SelectItem>
+                  <SelectItem value="pk">Pakistan</SelectItem>
+                  <SelectItem value="vn">Vietnam</SelectItem>
+                  <SelectItem value="cz">Czech Republic</SelectItem>
+                  <SelectItem value="hu">Hungary</SelectItem>
+                  <SelectItem value="at">Austria</SelectItem>
+                  <SelectItem value="be">Belgium</SelectItem>
+                  <SelectItem value="ro">Romania</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -45,7 +45,7 @@ model User {
   emailNotifications String?         @default("everything")
   pushNotifications  String?         @default("everything")
   gymId              String?         @db.ObjectId
-  gym                Gym?
+  gym                Gym?            @relation("UserGym", fields: [gymId], references: [id])
   instructorProfile  Instructor?     @relation("UserInstructor")
 }
 
@@ -53,7 +53,7 @@ model Gym {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   ownerId       String       @unique @db.ObjectId
-  owner         User         @relation(fields: [ownerId], references: [id]) // ✅ Fixed relation
+  owner         User          @relation("GymOwner", fields: [ownerId], references: [id])
   memberships   Membership[]
   classes       Class[]
   createdAt     DateTime     @default(now())
@@ -65,13 +65,13 @@ model Gym {
   state         String?
   description   String?
   logo          String?
-  instructors   Instructor[]
+  instructors   Instructor[] @relation("GymInstructors")
 }
 
 model Instructor {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   gymId     String   @db.ObjectId
-  gym       Gym      @relation(fields: [gymId], references: [id]) // ✅ Fixed relation
+  gym       Gym       @relation("GymInstructors", fields: [gymId], references: [id])
   classes   Class[]
   isTrainer Boolean? @default(false)
   createdAt DateTime @default(now())

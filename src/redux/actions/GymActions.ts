@@ -67,19 +67,35 @@ async function joinGym(userId: string, gymCode: string) {
 
 export async function getUserById(id: string) {
   try {
+    /*
     const user = await db.user.findUnique({
       where: { id }, // Look up user by email
       include: {
         goals: true,
         gym: {
-          include: {
+          select: {  // Use select instead of include to control depth
+            id: true,
+            name: true,
+            description: true,
+            country: true,
+            city: true,
+            postcode: true,
+            streetAddress: true,
+            state: true,
+            gymCode: true,
+
             classes: true, // ater this based on date time so only the ones now are fetched -> long wait times
           },
         }, // Include gym details if needed
-        memberships: true,
-        instructorProfile: true,
+       // memberships: true,
+       // instructorProfile: true,
         // Include memberships if needed
       },
+    });*/
+
+    const user = await db.user.findUnique({
+      where: { id },
+      select: { gymId: true }
     });
 
     if (!user) {
@@ -88,28 +104,28 @@ export async function getUserById(id: string) {
 
     let updatedUser;
 
-    if(user.gym){
-      const gymMembers = await db.user.findMany({
-        where: {
-          gymId: user?.gym?.id, // Filter users by gymId
-          gymRole: 'MEMBER' // Optional: filter only members (not owners/instructors)
-        },
-        include: {
-          instructorProfile: true,
-        }
-      });
+  //   if(user.gym){
+  //     const gymMembers = await db.user.findMany({
+  //       where: {
+  //         gymId: user?.gym?.id, // Filter users by gymId
+  //         gymRole: 'MEMBER' // Optional: filter only members (not owners/instructors)
+  //       },
+  //       include: {
+  //         instructorProfile: true,
+  //       }
+  //     });
 
-      console.log(gymMembers);
+  //     console.log(gymMembers);
 
-      updatedUser = user && gymMembers 
-  ? {
-      ...user,
-      gym: user.gym ? { ...user.gym, members: gymMembers } : undefined
-    }
-  : user;
-    }else{
+  //     updatedUser = user && gymMembers 
+  // ? {
+  //     ...user,
+  //     gym: user.gym ? { ...user.gym, members: gymMembers } : undefined
+  //   }
+  // : user;
+  //   }else{
       updatedUser = user;
-    }
+    //}
     console.log("USER DATA SUCCESS");
 
     return {
