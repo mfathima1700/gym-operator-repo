@@ -71,10 +71,24 @@ export async function getUserById(id: string) {
       where: { id }, // Look up user by email
       include: {
         goals: true,
+        bookings: {
+          select: {
+            id: true,
+            class: {
+              select:
+              {
+                name: true,
+                id: true,
+                time: true,
+              }
+            }
+          },
+        },
         gym: {
           include: {  // Use select instead of include to control depth
             classes: true, // ater this based on date time so only the ones now are fetched -> long wait times
           },
+         
         }, // Include gym details if needed
         // memberships: {
         //   select: {
