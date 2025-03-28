@@ -67,37 +67,17 @@ async function joinGym(userId: string, gymCode: string) {
 
 export async function getUserById(id: string) {
   try {
-    /*
     const user = await db.user.findUnique({
       where: { id }, // Look up user by email
       include: {
         goals: true,
         gym: {
-          select: {  // Use select instead of include to control depth
-            id: true,
-            name: true,
-            description: true,
-            country: true,
-            city: true,
-            postcode: true,
-            streetAddress: true,
-            state: true,
-            gymCode: true,
-
+          include: {  // Use select instead of include to control depth
             classes: true, // ater this based on date time so only the ones now are fetched -> long wait times
           },
         }, // Include gym details if needed
-       // memberships: true,
-       // instructorProfile: true,
-        // Include memberships if needed
       },
-    });*/
-
-    const user = await db.user.findUnique({
-      where: { id },
-      select: { gymId: true }
     });
-
     if (!user) {
       throw new Error("User not found");
     }
@@ -107,12 +87,11 @@ export async function getUserById(id: string) {
   //   if(user.gym){
   //     const gymMembers = await db.user.findMany({
   //       where: {
-  //         gymId: user?.gym?.id, // Filter users by gymId
+  //         gym: {
+  //           id: user.gym.id
+  //         },
   //         gymRole: 'MEMBER' // Optional: filter only members (not owners/instructors)
   //       },
-  //       include: {
-  //         instructorProfile: true,
-  //       }
   //     });
 
   //     console.log(gymMembers);
@@ -125,7 +104,7 @@ export async function getUserById(id: string) {
   // : user;
   //   }else{
       updatedUser = user;
-    //}
+   // }
     console.log("USER DATA SUCCESS");
 
     return {
@@ -382,31 +361,33 @@ export async function updateOwnerSettings(
 
 export async function convertToInstructor(userId: string, gymId: string) {
   try {
-    const user = await db.user.findUnique({
-      where: { id: userId },
-      include: {
-        instructorProfile: true,
-      },
-    });
+    // const user = await db.user.findUnique({
+    //   where: { id: userId },
+    // });
 
-    const gym = await db.gym.findUnique({
-      where: { id: userId },
-    });
+    // const gym = await db.gym.findUnique({
+    //   where: { id: userId },
+    // });
 
-    if (!user || !gym) {
-      throw new Error("User or gym not found");
-    }
+    // if (!user || !gym) {
+    //   throw new Error("User or gym not found");
+    // }
 
-    if(!user.instructorProfile){
-      const instructor = await db.instructor.create({data: {userId: userId,gymId: gymId,},});
+    // if(!user.isInstructor){
+    //   const instructor = await db.user.update({
+    //     where: { id: userId },
+    //     data: {
+    //       isInstructor: true,
+    //     },
+    //   });
 
       return {
         type: ALTER_MEMBER_SUCCESS,
-        payload: instructor,
+        payload: {}// instructor,
       };
-    }
+    //}
 
-    throw new Error("User already an instructor");
+    //throw new Error("User already an instructor");
   } catch (error) {
     console.log("FAILED TO CONVERT TO INSTRUCTOR");
     return {
@@ -419,27 +400,27 @@ export async function convertToInstructor(userId: string, gymId: string) {
 
 export async function convertToMember(userId: string, gymId: string) {
   try {
-    const user = await db.user.findUnique({
-      where: { id: userId },
-      include: {
-        instructorProfile: true,
-      },
-    });
+  //   const user = await db.user.findUnique({
+  //     where: { id: userId },
+  //   });
 
-    if (!user) {
-      throw new Error("User not found");
-    }
-    if(!user.instructorProfile){
-      throw new Error("User not an instructor");
-    }
+  //   if (!user) {
+  //     throw new Error("User not found");
+  //   }
+  //   if(!user.isInstructor){
+  //     throw new Error("User not an instructor");
+  //   }
 
-   const updatedUser =  await db.instructor.delete({
-      where: { userId: userId },
-    });
+  //  const updatedUser =  await db.user.update({
+  //     where: { id: userId },
+  //     data: {
+  //       isInstructor: false,
+  //     },
+  //     });
 
     return {
       type: ALTER_MEMBER_SUCCESS,
-      payload: updatedUser,
+      payload: {}//updatedUser,
     };
 
   } catch (error) {
