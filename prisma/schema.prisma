@@ -30,6 +30,7 @@ model User {
   gender             GenderStatus?
   gymRole            GymRole
   bookings           Booking[]
+  gym                Gym?            @relation("UserGym") // One-to-one relationship with Gym
   memberships        Membership[]
   dateOfBirth        DateTime?
   goals              Goal[]
@@ -40,20 +41,19 @@ model User {
   Authenticator      Authenticator[]
   updatedAt          DateTime        @updatedAt
   userRole           UserRole
-  phoneNumber        String?
-  country            String?
-  emailNotifications String?         @default("everything")
+  isInstructor       Boolean?        @default(false)
+  phoneNumber        String? // New field
+  country            String? // New field
+  emailNotifications String?         @default("everything") // New field
   pushNotifications  String?         @default("everything")
-  gymId              String?         @db.ObjectId
-  gym                Gym?            @relation("UserGym", fields: [gymId], references: [id])
-  instructorProfile  Instructor?     @relation("UserInstructor")
+  classesTaught      Class[]         @relation("InstructorClasses")
 }
 
 model Gym {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
   name          String
-  ownerId       String       @unique @db.ObjectId
-  owner         User          @relation("GymOwner", fields: [ownerId], references: [id])
+  ownerId       String       @unique @db.ObjectId // Ensure uniqueness for one-to-one
+  owner         User         @relation("UserGym", fields: [ownerId], references: [id]) // One-to-one relationship with User
   memberships   Membership[]
   classes       Class[]
   createdAt     DateTime     @default(now())
@@ -65,18 +65,6 @@ model Gym {
   state         String?
   description   String?
   logo          String?
-  instructors   Instructor[] @relation("GymInstructors")
-}
-
-model Instructor {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  gymId     String   @db.ObjectId
-  gym       Gym       @relation("GymInstructors", fields: [gymId], references: [id])
-  classes   Class[]
-  isTrainer Boolean? @default(false)
-  createdAt DateTime @default(now())
-  userId    String   @unique @db.ObjectId // 1:1 with User
-  user      User     @relation("UserInstructor", fields: [userId], references: [id])
 }
 
 // Membership model
@@ -89,7 +77,6 @@ model Membership {
   status    MembershipStatus // Enum: 'ACTIVE', 'INACTIVE'
   user      User             @relation(fields: [userId], references: [id]) // Relation field
   gym       Gym              @relation(fields: [gymId], references: [id])
-  plan      String
 }
 
 // cost
@@ -106,17 +93,14 @@ model Class {
   intensity    IntensityRating?
   skillLevel   SkillLevel?
   instructorId String?          @db.ObjectId
-  instructor   Instructor?      @relation(fields: [instructorId], references: [id]) // ✅ Fixed relation
-  recurrence   Occurance?
-  duration     Int?
-  days         String[]
-  room         String?
+  instructor   User?            @relation("InstructorClasses", fields: [instructorId], references: [id]) // ✅ Fix the relation name
+  recurrence   Occurance? // e.g., "one-off", "weekly", "biweekly"
+  duration     Int? // Duration in minutes
+  days         String[] // Array of selected weekdays
+  room         String? // Optional: Room name or reference
   startDate    DateTime?
   endDate      DateTime?
   time         String?
-
-  @@index([instructorId])
-  @@index([gymId, startDate])
 }
 
 // instructor
