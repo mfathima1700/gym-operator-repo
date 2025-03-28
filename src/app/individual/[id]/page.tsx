@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/popover";
 import { ClassesCards } from "@/components/dashboard/ClassesCards";
 import { GoalsCard } from "@/components/dashboard/GoalsCard";
+import { ClassesBarChart } from "@/components/dashboard/ClassesbarChart";
+import { GoalsBarChart } from "@/components/dashboard/GoalsBarChart";
 
 function classNames(...classes: (string | false | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
@@ -62,6 +64,8 @@ export default function IndividualDashboard() {
             <div className="*:data-[slot=card]:shadow-xs grid grid-cols-2 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
             <ClassesCards bookings={userData.bookings} />
             <GoalsCard goals={  userData.goals} />
+            <ClassesBarChart />
+            <GoalsBarChart />
             </div>
           </div>
         </div>

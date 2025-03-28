@@ -52,6 +52,9 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function ClassBarChart() {
+    
+    /*nb. members who have booked each class 
+    */
   return (
     <Card>
       <CardHeader>
