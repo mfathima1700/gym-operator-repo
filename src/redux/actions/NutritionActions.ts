@@ -56,20 +56,20 @@ const options = {
   }
 }*/
 
-export async function getExerciseData(activity: string, weight: number) {
+export async function getExerciseData(activity: string, weight: number, duration: number) {
     try {
   
-  const options = {
-      method: 'GET',
-      url: 'https://exercises-by-api-ninjas.p.rapidapi.com/v1/exercises',
-      params: {name: activity},
-      headers: {
-        'x-rapidapi-key': '40ce7cd81emsh47e0fc34c5755bap1db808jsn0c1c32594799',
-        'x-rapidapi-host': 'exercises-by-api-ninjas.p.rapidapi.com'
-      }
-    };
-  
-      const response = await axios.request(options)
+      const apiKey = process.env.NEXT_PUBLIC_NINJA_API_KEY
+      const response = await axios.get('https://api.api-ninjas.com/v1/caloriesburned', {
+        params: {
+            activity: activity,
+            weight: weight,
+            duration:duration
+        },
+        headers: {
+            'X-Api-Key': apiKey
+        }
+    });
   
       console.log("GET API NINJA STUFF SUCCESS");
       console.log(response.data);
@@ -87,23 +87,21 @@ export async function getExerciseData(activity: string, weight: number) {
     }
   }
 
-export async function getNutritionData(query: string) {
+export async function getNutritionData(foods: string) {
   try {
-    const response = await axios.get(
-      "https://edamam-food-and-grocery-database.p.rapidapi.com/api/food-database/v2/parser",
-      {
+    const apiKey = process.env.NEXT_PUBLIC_NINJA_API_KEY;
+    const response = await axios.get('https://api.api-ninjas.com/v1/nutrition', {
         params: {
-          ingr: query,
+            query: foods // The food item to analyze (e.g., "1lb brisket and fries")
         },
         headers: {
-          "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY,
-          "X-RapidAPI-Host": "edamam-food-and-grocery-database.p.rapidapi.com",
-        },
-      }
-    );
+            'X-Api-Key': apiKey
+        }
+    });
 
     console.log("GET EDAMAM STUFF SUCCESS");
-
+    console.log(response.data);
+    
     return {
       type: GET_NUTRITION_SUCCESS,
       payload: response.data,

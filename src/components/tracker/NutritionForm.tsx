@@ -7,21 +7,25 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useState } from "react";
 import { AppDispatch } from "@/redux/store";
 import { useDispatch } from "react-redux";
-import { getExerciseData, getNutritionData } from "@/redux/actions/NutritionActions";
+import {
+  getExerciseData,
+  getNutritionData,
+} from "@/redux/actions/NutritionActions";
+import { FitnessTable } from "./FitnessTable";
 
 export default function NutritionForm({
   exerciseData,
   nutritionData,
 }: {
-  exerciseData: string;
-  nutritionData: string;
+  exerciseData: any;
+  nutritionData: any;
 }) {
   const dispatch = useDispatch<AppDispatch>();
 
   const [data, setData] = useState(() => ({
     activity: "",
     weight: 0,
-    duration:60,
+    duration: 60,
     quantity: 1,
     item: "",
   }));
@@ -35,22 +39,21 @@ export default function NutritionForm({
 
   function calculateCalories(e: React.MouseEvent) {
     e.preventDefault();
-    dispatch(getExerciseData(data.activity, data.weight))
+    dispatch(getExerciseData(data.activity, data.weight, data.duration));
   }
 
   function calculateNutrition(e: React.MouseEvent) {
-    e.preventDefault()
-    dispatch(getNutritionData(`${data.quantity} ${data.item}`))
+    e.preventDefault();
+    dispatch(getNutritionData(`${data.quantity} ${data.item}`));
   }
 
   return (
     <form className="space-y-12">
       <Card>
         <CardContent className="p-6">
-          <h2 className="text-lg font-semibold">Personal Information</h2>
+          <h2 className="text-lg font-semibold">Activity Information</h2>
           <p className="text-sm text-gray-500">
-            This information will be displayed publicly, so be careful what you
-            share.
+            Calculate the number of calories burned during an activity.
           </p>
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-6">
             <div className="sm:col-span-3 grid gap-2">
@@ -93,7 +96,14 @@ export default function NutritionForm({
               <Button onClick={calculateCalories}>Calculate</Button>
             </div>
 
-            <div className="col-span-full">{exerciseData}</div>
+            {exerciseData ? (
+              <div className="col-span-full">
+                 <Label htmlFor="first-name" className="mb-4">Results</Label>
+                <FitnessTable exerciseData={ exerciseData } />
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -101,10 +111,9 @@ export default function NutritionForm({
       {/* Notifications Section */}
       <Card>
         <CardContent className="p-6">
-          <h2 className="text-lg font-semibold text-white">Notifications</h2>
+          <h2 className="text-lg font-semibold text-white">Nutritional Information</h2>
           <p className="mt-1 text-sm text-gray-400">
-            We'll always let you know about important changes, but you pick what
-            else you want to hear about.
+           Calculate the nutritional information for a food item.
           </p>
 
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-6">
