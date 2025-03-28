@@ -18,32 +18,33 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 const chartData = [
-  { browser: "chrome", visitors: 187, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 275, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 90, fill: "var(--color-other)" },
+  { browser: "taekwondo", visitors: 2, fill: "var(--color-taekwondo)" },
+  { browser: "cycling", visitors: 1, fill: "var(--color-cycling)" },
+  { browser: "running", visitors: 3, fill: "var(--color-running)" },
+  { browser: "swimming", visitors: 1, fill: "var(--color-swimming)" },
+  { browser: "yoga", visitors: 0, fill: "var(--color-yoga)" },
 ]
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
+  taekwondo: {
+    label: "Taekwondo",
     color: "hsl(var(--chart-1))",
   },
-  safari: {
-    label: "Safari",
+  cycling: {
+    label: "Cycling",
     color: "hsl(var(--chart-2))",
   },
-  firefox: {
-    label: "Firefox",
+  running: {
+    label: "Running",
     color: "hsl(var(--chart-3))",
   },
-  edge: {
-    label: "Edge",
+  swimming: {
+    label: "Swimming",
     color: "hsl(var(--chart-4))",
+  },
+  yoga: {
+    label: "Yoga",
+    color: "hsl(var(--chart-5))",
   },
   other: {
     label: "Other",
@@ -58,8 +59,8 @@ export function ClassBarChart() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Active</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Class Bookings</CardTitle>
+        <CardDescription>October - March 2025</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -100,10 +101,10 @@ export function ClassBarChart() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Bookings are up this month <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Showing total class bookings for the last month
         </div>
       </CardFooter>
     </Card>

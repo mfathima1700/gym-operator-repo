@@ -43,7 +43,7 @@ export function GoalsBarChart({completedNb }: { completedNb: number }) {
     <Card>
       <CardHeader>
         <CardTitle>Goals Completed</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardDescription>October - March 2025</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>

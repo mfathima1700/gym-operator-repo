@@ -17,13 +17,14 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+
 const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
+  { month: "October", desktop: 0 },
+  { month: "November", desktop: 0 },
+  { month: "December", desktop: 0 },
+  { month: "January", desktop: 0 },
+  { month: "February", desktop: 0 },
+  { month: "March", desktop: 9 },
 ]
 
 const chartConfig = {
@@ -41,8 +42,8 @@ export function MemberBarChart() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>New Members Per Month</CardTitle>
+        <CardDescription>October - March 2025</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -65,10 +66,10 @@ export function MemberBarChart() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Increased by 100% this month <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Showing total new gym members for the last 6 months
         </div>
       </CardFooter>
     </Card>

@@ -35,7 +35,7 @@ export function ClassesCards({ bookings }: { bookings: Booking[] }) {
     <Card className="@container/card">
       <CardHeader>
         <CardTitle>Upcoming Classes</CardTitle>
-        <CardDescription></CardDescription>
+        <CardDescription>Keep track of all of the classes you're booked for</CardDescription>
       </CardHeader>
       <CardContent>
         <form>

@@ -34,7 +34,7 @@ export function GoalsCard({ goals }: { goals: Goal[] }) {
     <Card className="@container/card">
       <CardHeader>
         <CardTitle>Goals In Progress</CardTitle>
-        <CardDescription></CardDescription>
+        <CardDescription>Keep track of all of your unfinished goals</CardDescription>
       </CardHeader>
       <CardContent>
         <form>
