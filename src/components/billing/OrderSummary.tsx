@@ -16,11 +16,11 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
           
               <div  className="flex px-4 py-6 sm:px-6">
                 <div className="shrink-0 bg-white">
-                  <img
+                  {/* <img
                     alt={"Front of men's Basic Tee in black."}
                     src={"/centred-logo.png"}
                     className="w-20 rounded-md"
-                  />
+                  /> */}
                 </div>
 
                 <div className="ml-6 flex flex-1 flex-col">

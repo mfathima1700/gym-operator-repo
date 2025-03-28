@@ -81,3 +81,8 @@ export async function sendDeleteEmail(userInfo: UserInfo) {
     };
   }
 }
+
+export async function sendCancelEmail(userInfo: UserInfo) {
+  try {}
+  catch (error) {}
+}

@@ -42,10 +42,10 @@ export function ClassesCards({ bookings }: { bookings: Booking[] }) {
           {bookings?.length > 0 ? (
             <div className="grid gap-4 py-4">
               {bookings
-                .filter((booking) => {
-                  const classTime = new Date(booking.class.time);
-                  return classTime > new Date(); // Only keep future classes
-                })
+                // .filter((booking) => {
+                //   const classTime = new Date(booking.class.time);
+                //   return classTime > new Date(); // Only keep future classes
+                // })
                 .map((booking) => (
                   <div
                     key={booking.id}

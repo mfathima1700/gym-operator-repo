@@ -51,7 +51,7 @@ export function GoalsCard({ goals }: { goals: Goal[] }) {
                     htmlFor={`-${goal.title}`}
                     className="text-left col-span-3"
                   >
-                    {goal.notes}
+                    {goal.title}
                   </Label>
                   <div className="flex justify-end col-span-1">
 

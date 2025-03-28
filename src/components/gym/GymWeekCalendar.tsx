@@ -143,10 +143,10 @@ user:any
     console.log(newEndOfWeek);
   };
 
-  // Function to go to the next week
   const handleNextWeek = (e: React.MouseEvent) => {
     const newStartOfWeek = new Date(startOfWeek);
-    newStartOfWeek.setDate(startOfWeek.getDate() + 7); // Move 7 days forward to get the next week
+    newStartOfWeek.setDate(startOfWeek.getDate() + 7); 
+    // Move 7 days forward to get the next week
     setStartOfWeek(newStartOfWeek);
 
     setWeekdays(updateWeekdays(newStartOfWeek));
@@ -372,7 +372,7 @@ user:any
                                     className={`flex-row p-2 gap-x-4 text-xs/5 flex-grow`}
                                   >
                                     <p
-                                      className={cn(
+                                      className={cn("text-left",
                                         generateColourP2(classObject.name)
                                       )}
                                     >
@@ -383,7 +383,7 @@ user:any
                                       </time>
                                       <span
                                         className={cn(
-                                          `pl-4 font-semibold text-right`,
+                                          `pl-12  text-right`,
                                           generateColourP2(classObject.name)
                                         )}
                                       >

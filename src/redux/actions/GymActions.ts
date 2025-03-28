@@ -71,22 +71,22 @@ export async function getUserById(id: string) {
       where: { id }, // Look up user by email
       include: {
         goals: true,
-        bookings: {
-          select: {
-            id: true,
-            bookingDate: true,
-            class: {
-              select:
-              {
-                name: true,
-                id: true,
-                time: true,
-                startDate: true,
-                endDate: true,
-              }
-            }
-          },
-        },
+        // bookings: {
+        //   select: {
+        //     id: true,
+        //     bookingDate: true,
+        //     class: {
+        //       select:
+        //       {
+        //         name: true,
+        //         id: true,
+        //         time: true,
+        //         startDate: true,
+        //         endDate: true,
+        //       }
+        //     }
+        //   },
+        // },
         gym: {
           include: {  // Use select instead of include to control depth
             classes: true, // ater this based on date time so only the ones now are fetched -> long wait times
@@ -106,29 +106,20 @@ export async function getUserById(id: string) {
 
     let updatedUser;
 
-  //   if(user.memberships.length > 0){
-  //     const gymMembers = await db.gym.findUnique({
-  //       where: { id: user.memberships[0].gymId },
-  //       include: {
-  //         memberships: {
-  //           include: {
-  //             user: true, // Get user details
-  //           },
-  //         },
-  //       },
-  //     });
+    const bookings = await db.booking.findMany({
+      where: { userId: id },
+      include: {
+        class: true,
+      },
+    });
 
-  //     console.log(gymMembers);
+    console.log(bookings)
 
-  //     updatedUser = user && gymMembers 
-  // ? {
-  //     ...user,
-  //     gym: user.gym ? { ...user.gym, members: gymMembers } : undefined
-  //   }
-  // : user;
-  //   }else{
-      updatedUser = user;
-    //}
+    updatedUser = {
+      ...user,
+      bookings,
+    };
+  
     console.log("USER DATA SUCCESS");
 
     return {
@@ -325,8 +316,8 @@ export async function updateOwnerSettings(
       throw new Error("User not found");
     }
 
-    const imageBuffer  = Buffer.from(new Uint8Array(await data.image.arrayBuffer())); 
-    const logoBuffer  = Buffer.from(new Uint8Array(await gymData.logo.arrayBuffer()));
+   // const imageBuffer  = Buffer.from(new Uint8Array(await data.image.arrayBuffer())); 
+   // const logoBuffer  = Buffer.from(new Uint8Array(await gymData.logo.arrayBuffer()));
     
     // Update the User
     const updatedUser = await db.user.update({

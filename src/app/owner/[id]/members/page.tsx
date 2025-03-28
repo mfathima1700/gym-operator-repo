@@ -169,7 +169,7 @@ export default function Members() {
   }, [userState.user, userState.success, userState.error]);
 
   useEffect(() => {
-    if (userData.gym?.name === "GymSonic") {
+    if (userData.gym?.name) {
       setUserData((prevState) => ({
         ...prevState,
         gym: {

@@ -98,7 +98,7 @@ function AddGoalDialog({ triggerRef, id }: { triggerRef: any; id: string }) {
               />
             </div>
           </div>
-          <div className="sm:col-span-3">
+          {/* <div className="sm:col-span-3">
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="terms"
@@ -112,7 +112,7 @@ function AddGoalDialog({ triggerRef, id }: { triggerRef: any; id: string }) {
                 Completed
               </label>
             </div>
-          </div>
+          </div> */}
         </div>
         <DialogFooter>
           <Button onClick={onSaveClick}>Save changes</Button>

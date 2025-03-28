@@ -8,7 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import NutritionForm from "@/components/tracker/NutritionForm";
 
-export default function Goals() {
+export default function TrackerPage() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const params = useParams();
