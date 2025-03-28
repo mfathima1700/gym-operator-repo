@@ -5,8 +5,9 @@ import {
 import { AppDispatch } from "@/redux/store";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
-import { Button } from "react-day-picker";
+import {Button} from "@/components/ui/button";
 import { useDispatch } from "react-redux";
+import React from "react";
 
 interface userData {
   id: string;
@@ -16,8 +17,7 @@ interface userData {
   country?: string;
   image?: any;
   emailNotifications?: string;
-  pushNotifications?: string;
-  instructorProfile?: {};
+  isInstructor: boolean;
   createdAt: Date;
 }
 
@@ -52,7 +52,7 @@ export default function MemberCards({
       role="list"
       className="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 xl:gap-x-8"
     >
-      {gymMembers.map((member) => (
+       {gymMembers.map((member) => (
         <li
           key={member.id}
           className="overflow-hidden rounded-xl border border-gray-800"
@@ -60,7 +60,7 @@ export default function MemberCards({
           <div className="flex items-center gap-x-4 border-b border-gray-800   p-6">
             <img
               alt={member.name}
-              src={member.image}
+              src={member.image ? member.image: "https://avatars.githubusercontent.com/u/2015447?v=4"}
               className="size-12 flex-none rounded-full bg-white object-cover ring-1 ring-gray-900/10"
             />
             <div className="text-sm/6 font-medium text-white">
@@ -71,14 +71,14 @@ export default function MemberCards({
             <div className="flex justify-between gap-x-4 py-3">
               <dt className="text-white">Role</dt>
               <dd className="text-gray-400">
-                {member.instructorProfile ? "Instructor" : "Member"}
+                {member.isInstructor ? "Instructor" : "Member"}
               </dd>
             </div>
             <div className="flex justify-between gap-x-4 py-3">
-              <dt className="text-white">Created</dt>
+              <dt className="text-white">Joined </dt>
               <dd className="flex items-start gap-x-2">
                 <div className="font-medium text-gray-400">
-                  {member.createdAt.toISOString()}
+                  {member.createdAt.toLocaleDateString()}
                 </div>
               </dd>
             </div>
@@ -87,21 +87,21 @@ export default function MemberCards({
               <dd className="flex items-start gap-x-2">
                 <Button
                   className="items-end"
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     handleClick(
                       e,
                       member.id,
-                      member.instructorProfile ? true : false
+                      member.isInstructor ? true : false
                     );
                   }}
                 >
-                  {`Convert to ${member.instructorProfile ? "Instructor" : "Member"}`}
+                  {`Convert to ${member.isInstructor ? "Instructor" : "Member"}`}
                 </Button>
               </dd>
             </div>
           </dl>
         </li>
-      ))}
+      ))} 
     </ul>
   );
 }
