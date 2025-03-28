@@ -21,46 +21,55 @@ import {
 
 interface Booking {
   id: string;
+  bookingDate: Date;
   class: {
     name: string;
     id: string;
     time: Date;
+    startDate: Date;
+    endDate: Date;
   };
 }
 export function ClassesCards({ bookings }: { bookings: Booking[] }) {
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle>Classes Today:</CardTitle>
+        <CardTitle>Upcoming Classes</CardTitle>
         <CardDescription></CardDescription>
       </CardHeader>
       <CardContent>
         <form>
           {bookings?.length > 0 ? (
             <div className="grid gap-4 py-4">
-              {bookings.map((booking) => (
-                <div
-                  key={booking.id}
-                  className="grid grid-cols-4 items-center gap-4"
-                >
-                  <Label
-                    htmlFor={`booking-${booking.class.name}`}
-                    className="text-left col-span-3"
+              {bookings
+                .filter((booking) => {
+                  const classTime = new Date(booking.class.time);
+                  return classTime > new Date(); // Only keep future classes
+                })
+                .map((booking) => (
+                  <div
+                    key={booking.id}
+                    className="grid grid-cols-4 items-center gap-4"
                   >
-                    {booking.class.name}
-                  </Label>
-                  <Input
-                  disabled
-                    id={`booking-${booking.class.time}`}
-                    value={booking.class.name}
-                    className="col-span-1"
-                  />
-                </div>
-              ))}
+                    <Label
+                      htmlFor={`booking-${booking.class.name}`}
+                      className="text-left col-span-2"
+                    >
+                      {booking.class.name}
+                    </Label>
+
+                    <Label
+                      htmlFor={`booking-${booking.class.name}`}
+                      className="text-right col-span-2"
+                    >
+                      {booking.class.startDate.toLocaleDateString()}
+                    </Label>
+                  </div>
+                ))}
             </div>
           ) : (
             <div className="text-sm text-muted-foreground">
-              <p>No classes booked for today</p>
+              <p>No classes booked </p>
             </div>
           )}
         </form>

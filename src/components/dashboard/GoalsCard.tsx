@@ -40,7 +40,9 @@ export function GoalsCard({ goals }: { goals: Goal[] }) {
         <form>
           {goals?.length > 0 ? (
             <div className="grid gap-4 py-4">
-              {goals.map((goal) => (
+              {goals.filter((goal) => {
+                  return !goal.completed // Only keep future classes
+                }).map((goal) => (
                 <div
                   key={goal.id}
                   className="grid grid-cols-4 items-center gap-4"

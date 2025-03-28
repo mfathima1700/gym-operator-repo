@@ -15,10 +15,10 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
           <ul role="list" className="divide-y divide-gray-800">
           
               <div  className="flex px-4 py-6 sm:px-6">
-                <div className="shrink-0">
+                <div className="shrink-0 bg-white">
                   <img
                     alt={"Front of men's Basic Tee in black."}
-                    src={"https://tailwindcss.com/plus-assets/img/ecommerce-images/checkout-page-02-product-01.jpg"}
+                    src={"/centred-logo.png"}
                     className="w-20 rounded-md"
                   />
                 </div>

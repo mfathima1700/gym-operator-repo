@@ -74,12 +74,15 @@ export async function getUserById(id: string) {
         bookings: {
           select: {
             id: true,
+            bookingDate: true,
             class: {
               select:
               {
                 name: true,
                 id: true,
                 time: true,
+                startDate: true,
+                endDate: true,
               }
             }
           },
