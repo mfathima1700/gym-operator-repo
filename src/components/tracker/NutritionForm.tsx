@@ -12,6 +12,7 @@ import {
   getNutritionData,
 } from "@/redux/actions/NutritionActions";
 import { FitnessTable } from "./FitnessTable";
+import { FoodTable } from "./FoodTable";
 
 export default function NutritionForm({
   exerciseData,
@@ -146,7 +147,14 @@ export default function NutritionForm({
               <Button onClick={calculateNutrition}>Calculate</Button>
             </div>
 
-            <div className="col-span-full">{nutritionData}</div>
+            {nutritionData ? (
+              <div className="col-span-full">
+                 <Label htmlFor="first-name" className="mb-4">Results</Label>
+                <FoodTable nutritionData={ nutritionData } />
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </CardContent>
       </Card>
