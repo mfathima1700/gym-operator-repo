@@ -49,13 +49,13 @@ type UserType = {
 };
 
 export default function GymWeekCalendar({
-
+user,
  members,
   classes,
   isOwner,
   id,
 }: {
-
+user:any
  members: UserType[];
   classes: ClassType[];
   isOwner: boolean;
@@ -407,8 +407,10 @@ export default function GymWeekCalendar({
                               <EditClassDialog
                                 gymClass={classObject}
                                 id={id}
+                                today={todaysDate}
                                 editTriggerRef={editTriggerRef}
                                 isOwner={isOwner}
+                                user={user}
                               />
                             </Dialog>
                           </li>

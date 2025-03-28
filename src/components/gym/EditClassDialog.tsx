@@ -33,29 +33,50 @@ import {
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { useState } from "react";
+import { sendDeleteEmail } from "@/redux/actions/EmailActions";
+
+
+interface UserInfo {
+  email: string;
+  name: string;
+ gym:{
+  name: string;
+ }
+}
 
 export function EditClassDialog({
   gymClass,
   editTriggerRef,
   id,
+  today,
   isOwner,
+  user
 }: {
   gymClass: any;
   editTriggerRef:any
   id: string;
   isOwner: boolean;
+  today: Date;
+  user:UserInfo
 }) {
   const dispatch = useDispatch<AppDispatch>();
 
   function onCancelClick(e: React.MouseEvent) {
     e.preventDefault();
-
+    //dispatch(cancelClass(classData.id)); send email to user to cancel for today
     dispatch(cancelClass(classData.id));
   }
 
   function onDeleteClick(e: React.MouseEvent) {
     e.preventDefault();
     editTriggerRef.current?.click();
+    const emailData = {
+      email: user.email,
+      name: user.name,
+      gymName: user?.gym?.name,
+      className: gymClass.name,
+    };
+    dispatch(sendDeleteEmail(emailData));
     dispatch(deleteClass(classData.id));
   }
 
