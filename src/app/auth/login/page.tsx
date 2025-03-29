@@ -38,7 +38,7 @@ export default function Login() {
       } else if (signInState?.user?.gymRole === "MEMBER") {
         //router.push(`/individual/${signInState?.user?.id}`);
 
-        if(signInState?.user?.firstName){
+        if(signInState?.user?.name !== "" && signInState?.user?.name !== undefined && signInState?.user?.name !== null){
           window.location.href = `/individual/${signInState?.user?.id}`;
         }else{
           window.location.href = `/individual/${signInState?.user?.id}/create`;
