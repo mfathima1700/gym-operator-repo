@@ -113,7 +113,7 @@ export async function getUserById(id: string) {
       },
     });
 
-    console.log(bookings)
+    //console.log(bookings)
 
     updatedUser = {
       ...user,

@@ -53,13 +53,14 @@ user,
  members,
   classes,
   isOwner,
-  id,
+  gymId,
+  
 }: {
 user:any
  members: UserType[];
   classes: ClassType[];
   isOwner: boolean;
-  id: string;
+  gymId: string;
 }) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const editTriggerRef = useRef<HTMLButtonElement>(null);
@@ -258,7 +259,7 @@ user:any
 
                 <AddClassDialog
                 triggerRef={triggerRef}
-                gymId={id}
+                gymId={gymId}
                 />
               </Dialog>
             </div>
@@ -290,7 +291,7 @@ user:any
 
                     <AddClassDialog
                     triggerRef={triggerRef}
-                       gymId={id}
+                       gymId={gymId}
                     />
                   </Dialog>
                 </MenuItem>
@@ -406,11 +407,12 @@ user:any
                               </DialogTrigger>
                               <EditClassDialog
                                 gymClass={classObject}
-                                id={id}
+                                gymId={gymId}
                                 today={todaysDate}
                                 editTriggerRef={editTriggerRef}
                                 isOwner={isOwner}
                                 user={user}
+                               
                               />
                             </Dialog>
                           </li>

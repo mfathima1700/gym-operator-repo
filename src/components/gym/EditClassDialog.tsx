@@ -37,6 +37,7 @@ import { sendDeleteEmail } from "@/redux/actions/EmailActions";
 
 
 interface UserInfo {
+  id: string;
   email: string;
   name: string;
  gym:{
@@ -47,14 +48,14 @@ interface UserInfo {
 export function EditClassDialog({
   gymClass,
   editTriggerRef,
-  id,
+  gymId,
   today,
   isOwner,
   user
 }: {
   gymClass: any;
   editTriggerRef:any
-  id: string;
+  gymId: string;
   isOwner: boolean;
   today: Date;
   user:UserInfo
@@ -83,7 +84,9 @@ export function EditClassDialog({
   function onBookClick(e: React.MouseEvent) {
     e.preventDefault();
     editTriggerRef.current?.click();
-    dispatch(bookClass(classData.id, id));
+
+    console.log("user id " + user.id)
+    dispatch(bookClass(classData.id, user.id));
   }
 
   function onUpdateClick(e: React.MouseEvent) {

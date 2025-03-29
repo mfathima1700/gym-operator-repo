@@ -145,6 +145,7 @@ export async function updateClass(data: classData, classId: string) {
 export async function bookClass(classId: string, userId:string) {
   try {
 
+    
     const booking = await db.booking.create({
       data: {
         userId: userId,
