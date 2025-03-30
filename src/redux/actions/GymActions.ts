@@ -19,6 +19,7 @@ import {
 } from "../constants/GymConstants";
 import { ObjectId } from "mongodb";
 import { GymRole } from "@prisma/client";
+import { use } from "react";
 
 /*
 export async function createGym(
@@ -71,33 +72,13 @@ export async function getUserById(id: string) {
       where: { id }, // Look up user by email
       include: {
         goals: true,
-        // bookings: {
-        //   select: {
-        //     id: true,
-        //     bookingDate: true,
-        //     class: {
-        //       select:
-        //       {
-        //         name: true,
-        //         id: true,
-        //         time: true,
-        //         startDate: true,
-        //         endDate: true,
-        //       }
-        //     }
-        //   },
-        // },
+        
         gym: {
           include: {  // Use select instead of include to control depth
             classes: true, // ater this based on date time so only the ones now are fetched -> long wait times
           },
          
-        }, // Include gym details if needed
-        // memberships: {
-        //   select: {
-        //     gymId: true,
-        //   }
-        // }
+        },
       },
     });
     if (!user) {
@@ -487,4 +468,68 @@ export async function deleteGym(gymId: string) {
 
     //await db.instructor.create({ data: { userId, gymId } });
   } catch (error) {}
+}
+
+export async function getUserAndInstructors(id: string) {
+  try {
+    const user = await db.user.findUnique({
+      where: { id }, // Look up user by email
+      include: {
+        goals: true,
+        
+        gym: {
+          include: {  // Use select instead of include to control depth
+            classes: true, // ater this based on date time so only the ones now are fetched -> long wait times
+          },
+         
+        },
+      },
+    });
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    let updatedUser;
+
+    // if(user?.gym){
+
+    //   const gymUsers = await db.user.findMany({
+    //     where: {
+    //       gym: {  // Query through the relation
+    //         id: user?.gym?.id  // The ID of the gym you're interested in
+    //       }
+    //     },
+    //   });
+  
+    //   console.log(gymUsers)
+  
+    //   updatedUser = {
+    //     ...user,
+    //   gym:{
+    //     ...user.gym,
+    //     members: gymUsers
+    //   }
+    //   };
+
+    //   return {
+    //     type: GET_USER_DATA_SUCCESS,
+    //     payload: updatedUser,
+    //   };
+    // }
+
+  
+    console.log("INSTRUCTORS DATA SUCCESS");
+    return {
+      type: GET_USER_DATA_SUCCESS,
+      payload: user,
+    };
+    
+  } catch (error) {
+    console.log("FAILED TO GET USER DATA");
+    console.log(error);
+    return {
+      type: GET_USER_DATA_FAILED,
+      payload: error,
+    };
+  }
 }

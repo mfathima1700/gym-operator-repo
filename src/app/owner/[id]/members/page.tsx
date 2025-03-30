@@ -9,7 +9,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { getUserById } from "@/redux/actions/GymActions";
+import { getUserAndInstructors, getUserById } from "@/redux/actions/GymActions";
 
 function classNames(...classes: (string | false | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
@@ -158,7 +158,7 @@ export default function Members() {
   }));
 
   useEffect(() => {
-    dispatch(getUserById(id));
+    dispatch(getUserAndInstructors(id));
   }, [id, alterMemberState.success, alterMemberState.error]);
 
   useEffect(() => {
@@ -169,15 +169,15 @@ export default function Members() {
   }, [userState.user, userState.success, userState.error]);
 
   useEffect(() => {
-    if (userData.gym?.name) {
-      setUserData((prevState) => ({
-        ...prevState,
-        gym: {
-          ...prevState.gym,
-          members: fakeMembers, // Set the members with fake data
-        },
-      }));
-    }
+    // if (userData.gym?.name) {
+    //   setUserData((prevState) => ({
+    //     ...prevState,
+    //     gym: {
+    //       ...prevState.gym,
+    //       members: fakeMembers, // Set the members with fake data
+    //     },
+    //   }));
+    // }
   }, [userData.gym?.name]);
 
   return (

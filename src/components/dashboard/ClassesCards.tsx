@@ -60,7 +60,7 @@ export function ClassesCards({ bookings }: { bookings: Booking[] }) {
 
                     <Label
                       htmlFor={`booking-${booking.class.name}`}
-                      className="text-right col-span-2"
+                      className="text-right col-span-2 font-normal text-slate-500"
                     >
                       {booking.class.startDate.toLocaleDateString()}
                     </Label>
