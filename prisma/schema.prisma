@@ -21,16 +21,20 @@ datasource db {
 // membership level
 
 model User {
-  id                 String          @id @default(auto()) @map("_id") @db.ObjectId
-  email              String          @unique
-  name               String?
-  password           String
-  hashedPassword     String?
-  createdAt          DateTime        @default(now())
-  gender             GenderStatus?
-  gymRole            GymRole
-  bookings           Booking[]
-  gym                Gym?            @relation("UserGym") // One-to-one relationship with Gym
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  email          String        @unique
+  name           String?
+  password       String
+  hashedPassword String?
+  createdAt      DateTime      @default(now())
+  gender         GenderStatus?
+  gymRole        GymRole
+  bookings       Booking[]
+  gymId          String?       @db.ObjectId
+  gym            Gym?          @relation("GymMembers", fields: [gymId], references: [id])
+
+  ownedGymId         String?         @unique @db.ObjectId // Store gym ownership here
+  ownedGym           Gym?            @relation("GymOwner", fields: [ownedGymId], references: [id])
   memberships        Membership[]
   dateOfBirth        DateTime?
   goals              Goal[]
@@ -41,10 +45,10 @@ model User {
   Authenticator      Authenticator[]
   updatedAt          DateTime        @updatedAt
   userRole           UserRole
-  isInstructor          Boolean?        @default(false)
-  phoneNumber        String? // New field
-  country            String? // New field
-  emailNotifications String?         @default("everything") // New field
+  isInstructor       Boolean?        @default(false)
+  phoneNumber        String?
+  country            String?
+  emailNotifications String?         @default("everything")
   pushNotifications  String?         @default("everything")
   classesTaught      Class[]         @relation("InstructorClasses")
 }
@@ -52,8 +56,8 @@ model User {
 model Gym {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
   name          String
-  ownerId       String       @unique @db.ObjectId // Ensure uniqueness for one-to-one
-  owner         User         @relation("UserGym", fields: [ownerId], references: [id]) // One-to-one relationship with User
+  members       User[]       @relation("GymMembers")
+  owner         User?        @relation("GymOwner")
   memberships   Membership[]
   classes       Class[]
   createdAt     DateTime     @default(now())
@@ -83,24 +87,24 @@ model Membership {
 
 // Class model
 model Class {
-  id          String           @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String?
-  gymId       String           @db.ObjectId
-  gym         Gym              @relation(fields: [gymId], references: [id])
-  bookings    Booking[]
-  capacity    Int?
-  intensity   IntensityRating?
-  skillLevel  SkillLevel?
+  id           String           @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  description  String?
+  gymId        String           @db.ObjectId
+  gym          Gym              @relation(fields: [gymId], references: [id])
+  bookings     Booking[]
+  capacity     Int?
+  intensity    IntensityRating?
+  skillLevel   SkillLevel?
   instructorId String?          @db.ObjectId
   instructor   User?            @relation("InstructorClasses", fields: [instructorId], references: [id]) // ✅ Fix the relation name
-  recurrence  Occurance? // e.g., "one-off", "weekly", "biweekly"
-  duration    Int? // Duration in minutes
-  days        String[] // Array of selected weekdays
-  room        String? // Optional: Room name or reference
-  startDate   DateTime?
-  endDate     DateTime?
-  time        String?
+  recurrence   Occurance? // e.g., "one-off", "weekly", "biweekly"
+  duration     Int? // Duration in minutes
+  days         String[] // Array of selected weekdays
+  room         String? // Optional: Room name or reference
+  startDate    DateTime?
+  endDate      DateTime?
+  time         String?
 }
 
 // instructor
