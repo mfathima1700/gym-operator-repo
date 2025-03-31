@@ -168,17 +168,6 @@ export default function Members() {
     }
   }, [userState.user, userState.success, userState.error]);
 
-  useEffect(() => {
-    // if (userData.gym?.name) {
-    //   setUserData((prevState) => ({
-    //     ...prevState,
-    //     gym: {
-    //       ...prevState.gym,
-    //       members: fakeMembers, // Set the members with fake data
-    //     },
-    //   }));
-    // }
-  }, [userData.ownedGym?.name]);
 
   return (
     <>

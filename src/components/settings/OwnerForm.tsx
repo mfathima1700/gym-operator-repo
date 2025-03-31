@@ -36,10 +36,17 @@ export default function OwnerForm({
 }) {
   function generateGymCode(e: React.MouseEvent): void {
     e.preventDefault();
-    const num = Array.from({ length: 16 }, () =>
+    /*const num = Array.from({ length: 16 }, () =>
       Math.floor(Math.random() * 10)
-    ).join("");
-    setGymData((prevState: any) => ({ ...prevState, gymCode: num }));
+    ).join("");*/
+
+    const uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+      const r = Math.random() * 16 | 0;  // Random number (0-15)
+      const v = c === "x" ? r : (r & 0x3) | 0x8; // Ensures correct UUID format
+      return v.toString(16);  // Convert to hex
+    });
+
+    setGymData((prevState: any) => ({ ...prevState, gymCode: uuid }));
   }
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

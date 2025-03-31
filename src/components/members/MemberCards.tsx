@@ -95,7 +95,7 @@ export default function MemberCards({
                     );
                   }}
                 >
-                  {`Convert to ${member.isInstructor ? "Instructor" : "Member"}`}
+                  {`Convert to ${member.isInstructor ? "Member" : "Instructor"}`}
                 </Button>
               </dd>
             </div>

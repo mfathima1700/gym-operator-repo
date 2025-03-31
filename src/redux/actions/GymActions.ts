@@ -482,49 +482,44 @@ export async function deleteGym(gymId: string) {
 export async function getUserAndInstructors(id: string) {
   try {
     const user = await db.user.findUnique({
-      where: { id }, // Look up user by email
+      where: { id },
       include: {
         goals: true,
-
-        gym: {
-          include: {
-            // Use select instead of include to control depth
-            classes: true, // ater this based on date time so only the ones now are fetched -> long wait times
-          },
-        },
+         ownedGym: { include: { classes: true } } 
       },
     });
+
     if (!user) {
       throw new Error("User not found");
     }
 
     let updatedUser;
 
-    // if(user?.gym){
+    if(user?.ownedGym){
 
-    //   const gymUsers = await db.user.findMany({
-    //     where: {
-    //       gym: {  // Query through the relation
-    //         id: user?.gym?.id  // The ID of the gym you're interested in
-    //       }
-    //     },
-    //   });
+      const gym = await db.gym.findUnique({
+        where: { id: user.ownedGymId ?? undefined },
+        include:{
+          members:true
+        }
+      });
 
-    //   console.log(gymUsers)
 
-    //   updatedUser = {
-    //     ...user,
-    //   gym:{
-    //     ...user.gym,
-    //     members: gymUsers
-    //   }
-    //   };
+      console.log(gym?.members)
 
-    //   return {
-    //     type: GET_USER_DATA_SUCCESS,
-    //     payload: updatedUser,
-    //   };
-    // }
+      updatedUser = {
+        ...user,
+        ownedGym:{
+        ...gym,
+        
+      }
+      };
+
+      return {
+        type: GET_USER_DATA_SUCCESS,
+        payload: updatedUser,
+      };
+    }
 
     console.log("INSTRUCTORS DATA SUCCESS");
     return {
