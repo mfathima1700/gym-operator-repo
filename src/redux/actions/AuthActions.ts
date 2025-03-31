@@ -98,7 +98,7 @@ export default async function registerUser(registerData: RegisterUser) {
         hashedPassword,
         gymRole,
         userRole,
-        ...(gymRole == GymRole.MEMBER && gym ? { gym: { connect: { id: gym.id } } } : {}),
+        ...(gymRole === GymRole.MEMBER && gym ? { gymId: gym.id } : {}),
       },
     });
 

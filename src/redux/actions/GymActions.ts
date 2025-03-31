@@ -50,11 +50,9 @@ async function joinGym(userId: string, gymCode: string) {
     //const objectId = new ObjectId(userId);
 
     await db.user.update({
-      where: { id: userId }, //objectId.toString() },
+      where: { id: userId }, 
       data: {
-        gym: {
-          connect: { id: gym.id },
-        },
+        gymId: gym.id,
       },
     });
 
@@ -142,21 +140,28 @@ export async function createGym(data: createOwnerData, id: string) {
       throw new Error("User not a gym owner");
     }
 
-    const updatedUser = await db.user.update({
-      where: { id: user.id },
-      data: {
-        name: `${data.firstName} ${data.lastName}`,
-      },
-    });
-
     const gym = await db.gym.create({
       data: {
         name: data.gymName,
         description: data.description,
         //address: data.address,
-        ownerId: updatedUser.id, // Link gym to the owner
+        //ownerId: updatedUser.id, // Link gym to the owner
       },
     });
+
+    if(!gym){
+      throw new Error("GYM NOT CREATED");
+    }
+
+    const updatedUser = await db.user.update({
+      where: { id: user.id },
+      data: {
+        name: `${data.firstName} ${data.lastName}`,
+        ownedGymId: gym.id,
+      },
+    });
+
+    
 
     console.log("CREATED GYM");
 
@@ -315,14 +320,13 @@ export async function updateOwnerSettings(
     });
 
     // Find the Gym associated with this User
-    const gym = await db.gym.findUnique({
-      where: { ownerId: updatedUser.id },
-    });
+    const gym = updatedUser.ownedGymId
+    ? await db.gym.findUnique({ where: { id: updatedUser.ownedGymId } }): null;
 
     // If the Gym exists, update its details
     if (gym) {
       await db.gym.update({
-        where: { ownerId: id },
+        where: { id: gym.id },
         data: {
           name: gymData.gymName,
           country: gymData.country,
