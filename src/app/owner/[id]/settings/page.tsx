@@ -73,18 +73,18 @@ export default function OwnerSettings() {
      
     }
 
-    if (userState.user?.gym) {
+    if (userState.user?.ownedGym) {
       setGymData((prevState) => ({
         ...prevState,
-        country: userState.user.gym.country || "",
-        city: userState.user.gym.city || "",
-        postcode: userState.user.gym.postcode || "",
-        streetAddress: userState.user.gym.streetAddress || "",
-        state: userState.user.gym.state || "",
-        description: userState.user.gym.description || "",
-        gymName: userState.user.gym.name || "",
-        logo: userState.user.gym.logo || undefined,
-        gymCode: userState.user.gym.gymCode || "",
+        country: userState.user.ownedGym.country || "",
+        city: userState.user.ownedGym.city || "",
+        postcode: userState.user.ownedGym.postcode || "",
+        streetAddress: userState.user.ownedGym.streetAddress || "",
+        state: userState.user.ownedGym.state || "",
+        description: userState.user.ownedGym.description || "",
+        gymName: userState.user.ownedGym.name || "",
+        logo: userState.user.ownedGym.logo || undefined,
+        gymCode: userState.user.ownedGym.gymCode || "",
       }));
     }
   }, [userState.user, userState.success, userState.error]);

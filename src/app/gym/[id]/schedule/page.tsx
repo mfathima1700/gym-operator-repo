@@ -32,6 +32,11 @@ export default function GymSchedule() {
       members: [],
       classes: [],
     },
+    ownedGym: {
+      id: "",
+      members: [],
+      classes: [],
+    },
   }));
 
   useEffect(() => {
@@ -62,10 +67,10 @@ export default function GymSchedule() {
           
           <GymWeekCalendar
           user={userData}
-          members={userData?.gym?.members ? userData.gym.members : []}
-            classes={userData?.gym?.classes ? userData.gym.classes : []}
+          members={userData?.ownedGym?.members ?? userData.gym?.members ?? []}
+            classes={userData?.ownedGym?.classes ?? userData.gym?.classes ?? []}
             isOwner={userData?.gymRole === "OWNER" ? true : false}
-            gymId={userData?.gym?.id} 
+            gymId={userData?.ownedGym?.id ?? userData?.gym?.id} 
           />
         </div>
       </CNLayout>

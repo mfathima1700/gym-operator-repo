@@ -149,7 +149,7 @@ export default function Members() {
   const alterMemberState = useSelector((state: RootState) => state.alterMember);
   const [userData, setUserData] = useState(() => ({
     goals: [],
-    gym: {
+    ownedGym: {
       id: "",
       name:"",
       classes: [],
@@ -178,7 +178,7 @@ export default function Members() {
     //     },
     //   }));
     // }
-  }, [userData.gym?.name]);
+  }, [userData.ownedGym?.name]);
 
   return (
     <>
@@ -187,8 +187,8 @@ export default function Members() {
           {/* <MemberOptions /> */}
           <CNMemberOptions />
 
-          {userData.gym?.members?.length > 0 ? (
-            <MemberCards gymMembers={userData.gym?.members} gymId={userData.gym?.id} />
+          {userData.ownedGym?.members?.length > 0 ? (
+            <MemberCards gymMembers={userData.ownedGym?.members} gymId={userData.ownedGym?.id} />
           ) : (
             <>
               <div className="flex flex-col items-center justify-center h-full">
@@ -196,7 +196,7 @@ export default function Members() {
               </div>
             </>
           )}
-          {userData.gym?.members?.length > 10 ? <PaginationDemo /> : <></>}
+          {userData.ownedGym?.members?.length > 10 ? <PaginationDemo /> : <></>}
         </div>
       </CNLayout>
     </>

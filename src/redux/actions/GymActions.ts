@@ -50,7 +50,7 @@ async function joinGym(userId: string, gymCode: string) {
     //const objectId = new ObjectId(userId);
 
     await db.user.update({
-      where: { id: userId }, 
+      where: { id: userId },
       data: {
         gymId: gym.id,
       },
@@ -66,22 +66,30 @@ async function joinGym(userId: string, gymCode: string) {
 
 export async function getUserById(id: string) {
   try {
+
     const user = await db.user.findUnique({
-      where: { id }, // Look up user by email
-      include: {
-        goals: true,
-        
-        gym: {
-          include: {  // Use select instead of include to control depth
-            classes: true, // ater this based on date time so only the ones now are fetched -> long wait times
-          },
-         
-        },
+      where: { id },
+      select: {
+        gymRole: true,
       },
     });
+
     if (!user) {
       throw new Error("User not found");
     }
+
+    const fullUser = await db.user.findUnique({
+      where: { id },
+      include: {
+        goals: true,
+        ...(user?.gymRole === "OWNER"
+          ? { ownedGym: { include: { classes: true } } }
+          : { gym: { include: { classes: true } } }),
+      },
+    });
+
+
+    
 
     let updatedUser;
 
@@ -95,10 +103,10 @@ export async function getUserById(id: string) {
     //console.log(bookings)
 
     updatedUser = {
-      ...user,
+      ...fullUser,
       bookings,
     };
-  
+
     console.log("USER DATA SUCCESS");
 
     return {
@@ -149,7 +157,7 @@ export async function createGym(data: createOwnerData, id: string) {
       },
     });
 
-    if(!gym){
+    if (!gym) {
       throw new Error("GYM NOT CREATED");
     }
 
@@ -160,8 +168,6 @@ export async function createGym(data: createOwnerData, id: string) {
         ownedGymId: gym.id,
       },
     });
-
-    
 
     console.log("CREATED GYM");
 
@@ -302,9 +308,9 @@ export async function updateOwnerSettings(
       throw new Error("User not found");
     }
 
-   // const imageBuffer  = Buffer.from(new Uint8Array(await data.image.arrayBuffer())); 
-   // const logoBuffer  = Buffer.from(new Uint8Array(await gymData.logo.arrayBuffer()));
-    
+    // const imageBuffer  = Buffer.from(new Uint8Array(await data.image.arrayBuffer()));
+    // const logoBuffer  = Buffer.from(new Uint8Array(await gymData.logo.arrayBuffer()));
+
     // Update the User
     const updatedUser = await db.user.update({
       where: { id: user.id },
@@ -321,7 +327,8 @@ export async function updateOwnerSettings(
 
     // Find the Gym associated with this User
     const gym = updatedUser.ownedGymId
-    ? await db.gym.findUnique({ where: { id: updatedUser.ownedGymId } }): null;
+      ? await db.gym.findUnique({ where: { id: updatedUser.ownedGymId } })
+      : null;
 
     // If the Gym exists, update its details
     if (gym) {
@@ -330,7 +337,7 @@ export async function updateOwnerSettings(
         data: {
           name: gymData.gymName,
           country: gymData.country,
-          gymCode:gymData.gymCode,
+          gymCode: gymData.gymCode,
           city: gymData.city,
           postcode: gymData.postcode,
           streetAddress: gymData.streetAddress,
@@ -361,68 +368,66 @@ export async function updateOwnerSettings(
 
 export async function convertToInstructor(userId: string, gymId: string) {
   try {
-    // const user = await db.user.findUnique({
-    //   where: { id: userId },
-    // });
+    const user = await db.user.findUnique({
+      where: { id: userId },
+    });
 
-    // const gym = await db.gym.findUnique({
-    //   where: { id: userId },
-    // });
+    const gym = await db.gym.findUnique({
+      where: { id: userId },
+    });
 
-    // if (!user || !gym) {
-    //   throw new Error("User or gym not found");
-    // }
+    if (!user || !gym) {
+      throw new Error("User or gym not found");
+    }
 
-    // if(!user.isInstructor){
-    //   const instructor = await db.user.update({
-    //     where: { id: userId },
-    //     data: {
-    //       isInstructor: true,
-    //     },
-    //   });
+    if (!user.isInstructor) {
+      const instructor = await db.user.update({
+        where: { id: userId },
+        data: {
+          isInstructor: true,
+        },
+      });
 
       return {
         type: ALTER_MEMBER_SUCCESS,
-        payload: {}// instructor,
+        payload: {}, // instructor,
       };
-    //}
+    }
 
-    //throw new Error("User already an instructor");
+    throw new Error("User already an instructor");
   } catch (error) {
     console.log("FAILED TO CONVERT TO INSTRUCTOR");
     return {
       type: ALTER_MEMBER_FAILED,
       payload: error,
     };
-
   }
 }
 
 export async function convertToMember(userId: string, gymId: string) {
   try {
-  //   const user = await db.user.findUnique({
-  //     where: { id: userId },
-  //   });
+    const user = await db.user.findUnique({
+      where: { id: userId },
+    });
 
-  //   if (!user) {
-  //     throw new Error("User not found");
-  //   }
-  //   if(!user.isInstructor){
-  //     throw new Error("User not an instructor");
-  //   }
+    if (!user) {
+      throw new Error("User not found");
+    }
+    if (!user.isInstructor) {
+      throw new Error("User not an instructor");
+    }
 
-  //  const updatedUser =  await db.user.update({
-  //     where: { id: userId },
-  //     data: {
-  //       isInstructor: false,
-  //     },
-  //     });
+    const updatedUser = await db.user.update({
+      where: { id: userId },
+      data: {
+        isInstructor: false,
+      },
+    });
 
     return {
       type: ALTER_MEMBER_SUCCESS,
-      payload: {}//updatedUser,
+      payload: updatedUser,
     };
-
   } catch (error) {
     console.log("FAILED TO CONVERT TO MEMBER");
     return {
@@ -480,12 +485,12 @@ export async function getUserAndInstructors(id: string) {
       where: { id }, // Look up user by email
       include: {
         goals: true,
-        
+
         gym: {
-          include: {  // Use select instead of include to control depth
+          include: {
+            // Use select instead of include to control depth
             classes: true, // ater this based on date time so only the ones now are fetched -> long wait times
           },
-         
         },
       },
     });
@@ -504,9 +509,9 @@ export async function getUserAndInstructors(id: string) {
     //       }
     //     },
     //   });
-  
+
     //   console.log(gymUsers)
-  
+
     //   updatedUser = {
     //     ...user,
     //   gym:{
@@ -521,13 +526,11 @@ export async function getUserAndInstructors(id: string) {
     //   };
     // }
 
-  
     console.log("INSTRUCTORS DATA SUCCESS");
     return {
       type: GET_USER_DATA_SUCCESS,
       payload: user,
     };
-    
   } catch (error) {
     console.log("FAILED TO GET USER DATA");
     console.log(error);

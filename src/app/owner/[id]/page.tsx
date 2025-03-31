@@ -42,7 +42,7 @@ export default function OwnerDashboard() {
 
   function onSendEmailClick(e: React.MouseEvent) {
     e.preventDefault();
-    dispatch(sendCancelEmail("test@test.com", {}));
+   // dispatch(sendCancelEmail());
   }
 
   return (

@@ -49,9 +49,9 @@ const data = {
   },
   teams: [
     {
-      name: user?.gym?.name ?? "Gym",
-      logo: user?.gym?.logo ?? "",
-      plan: user?.gym?.description ?? "A gym",
+      name: user?.ownedGym?.name ?? user?.gym?.name ?? "Gym",
+      logo: user?.ownedGym?.logo ?? user?.gym?.logo ?? "",
+      plan: user?.ownedGym?.description ?? user?.gym?.description ?? "A gym",
     },
   ],
   projects: [
@@ -187,7 +187,7 @@ if(user?.gymRole === "OWNER"){
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher gym={user?.gym}/>
+        <TeamSwitcher gym={user?.ownedGym ?? user?.gym}/>
       </SidebarHeader>
       <SidebarContent>
         {/* <NavMain items={data.navMain} /> */}
