@@ -373,7 +373,7 @@ export async function convertToInstructor(userId: string, gymId: string) {
     });
 
     const gym = await db.gym.findUnique({
-      where: { id: userId },
+      where: { id: gymId },
     });
 
     if (!user || !gym) {
@@ -388,9 +388,11 @@ export async function convertToInstructor(userId: string, gymId: string) {
         },
       });
 
+      console.log("CONVERTED TO INSTRUCTOR");
+
       return {
         type: ALTER_MEMBER_SUCCESS,
-        payload: {}, // instructor,
+        payload:  instructor,
       };
     }
 
@@ -423,6 +425,8 @@ export async function convertToMember(userId: string, gymId: string) {
         isInstructor: false,
       },
     });
+
+    console.log("CONVERTED TO MEMBER");
 
     return {
       type: ALTER_MEMBER_SUCCESS,
@@ -503,9 +507,6 @@ export async function getUserAndInstructors(id: string) {
           members:true
         }
       });
-
-
-      console.log(gym?.members)
 
       updatedUser = {
         ...user,
