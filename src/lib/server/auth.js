@@ -111,18 +111,24 @@ export async function setNewPassword(password, secret, userId) {
 
 export async function createGoogleOAuthSession(loginTrue) {
   try {
-    const client = await createClient();
+    //const client = await createClient();
+    const client = new Client()
+    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
+    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT);
     const account = new Account(client);
 
-    let successUrl;
-    let failureUrl;
-    if(loginTrue){
-     successUrl = process.env.NEXT_PUBLIC_APPWRITE_LOGIN_SUCCESS_URL;
-     failureUrl = process.env.NEXT_PUBLIC_APPWRITE_LOGIN_FAILURE_URL;
-    }else{
-      successUrl = process.env.NEXT_PUBLIC_APPWRITE_REGISTER_SUCCESS_URL;
-      failureUrl = process.env.NEXT_PUBLIC_APPWRITE_REGISTER_FAILURE_URL;
-    }
+   // let successUrl;
+   // let failureUrl;
+
+console.log("GOOGLE AUTH REGISTER TRUE")
+
+    // if(loginTrue){
+    //  successUrl = process.env.NEXT_PUBLIC_APPWRITE_LOGIN_SUCCESS_URL;
+    //  failureUrl = process.env.NEXT_PUBLIC_APPWRITE_LOGIN_FAILURE_URL;
+   // }else{
+     const  successUrl = process.env.NEXT_PUBLIC_APPWRITE_REGISTER_SUCCESS_URL;
+     const  failureUrl = process.env.NEXT_PUBLIC_APPWRITE_REGISTER_FAILURE_URL;
+   // }
     const result = await account.createOAuth2Session('google',  successUrl, failureUrl)
 
 

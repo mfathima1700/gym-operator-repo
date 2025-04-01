@@ -5,7 +5,12 @@ import { GymRole, UserRole } from "@prisma/client";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import registerUser, { createGoogleUser, getSession, signInWithGoogle, signUpWithGoogle } from "@/redux/actions/AuthActions";
+import registerUser, {
+  createGoogleUser,
+  getSession,
+  signInWithGoogle,
+  signUpWithGoogle,
+} from "@/redux/actions/AuthActions";
 import { User } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -13,6 +18,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getLoggedInUser } from "@/lib/server/appwrite";
 import { Dialog } from "@/components/ui/dialog";
 import RegisterDialog from "@/components/auth/RegisterDialog";
+import { Client, Account, OAuthProvider } from "appwrite";
 
 export default function Register() {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,22 +26,19 @@ export default function Register() {
   const signUpState = useSelector((state: RootState) => state.signUp);
   const sessionState = useSelector((state: RootState) => state.getSession);
   const searchParams = useSearchParams();
-  const status = searchParams.get('status');
+  const status = searchParams.get("status");
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     // sign up success
     if (signUpState?.user != null) {
       console.log(signUpState);
-
     }
   }, [signUpState.user, signUpState.error]);
 
-useEffect(() => {
+  useEffect(() => {
     if (status === "success") {
       // show dialog
-
-     
     } else if (status === "fail") {
       console.log("FAILED");
     }
@@ -80,7 +83,27 @@ useEffect(() => {
 
   async function handleGoogle(e: React.MouseEvent) {
     e.preventDefault();
-    dispatch(signUpWithGoogle());
+    // dispatch(signUpWithGoogle());
+
+    try{
+
+    
+    const client = new Client()
+      .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT as string)
+      .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT as string)
+      //.setKey(process.env.NEXT_PUBLIC_APPWRITE_KEY as string);
+    const account = new Account(client);
+
+    console.log("GOOGLE AUTH REGISTER TRUE");
+
+    const successUrl = process.env.NEXT_PUBLIC_APPWRITE_REGISTER_SUCCESS_URL;
+    const failureUrl = process.env.NEXT_PUBLIC_APPWRITE_REGISTER_FAILURE_URL;
+    // }
+
+    const result = await (account as any).createOAuth2Session('google', successUrl, failureUrl)
+    }catch(error){
+      console.log(error);
+    }
   }
 
   function handleCreateGoogleUser(e: React.MouseEvent) {
@@ -100,11 +123,16 @@ useEffect(() => {
           handleGoogle={handleGoogle}
         />
       </div>
-      <Dialog open={open} onOpenChange={setOpen} > 
-        <RegisterDialog signUp={handleCreateGoogleUser} 
-        handleChange={handleChange} userData={userData} 
-        setUserData={setUserData}/>
-        </Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <RegisterDialog
+          signUp={handleCreateGoogleUser}
+          handleChange={handleChange}
+          userData={userData}
+          setUserData={setUserData}
+        />
+      </Dialog>
     </div>
   );
 }
+
+
