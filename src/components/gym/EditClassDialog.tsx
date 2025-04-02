@@ -46,6 +46,7 @@ interface UserInfo {
 }
 
 export function EditClassDialog({
+  bookings,
   gymClass,
   editTriggerRef,
   gymId,
@@ -53,6 +54,7 @@ export function EditClassDialog({
   isOwner,
   user
 }: {
+  bookings: any;
   gymClass: any;
   editTriggerRef:any
   gymId: string;

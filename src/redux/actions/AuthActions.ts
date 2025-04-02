@@ -61,11 +61,15 @@ export async function testAction() {
 }
 
 interface RegisterUser {
+  id?: string;
+  name?: string;
   email: string;
   password: string;
   gymRole: GymRole;
   userRole: UserRole;
   gymCode: string;
+  locale?:string
+  picture?:string
 }
 
 export default async function registerUser(registerData: RegisterUser) {
@@ -140,14 +144,13 @@ export async function signUpWithGoogle() {
 
 export async function createGoogleUser(googleUser: RegisterUser) {
   try {
-    const user = await getGoogleOAuthSession();
+    //const user = await getGoogleOAuthSession();
 
-    const hashedPassword = saltAndHashPassword(user.password);
     const userRole = googleUser.userRole;
     const gymRole = googleUser.gymRole;
 
-    const email = user.email;
-    const password = user.password;
+    const email = googleUser.email;
+    const password = "blank";
 
     let gym;
     if (gymRole == GymRole.MEMBER) {
@@ -162,13 +165,16 @@ export async function createGoogleUser(googleUser: RegisterUser) {
 
     const mongoUser = await db.user.create({
       data: {
-        email,
-        password,
-        hashedPassword,
-        gymRole,
-        userRole,
+        id:googleUser.id,
+        email:email,
+        password:password,
+        name: googleUser.name,
+        gymRole: gymRole,
+        userRole: userRole,
+        country: googleUser.locale,
+        image: googleUser.picture,
 
-        ...(gymRole == GymRole.MEMBER && gym ? { gym: { connect: { id: gym.id } } } : {}),
+        ...(gymRole === GymRole.MEMBER && gym ? { gymId: gym.id } : {}),
       },
     });
 

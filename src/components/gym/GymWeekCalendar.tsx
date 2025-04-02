@@ -40,6 +40,7 @@ type ClassType = {
   endDate: Date;
   time: string; // e.g., "10:00"
   colour: string;
+  bookings?:[]
 };
 
 type UserType = {
@@ -412,7 +413,7 @@ user:any
                                 editTriggerRef={editTriggerRef}
                                 isOwner={isOwner}
                                 user={user}
-                               
+                                bookings={classObject.bookings}
                               />
                             </Dialog>
                           </li>

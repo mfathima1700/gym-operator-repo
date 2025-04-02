@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { TrendingUp } from "lucide-react";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import {
   Card,
@@ -10,40 +10,55 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 
-const chartData = [
-  { month: "October", desktop: 0 },
-  { month: "November", desktop: 0 },
-  { month: "December", desktop: 0 },
-  { month: "January", desktop: 0 },
-  { month: "February", desktop: 0 },
-  { month: "March", desktop: 9 },
-]
+// const chartData = [
+//   { month: "October", desktop: 0 },
+//   { month: "November", desktop: 0 },
+//   { month: "December", desktop: 0 },
+//   { month: "January", desktop: 0 },
+//   { month: "February", desktop: 0 },
+//   { month: "March", desktop: 9 },
+// ]
 
 const chartConfig = {
   desktop: {
     label: "Desktop",
     color: "hsl(var(--chart-1))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-export function MemberBarChart() {
+export function MemberBarChart({members}: {members: any[]}) {
+  const now = new Date();
 
-    {
-        /*nb members joining per month */
-    }
+
+  const chartData = Array.from({ length: 6 }, (_, i) => {
+  const date = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1); // Get the first day of each month
+  const nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1); // First day of next month
+
+  return {
+    month: date.toLocaleString("en-US", { month: "long" }), // Convert to month name
+    desktop: members.filter(member => {
+      const createdAt = new Date(member.createdAt);
+      return createdAt >= date && createdAt < nextMonth; // Check if member joined in the month
+    }).length,
+  };
+});
+
+  {
+    /*nb members joining per month */
+  }
   return (
     <Card>
       <CardHeader>
         <CardTitle>New Members Per Month</CardTitle>
-        <CardDescription>October - March 2025</CardDescription>
+        <CardDescription>{`${chartData[0].month} - ${chartData[5].month} ${now.getFullYear()}`}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -65,13 +80,19 @@ export function MemberBarChart() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Increased by 100% this month <TrendingUp className="h-4 w-4" />
-        </div>
+      <div className="flex gap-2 font-medium leading-none">
+  Increased by{" "}
+  {chartData[0].desktop > 0
+    ? ((chartData[5].desktop - chartData[0].desktop) / chartData[0].desktop) * 100
+    : chartData[5].desktop > 0
+    ? 100
+    : 0
+  }% in the last 6 months <TrendingUp className="h-4 w-4" />
+</div>
         <div className="leading-none text-muted-foreground">
           Showing total new gym members for the last 6 months
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }

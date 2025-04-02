@@ -29,7 +29,7 @@ export default function Login() {
       if (signInState?.user?.gymRole === "OWNER") {
        // router.push(`/owner/${signInState?.user?.id}`);
 
-       if(signInState?.user?.ownedGym){
+       if(signInState?.user?.ownedGymId){
         window.location.href = `/owner/${signInState?.user?.id}`;
        }else{
         window.location.href = `/owner/${signInState?.user?.id}/create`;

@@ -66,7 +66,6 @@ async function joinGym(userId: string, gymCode: string) {
 
 export async function getUserById(id: string) {
   try {
-
     const user = await db.user.findUnique({
       where: { id },
       select: {
@@ -87,9 +86,6 @@ export async function getUserById(id: string) {
           : { gym: { include: { classes: true } } }),
       },
     });
-
-
-    
 
     let updatedUser;
 
@@ -392,7 +388,7 @@ export async function convertToInstructor(userId: string, gymId: string) {
 
       return {
         type: ALTER_MEMBER_SUCCESS,
-        payload:  instructor,
+        payload: instructor,
       };
     }
 
@@ -489,7 +485,14 @@ export async function getUserAndInstructors(id: string) {
       where: { id },
       include: {
         goals: true,
-         ownedGym: { include: { classes: true } } 
+        ownedGym:  true
+        // {
+        //   include: {
+        //     classes: {
+        //       include: { bookings: true },
+        //     },
+        //   },
+        // },
       },
     });
 
@@ -499,21 +502,22 @@ export async function getUserAndInstructors(id: string) {
 
     let updatedUser;
 
-    if(user?.ownedGym){
-
+    if (user?.ownedGym) {
       const gym = await db.gym.findUnique({
         where: { id: user.ownedGymId ?? undefined },
-        include:{
-          members:true
-        }
+        include: {
+          members: true,
+          classes: {
+            include: { bookings: true },
+          }
+        },
       });
 
       updatedUser = {
         ...user,
-        ownedGym:{
-        ...gym,
-        
-      }
+        ownedGym: {
+          ...gym,
+        },
       };
 
       return {

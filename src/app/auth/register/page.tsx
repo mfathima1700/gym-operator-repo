@@ -38,6 +38,7 @@ export default function Register() {
 
   useEffect(() => {
     if (status === "success") {
+      setOpen(true);
       // show dialog
     } else if (status === "fail") {
       console.log("FAILED");
@@ -106,10 +107,26 @@ export default function Register() {
     }
   }
 
-  function handleCreateGoogleUser(e: React.MouseEvent) {
+  async function handleCreateGoogleUser(e: React.MouseEvent) {
     e.preventDefault();
     setOpen(false);
-    dispatch(createGoogleUser(userData));
+    
+    const client = new Client()
+    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT as string)
+    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT as string)
+   // .setKey(process.env.NEXT_PUBLIC_APPWRITE_KEY as string);
+  const account = new Account(client);
+   const session = await account.getSession("current");
+   console.log(session) 
+   const accessToken = session.providerAccessToken;
+   // Now make a fetch request to Google UserInfo API:
+   const googleUser = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+       headers: { Authorization: `Bearer ${accessToken}` },
+   }).then(res => res.json());
+   
+   console.log("GOOGLE USER FETCHED")
+
+   dispatch(createGoogleUser(googleUser));
   }
 
   return (
