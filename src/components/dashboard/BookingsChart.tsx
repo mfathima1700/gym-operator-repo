@@ -38,7 +38,7 @@ export function BookingsChart({classes}: {classes: any[]}) {
     return classItem.bookings.length > maxClass.bookings.length ? classItem : maxClass;
   }, classes[0]); 
  
-  console.log(chartData)
+ // console.log(chartData)
     /*nb. members who have booked each class 
     */
   return (

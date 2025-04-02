@@ -65,13 +65,13 @@ export default function IndividualDashboard() {
               <ClassesCards bookings={userData.bookings} />
               <GoalsCard goals={userData.goals} />
               <ClassesBarChart
-                bookingNb={
-                  userData.bookings.length ? userData.bookings.length : 0
+                bookings={
+                  userData.bookings ?? []
                 }
               />
               <GoalsBarChart
-                completedNb={
-                  userData.goals.length > 0 ? userData.goals.length : 0
+                goals={
+                  userData.goals ?? []
                 }
               />
             </div>
