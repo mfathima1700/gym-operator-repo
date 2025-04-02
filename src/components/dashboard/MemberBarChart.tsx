@@ -18,14 +18,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-// const chartData = [
-//   { month: "October", desktop: 0 },
-//   { month: "November", desktop: 0 },
-//   { month: "December", desktop: 0 },
-//   { month: "January", desktop: 0 },
-//   { month: "February", desktop: 0 },
-//   { month: "March", desktop: 9 },
-// ]
 
 const chartConfig = {
   desktop: {

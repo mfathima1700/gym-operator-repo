@@ -42,15 +42,9 @@ export function SectionCards({members}: {members: any[]}) {
       </Card>
       <Card className="@container/card">
         <CardHeader className="relative">
-          <CardDescription>New Members</CardDescription>
+          <CardDescription>Current Members</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-          {1 * members.filter(member => {
-  const createdAt = new Date(member.createdAt);
-  const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1); // First day of the current month
-
-  return createdAt >= startOfMonth;
-}).length}
+          {members.length}
           </CardTitle>
           <div className="absolute right-4 top-4">
             {/* <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">

@@ -95,6 +95,8 @@ export default async function registerUser(registerData: RegisterUser) {
 
     const success = await signUpWithEmail(registerData);
 
+    
+    console.log("SIGNED UP WITH APPWITE");
     const user = await db.user.create({
       data: {
         email,
@@ -102,7 +104,7 @@ export default async function registerUser(registerData: RegisterUser) {
         hashedPassword,
         gymRole,
         userRole,
-        ...(gymRole === GymRole.MEMBER && gym ? { gymId: gym.id } : {}),
+        ...(gymRole === GymRole.MEMBER && gym ? { gymId: gym?.id } : {}),
       },
     });
 
