@@ -36,8 +36,10 @@ import {
   setNewPassword,
   createGoogleOAuthSession,
   getGoogleOAuthSession,
+  verifyAppwriteSession,
 } from "@/lib/server/auth";
 import { getLoggedInUser } from "@/lib/server/appwrite";
+import { NextResponse } from "next/server";
 
 interface AuthState {
   user: any | null;
@@ -144,14 +146,18 @@ export async function signUpWithGoogle() {
 }
 
 
-export async function createGoogleUser(googleUser: RegisterUser) {
+export async function createGoogleUser(googleUser: RegisterUser, cookie: string) {
   try {
     //const user = await getGoogleOAuthSession();
+    
+
+    const appWriteUser = await verifyAppwriteSession(cookie);
+
 
     const userRole = googleUser.userRole;
     const gymRole = googleUser.gymRole;
 
-    const email = googleUser.email;
+    const email = appWriteUser.email;
     const password = "blank";
 
     let gym;
@@ -167,14 +173,13 @@ export async function createGoogleUser(googleUser: RegisterUser) {
 
     const mongoUser = await db.user.create({
       data: {
-        id:googleUser.id,
         email:email,
         password:password,
-        name: googleUser.name,
+        name: appWriteUser.name,
         gymRole: gymRole,
         userRole: userRole,
-        country: googleUser.locale,
-        image: googleUser.picture,
+        //country: appWriteUser.locale,
+        image: appWriteUser.prefs?.picture,
 
         ...(gymRole === GymRole.MEMBER && gym ? { gymId: gym.id } : {}),
       },
@@ -194,6 +199,8 @@ export async function createGoogleUser(googleUser: RegisterUser) {
     };
   }
 }
+
+
 
 export async function getSession() {
   try {

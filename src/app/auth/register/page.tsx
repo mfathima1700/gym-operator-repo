@@ -82,6 +82,7 @@ export default function Register() {
     dispatch(registerUser(userData));
   }
 
+ 
   async function handleGoogle(e: React.MouseEvent) {
     e.preventDefault();
     // dispatch(signUpWithGoogle());
@@ -102,11 +103,14 @@ export default function Register() {
     // }
 
     const result = await (account as any).createOAuth2Session('google', successUrl, failureUrl)
+    console.log("RESULT")
+    console.log(result)
     }catch(error){
       console.log(error);
     }
   }
 
+   /*
   async function handleCreateGoogleUser(e: React.MouseEvent) {
     e.preventDefault();
     setOpen(false);
@@ -127,7 +131,7 @@ export default function Register() {
    console.log("GOOGLE USER FETCHED")
 
    dispatch(createGoogleUser(googleUser));
-  }
+  }*/
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
@@ -140,14 +144,14 @@ export default function Register() {
           handleGoogle={handleGoogle}
         />
       </div>
-      <Dialog open={open} onOpenChange={setOpen}>
+      {/* <Dialog open={open} onOpenChange={setOpen}>
         <RegisterDialog
           signUp={handleCreateGoogleUser}
           handleChange={handleChange}
           userData={userData}
           setUserData={setUserData}
         />
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 }

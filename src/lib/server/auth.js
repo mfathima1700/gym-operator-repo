@@ -83,6 +83,18 @@ export async function signInWithEmail(user) {
   }
 }
 
+export async function verifyAppwriteSession(cookie) {
+  const client = new Client()
+  .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
+  .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT)
+  .setSession(cookie)
+
+  const account = new Account(client);
+  const appwriteUser = await account.get();
+
+  return appwriteUser; 
+}
+
 export async function sendForgotPasswordEmail(email) {
   try {
     const client = await createClient();

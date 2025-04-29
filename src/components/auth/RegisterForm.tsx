@@ -36,7 +36,7 @@ export default function RegisterForm({
               <div className="flex h-8 w-8 items-center justify-center rounded-md">
                 <GalleryVerticalEnd className="size-6" />
               </div>
-              <span className="sr-only">Acme Inc.</span>
+              <span className="sr-only">GymOperator</span>
             </a>
             <h1 className="text-xl font-bold">Create your Account</h1>
             <div className="text-center text-sm">
