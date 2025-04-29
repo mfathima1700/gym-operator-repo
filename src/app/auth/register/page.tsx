@@ -82,56 +82,60 @@ export default function Register() {
     dispatch(registerUser(userData));
   }
 
- 
   async function handleGoogle(e: React.MouseEvent) {
     e.preventDefault();
     // dispatch(signUpWithGoogle());
 
-    try{
-
-    
-    const client = new Client()
-      .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT as string)
-      .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT as string)
+    try {
+      const client = new Client()
+        .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT as string)
+        .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT as string);
       //.setKey(process.env.NEXT_PUBLIC_APPWRITE_KEY as string);
-    const account = new Account(client);
+      const account = new Account(client);
 
-    console.log("GOOGLE AUTH REGISTER TRUE");
+      console.log("GOOGLE AUTH REGISTER TRUE");
+      const baseUrl = window.location.origin;
 
-    const successUrl = process.env.NEXT_PUBLIC_APPWRITE_REGISTER_SUCCESS_URL;
-    const failureUrl = process.env.NEXT_PUBLIC_APPWRITE_REGISTER_FAILURE_URL;
-    // }
-
-    const result = await (account as any).createOAuth2Session('google', successUrl, failureUrl)
-    console.log("RESULT")
-    console.log(result)
-    }catch(error){
+      const successUrl = process.env.NEXT_PUBLIC_APPWRITE_REGISTER_SUCCESS_URL;
+      const failureUrl = process.env.NEXT_PUBLIC_APPWRITE_REGISTER_FAILURE_URL;
+      // }
+      //(account as any)
+      const result = await (account as any).createOAuth2Token(
+        "google",
+        `${baseUrl}/auth/google`, // New callback URL
+        `${baseUrl}/auth/register?status=fail`
+      ); // Failure URL
+      console.log("RESULT");
+      console.log(result);
+    } catch (error) {
       console.log(error);
     }
   }
 
-   /*
   async function handleCreateGoogleUser(e: React.MouseEvent) {
     e.preventDefault();
     setOpen(false);
-    
-    const client = new Client()
-    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT as string)
-    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT as string)
-   // .setKey(process.env.NEXT_PUBLIC_APPWRITE_KEY as string);
-  const account = new Account(client);
-   const session = await account.getSession("current");
-   console.log(session) 
-   const accessToken = session.providerAccessToken;
-   // Now make a fetch request to Google UserInfo API:
-   const googleUser = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-       headers: { Authorization: `Bearer ${accessToken}` },
-   }).then(res => res.json());
-   
-   console.log("GOOGLE USER FETCHED")
 
-   dispatch(createGoogleUser(googleUser));
-  }*/
+    //   const client = new Client()
+    //   .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT as string)
+    //   .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT as string)
+    //  // .setKey(process.env.NEXT_PUBLIC_APPWRITE_KEY as string);
+    // const account = new Account(client);
+    //  const session = await account.getSession("current");
+    //  console.log(session)
+    //  const accessToken = session.providerAccessToken;
+    //  // Now make a fetch request to Google UserInfo API:
+    //  const googleUser = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+    //      headers: { Authorization: `Bearer ${accessToken}` },
+    //  }).then(res => res.json());
+
+    //  console.log("GOOGLE USER FETCHED")
+
+    const cookie = document.cookie.match(/a_session_[^=]+=([^;]+)/)?.[1];
+    if (!cookie) throw new Error("No session found");
+
+    dispatch(createGoogleUser(userData, cookie));
+  }
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
@@ -144,16 +148,14 @@ export default function Register() {
           handleGoogle={handleGoogle}
         />
       </div>
-      {/* <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={setOpen}>
         <RegisterDialog
           signUp={handleCreateGoogleUser}
           handleChange={handleChange}
           userData={userData}
           setUserData={setUserData}
         />
-      </Dialog> */}
+      </Dialog>
     </div>
   );
 }
-
-

@@ -200,7 +200,54 @@ export async function createGoogleUser(googleUser: RegisterUser, cookie: string)
   }
 }
 
+export async function createGoogleUser2(googleUser: RegisterUser) {
+  try {
 
+    const userRole = googleUser.userRole;
+  
+    const email = googleUser.email;
+    const password = "password";
+
+    let gym;
+    if (googleUser.gymRole == GymRole.MEMBER) {
+      gym = await db.gym.findUnique({
+        where: { gymCode: googleUser.gymCode },
+      });
+
+      if (!gym) {
+        throw new Error("Invalid gym code");
+      }
+    }
+
+    console.log("GOOGLE USER DATA DONE")
+    const mongoUser = await db.user.create({
+      data: {
+        email:email,
+        password:password,
+        name: googleUser.name,
+        gymRole: googleUser.gymRole as GymRole,
+        userRole: googleUser.userRole as UserRole,
+        //country: appWriteUser.locale,
+        //image: googleUser.prefs?.picture,
+
+        ...(googleUser.gymRole === GymRole.MEMBER && gym ? { gymId: gym.id } : {}),
+      },
+    });
+
+    console.log("CREATE GOOGLE USER SUCCESSFUL");
+    return {
+      type: SIGN_UP_SUCCESS,
+      payload: mongoUser,
+    };
+  } catch (error) {
+    console.log(error);
+    console.log("CREATE GOOGLE USER FAILED");
+    return {
+      type: SIGN_UP_FAILED,
+      payload: {},
+    };
+  }
+}
 
 export async function getSession() {
   try {
