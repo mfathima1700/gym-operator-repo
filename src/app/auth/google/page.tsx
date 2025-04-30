@@ -19,6 +19,21 @@ export default function GoogleSignUp() {
   const searchParams = useSearchParams();
   const userId = searchParams.get("userId");
   const secret = searchParams.get("secret");
+  const signUpState = useSelector((state: RootState) => state.signUp);
+
+  useEffect(() => {
+    // sign up success
+    if (signUpState?.user != null) {
+      console.log(signUpState);
+      if (signUpState?.user?.gymRole === "OWNER") {
+        window.location.href = `/owner/${signUpState?.user?.id}`;
+      } else if (signUpState?.user?.gymRole === "MEMBER") {
+        window.location.href = `/individual/${signUpState?.user?.id}`;
+      }
+    }else if (signUpState?.error) {
+        // TODO: Error Handling
+    }
+  }, [signUpState.user, signUpState.error]);
 
   const [userData, setUserData] = useState(() => ({
     email: "",
@@ -26,7 +41,7 @@ export default function GoogleSignUp() {
     userRole: UserRole.USER,
     gymRole: GymRole.MEMBER,
     gymCode: "",
-    gymName:"",
+    gymName: "",
   }));
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -65,9 +80,9 @@ export default function GoogleSignUp() {
       // Get the current user
       const user = await account.get();
       console.log(user);
-      const newObject = {...userData, name: user.name,  email: user.email,}
+      const newObject = { ...userData, name: user.name, email: user.email };
 
-      console.log(newObject)
+      console.log(newObject);
       dispatch(createGoogleUser2(newObject));
     } catch (error) {
       console.log(error);

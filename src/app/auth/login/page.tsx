@@ -45,6 +45,8 @@ export default function Login() {
         }
        
       }
+    }else if (signInState?.error) {
+     // TODO: Error Handling
     }
   }, [signInState.user, signInState.error, signInState.success]);
 

@@ -13,22 +13,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
+////ownedGymId         String?         @unique @db.ObjectId // Store gym ownership here
 model User {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  email          String        @unique
-  name           String?
-  password       String
-  hashedPassword String?
-  createdAt      DateTime      @default(now())
-  gender         GenderStatus?
-  gymRole        GymRole
-  bookings       Booking[]
-  gymId          String?       @db.ObjectId
-  gym            Gym?          @relation("GymMembers", fields: [gymId], references: [id])
+  id                 String          @id @default(auto()) @map("_id") @db.ObjectId
+  email              String          @unique
+  name               String?
+  password           String
+  hashedPassword     String?
+  createdAt          DateTime        @default(now())
+  gender             GenderStatus?
+  gymRole            GymRole
+  bookings           Booking[]
+  gymId              String?         @db.ObjectId
+  gym                Gym?            @relation("GymMembers", fields: [gymId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  ownedGymId         String?         @unique @db.ObjectId // Store gym ownership here
-  ownedGym           Gym?            @relation("GymOwner", fields: [ownedGymId], references: [id])
+  ownedGym         Gym?          @relation("GymOwner")
   memberships        Membership[]
   dateOfBirth        DateTime?
   goals              Goal[]
@@ -45,13 +44,17 @@ model User {
   emailNotifications String?         @default("everything")
   pushNotifications  String?         @default("everything")
   classesTaught      Class[]         @relation("InstructorClasses")
+
+  @@index([gymId])
 }
+ // @@index([gymRole, ownedGymId], name: "owner_validation")
 
 model Gym {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   members       User[]       @relation("GymMembers")
-  owner         User?        @relation("GymOwner")
+   owner     User     @relation("GymOwner", fields: [ownerId], references: [id])
+  ownerId   String   @unique
   memberships   Membership[]
   classes       Class[]
   createdAt     DateTime     @default(now())
@@ -65,7 +68,6 @@ model Gym {
   logo          String?
 }
 
-
 model Membership {
   id        String           @id @default(auto()) @map("_id") @db.ObjectId
   userId    String           @db.ObjectId
@@ -76,7 +78,6 @@ model Membership {
   user      User             @relation(fields: [userId], references: [id]) // Relation field
   gym       Gym              @relation(fields: [gymId], references: [id])
 }
-
 
 model Class {
   id           String           @id @default(auto()) @map("_id") @db.ObjectId
@@ -98,7 +99,6 @@ model Class {
   endDate      DateTime?
   time         String?
 }
-
 
 model Booking {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId

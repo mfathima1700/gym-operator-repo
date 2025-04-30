@@ -31,17 +31,20 @@ export default function Register() {
 
   useEffect(() => {
     // sign up success
-    if (signUpState?.user != null) {
+    if ( signUpState?.user != null) {
       console.log(signUpState);
+      // TODO: Redirect to check if email is verified or alert for email being registered
     }
   }, [signUpState.user, signUpState.error]);
 
   useEffect(() => {
-    if (status === "success") {
-      setOpen(true);
-      // show dialog
-    } else if (status === "fail") {
+    // if (status === "success") {
+    //   setOpen(true);
+    //   // show dialog
+    // } else 
+   if (status === "fail") {
       console.log("FAILED");
+      // TODO: Error Handling
     }
   }, [status]);
 
@@ -149,14 +152,14 @@ export default function Register() {
           handleGoogle={handleGoogle}
         />
       </div>
-      <Dialog open={open} onOpenChange={setOpen}>
+      {/* <Dialog open={open} onOpenChange={setOpen}>
         <RegisterDialog
           signUp={handleCreateGoogleUser}
           handleChange={handleChange}
           userData={userData}
           setUserData={setUserData}
         />
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 }

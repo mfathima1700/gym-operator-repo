@@ -81,7 +81,7 @@ export function BookingsChart({classes}: {classes: any[]}) {
     </CardContent>
     <CardFooter className="flex-col items-start gap-2 text-sm">
       <div className="flex gap-2 font-medium leading-none">
-       {mostBookedClass.name} was most popular
+       { classes.length > 0 ? `${mostBookedClass.name} was most popular` : "No class data available"} 
       </div>
       <div className="leading-none text-muted-foreground">
       Total bookings for several classes
