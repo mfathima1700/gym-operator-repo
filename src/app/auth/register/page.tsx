@@ -70,7 +70,7 @@ export default function Register() {
     userRole: UserRole.USER,
     gymRole: GymRole.MEMBER,
     gymCode: "",
-    gymName:"",
+ //   gymName:"",
   }));
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {

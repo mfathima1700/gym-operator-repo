@@ -59,7 +59,7 @@ export default function GoogleForm({
               ) : (
                 <></>
               )}
-              {userData.gymRole === GymRole.OWNER ? (
+              {/* {userData.gymRole === GymRole.OWNER ? (
                 <>
                   <Label htmlFor="email">Gym Name</Label>
                   <div className="flex flex-col space-y-1.5">
@@ -76,7 +76,7 @@ export default function GoogleForm({
                 </>
               ) : (
                 <></>
-              )}
+              )} */}
             </div>
           </form>
         </CardContent>

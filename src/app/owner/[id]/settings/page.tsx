@@ -34,6 +34,7 @@ export default function OwnerSettings() {
   }));
 
   const [gymData, setGymData] = useState(() => ({
+    id: "",
     country: "",
     city: "",
     postcode: "",
@@ -46,7 +47,7 @@ export default function OwnerSettings() {
   }));
 
   useEffect(() => {
-    console.log(updateOwnerSettingsState);
+   // console.log(updateOwnerSettingsState);
     if (updateOwnerSettingsState?.success) {
       router.push(`/owner/${id}`);
     }
@@ -58,7 +59,7 @@ export default function OwnerSettings() {
 
   // Update state when user data is available
   useEffect(() => {
-    console.log(userState.user);
+   // console.log(userState.user);
     if (userState.user) {
       setOwnerData((prevState) => ({
         ...prevState,
@@ -76,6 +77,7 @@ export default function OwnerSettings() {
     if (userState.user?.ownedGym) {
       setGymData((prevState) => ({
         ...prevState,
+        id: userState.user.ownedGym.id || "",
         country: userState.user.ownedGym.country || "",
         city: userState.user.ownedGym.city || "",
         postcode: userState.user.ownedGym.postcode || "",
@@ -92,7 +94,7 @@ export default function OwnerSettings() {
   function onSaveClick(e: React.MouseEvent) {
     e.preventDefault();
 
-    console.log(ownerData);
+   // console.log(ownerData);
     console.log(gymData);
     dispatch(updateOwnerSettings(ownerData, gymData, id));
   }

@@ -103,7 +103,7 @@ export default function RegisterForm({
               <></>
             )}
 
-{userData.gymRole === GymRole.OWNER ? (
+{/* {userData.gymRole === GymRole.OWNER ? (
               <div className="grid gap-2">
                 <Label htmlFor="email">Gym Name</Label>
                 <Input
@@ -117,7 +117,7 @@ export default function RegisterForm({
               </div>
             ) : (
               <></>
-            )}
+            )} */}
 
 {/*  */}
             <Button type="submit" className="w-full" onClick={handleSubmit}>

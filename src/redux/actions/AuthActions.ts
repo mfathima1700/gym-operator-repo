@@ -72,8 +72,8 @@ interface RegisterUser {
   userRole: UserRole;
   gymCode: string;
   gymName?: string;
-  locale?:string
-  picture?:string
+  locale?: string;
+  picture?: string;
 }
 
 export default async function registerUser(registerData: RegisterUser) {
@@ -92,15 +92,9 @@ export default async function registerUser(registerData: RegisterUser) {
       if (!gym) {
         throw new Error("Invalid gym code");
       }
-    }else{
-      gym = await db.gym.create({
-        data: { name: `${registerData.gymName}` },
-      });
     }
-
     const success = await signUpWithEmail(registerData);
 
-    
     console.log("SIGNED UP WITH APPWITE");
 
     const createData: any = {
@@ -111,38 +105,18 @@ export default async function registerUser(registerData: RegisterUser) {
       gymRole: registerData.gymRole,
       userRole: registerData.userRole,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
-
-    if (registerData.gymRole === GymRole.OWNER && gym) {
-      createData.ownedGymId = gym.id;
-    }
 
     if (registerData.gymRole === GymRole.MEMBER && gym) {
       createData.gymId = gym.id;
     }
 
-    if (registerData.gymRole !== GymRole.OWNER) {
-      delete createData.ownedGymId;
-    }
-
     const user = await db.user.create({
-      data: createData
+      data: createData,
     });
 
-    // const user = await db.user.create({
-    //   data: {
-    //     email,
-    //     password,
-    //     hashedPassword,
-    //     gymRole,
-    //     userRole,
-    //     createdAt: new Date(),
-    //     updatedAt: new Date(),
     //     ...(gymRole === GymRole.OWNER && gym ? { ownedGymId : gym?.id } : { ownedGymId : undefined }),
-    //     ...(gymRole === GymRole.MEMBER && gym ? { gymId: gym?.id } : { gymId: null }),
-    //   },
-    // });
 
     console.log("REGISTER SUCESSFUL");
     return {
@@ -179,14 +153,14 @@ export async function signUpWithGoogle() {
   }
 }
 
-
-export async function createGoogleUser(googleUser: RegisterUser, cookie: string) {
+export async function createGoogleUser(
+  googleUser: RegisterUser,
+  cookie: string
+) {
   try {
     //const user = await getGoogleOAuthSession();
-    
 
     const appWriteUser = await verifyAppwriteSession(cookie);
-
 
     const userRole = googleUser.userRole;
     const gymRole = googleUser.gymRole;
@@ -207,8 +181,8 @@ export async function createGoogleUser(googleUser: RegisterUser, cookie: string)
 
     const mongoUser = await db.user.create({
       data: {
-        email:email,
-        password:password,
+        email: email,
+        password: password,
         name: appWriteUser.name,
         gymRole: gymRole,
         userRole: userRole,
@@ -245,14 +219,9 @@ export async function createGoogleUser2(googleUser: RegisterUser) {
       if (!gym) {
         throw new Error("Invalid gym code");
       }
-    }else{
-      gym = await db.gym.create({
-        data: { name: `${googleUser.gymName}` },
-      });
-      
     }
 
-    console.log("GOOGLE USER DATA DONE")
+    console.log("GOOGLE USER DATA DONE");
 
     const createData: any = {
       email: googleUser.email,
@@ -261,33 +230,16 @@ export async function createGoogleUser2(googleUser: RegisterUser) {
       gymRole: googleUser.gymRole,
       userRole: googleUser.userRole,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
-    if (googleUser.gymRole === GymRole.OWNER && gym) {
-      createData.ownedGymId = gym.id;
-    }else if (googleUser.gymRole === GymRole.MEMBER && gym) {
+    if (googleUser.gymRole === GymRole.MEMBER && gym) {
       createData.gymId = gym.id;
     }
 
     const mongoUser = await db.user.create({
-      data: createData
+      data: createData,
     });
-
-
-
-    // const mongoUser = await db.user.create({
-    //   data: {
-    //     email: googleUser.email,
-    //     password:"password",
-    //     name: googleUser.name,
-    //     gymRole: googleUser.gymRole as GymRole,
-    //     userRole: googleUser.userRole as UserRole,
-    //     createdAt: new Date(),
-    //     ...(googleUser.gymRole === GymRole.OWNER && gym ? { ownedGymId : gym?.id } : { ownedGymId : undefined }),
-    //     ...(googleUser.gymRole === GymRole.MEMBER && gym ? { gymId: gym?.id } : { gymId: null }),
-    //   },
-    // });
 
     console.log("CREATE GOOGLE USER SUCCESSFUL");
     return {
@@ -339,13 +291,9 @@ export async function signOutSession() {
   }
 }
 
-export async function googleSignOut(){
-
-  try{
-
-  }catch(error){
-    
-  }
+export async function googleSignOut() {
+  try {
+  } catch (error) {}
 }
 
 interface SignInUser {

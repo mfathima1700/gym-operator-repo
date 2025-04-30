@@ -26,7 +26,11 @@ export default function GoogleSignUp() {
     if (signUpState?.user != null) {
       console.log(signUpState);
       if (signUpState?.user?.gymRole === "OWNER") {
-        window.location.href = `/owner/${signUpState?.user?.id}`;
+        if(signUpState?.user?.ownedGym){
+          window.location.href = `/owner/${signUpState?.user?.id}`;
+         }else{
+          window.location.href = `/owner/${signUpState?.user?.id}/create`;
+         }
       } else if (signUpState?.user?.gymRole === "MEMBER") {
         window.location.href = `/individual/${signUpState?.user?.id}`;
       }
@@ -41,7 +45,7 @@ export default function GoogleSignUp() {
     userRole: UserRole.USER,
     gymRole: GymRole.MEMBER,
     gymCode: "",
-    gymName: "",
+   // gymName: "",
   }));
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {

@@ -148,6 +148,7 @@ export async function createGym(data: createOwnerData, id: string) {
       data: {
         name: data.gymName,
         description: data.description,
+        ownerId: user.id,
         //address: data.address,
         //ownerId: updatedUser.id, // Link gym to the owner
       },
@@ -161,7 +162,6 @@ export async function createGym(data: createOwnerData, id: string) {
       where: { id: user.id },
       data: {
         name: `${data.firstName} ${data.lastName}`,
-        ownedGymId: gym.id,
       },
     });
 
@@ -279,6 +279,7 @@ interface ownerSettingsData {
 }
 
 interface gymSettingsData {
+  id: string;
   country?: string;
   city?: string;
   postcode?: string;
@@ -321,13 +322,15 @@ export async function updateOwnerSettings(
       },
     });
 
-    // Find the Gym associated with this User
-    const gym = updatedUser.ownedGymId
-      ? await db.gym.findUnique({ where: { id: updatedUser.ownedGymId } })
-      : null;
+      const gym = await db.gym.findUnique({
+        where: { id: gymData.id },
+      });
+  
+      if (!gym) {
+        throw new Error("Gym not found");
+      }
 
-    // If the Gym exists, update its details
-    if (gym) {
+    
       await db.gym.update({
         where: { id: gym.id },
         data: {
@@ -342,7 +345,7 @@ export async function updateOwnerSettings(
           //logo: logoBuffer,
         },
       });
-    }
+    
 
     console.log("UPDATE GYM SUCCESS");
     return {
@@ -504,7 +507,7 @@ export async function getUserAndInstructors(id: string) {
 
     if (user?.ownedGym) {
       const gym = await db.gym.findUnique({
-        where: { id: user.ownedGymId ?? undefined },
+        where: { id: user.ownedGym.id ?? undefined },
         include: {
           members: true,
           classes: {
