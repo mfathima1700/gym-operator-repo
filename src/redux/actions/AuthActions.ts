@@ -40,6 +40,7 @@ import {
 } from "@/lib/server/auth";
 import { getLoggedInUser } from "@/lib/server/appwrite";
 import { NextResponse } from "next/server";
+import { ObjectId } from "mongodb";
 
 interface AuthState {
   user: any | null;
@@ -70,6 +71,7 @@ interface RegisterUser {
   gymRole: GymRole;
   userRole: UserRole;
   gymCode: string;
+  gymName?: string;
   locale?:string
   picture?:string
 }
@@ -93,6 +95,10 @@ export default async function registerUser(registerData: RegisterUser) {
       if (!gym) {
         throw new Error("Invalid gym code");
       }
+    }else{
+      gym = await db.gym.create({
+        data: { name: `${registerData.gymName}` },
+      });
     }
 
     const success = await signUpWithEmail(registerData);
@@ -106,7 +112,10 @@ export default async function registerUser(registerData: RegisterUser) {
         hashedPassword,
         gymRole,
         userRole,
-        ...(gymRole === GymRole.MEMBER && gym ? { gymId: gym?.id } : {}),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        ...(gymRole === GymRole.OWNER && gym ? { ownedGymId : gym?.id } : { ownedGymId : undefined }),
+        ...(gymRole === GymRole.MEMBER && gym ? { gymId: gym?.id } : { gymId: null }),
       },
     });
 
@@ -120,7 +129,7 @@ export default async function registerUser(registerData: RegisterUser) {
     console.log(error);
     return {
       type: SIGN_UP_FAILED,
-      payload: error,
+      payload: { error: (error as Error).message || "Unknown error" },
     };
   }
 }
@@ -202,12 +211,6 @@ export async function createGoogleUser(googleUser: RegisterUser, cookie: string)
 
 export async function createGoogleUser2(googleUser: RegisterUser) {
   try {
-
-    const userRole = googleUser.userRole;
-  
-    const email = googleUser.email;
-    const password = "password";
-
     let gym;
     if (googleUser.gymRole == GymRole.MEMBER) {
       gym = await db.gym.findUnique({
@@ -217,20 +220,24 @@ export async function createGoogleUser2(googleUser: RegisterUser) {
       if (!gym) {
         throw new Error("Invalid gym code");
       }
+    }else{
+      gym = await db.gym.create({
+        data: { name: `${googleUser.gymName}'s Gym` },
+      });
+      
     }
 
     console.log("GOOGLE USER DATA DONE")
     const mongoUser = await db.user.create({
       data: {
-        email:email,
-        password:password,
-        name: googleUser.name,
-        gymRole: googleUser.gymRole as GymRole,
-        userRole: googleUser.userRole as UserRole,
-        //country: appWriteUser.locale,
-        //image: googleUser.prefs?.picture,
-
-        ...(googleUser.gymRole === GymRole.MEMBER && gym ? { gymId: gym.id } : {}),
+        email: "happytubby@esmail.com",//googleUser.email,
+        password:"password",
+       // name: googleUser.name,
+        gymRole: GymRole.OWNER,//googleUser.gymRole as GymRole,
+        userRole: UserRole.USER,//googleUser.userRole as UserRole,
+        createdAt: new Date(),
+        ...(googleUser.gymRole === GymRole.OWNER && gym ? { ownedGymId : gym?.id } : { ownedGymId : undefined }),
+        ...(googleUser.gymRole === GymRole.MEMBER && gym ? { gymId: gym?.id } : { gymId: null }),
       },
     });
 
@@ -244,7 +251,7 @@ export async function createGoogleUser2(googleUser: RegisterUser) {
     console.log("CREATE GOOGLE USER FAILED");
     return {
       type: SIGN_UP_FAILED,
-      payload: {},
+      payload: { error: (error as Error).message || "Unknown error" },
     };
   }
 }

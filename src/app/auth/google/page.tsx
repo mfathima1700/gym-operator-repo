@@ -26,6 +26,7 @@ export default function GoogleSignUp() {
     userRole: UserRole.USER,
     gymRole: GymRole.MEMBER,
     gymCode: "",
+    gymName:"",
   }));
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
