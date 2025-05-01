@@ -292,31 +292,8 @@ export default function MemberWeekCalendar({
               <ChevronRight />
             </Button>
           </div>
-          <div className="hidden md:ml-4 md:flex md:items-center">
-            <div className="ml-6 h-6 w-px bg-gray-700" />
-          </div>
-          <Menu as="div" className="relative ml-6 md:hidden">
-            <MenuButton className="-mx-2 flex items-center rounded-full border border-transparent p-2 text-gray-400 hover:text-gray-500">
-              <span className="sr-only">Open menu</span>
-              <EllipsisHorizontalIcon className="size-5" aria-hidden="true" />
-            </MenuButton>
-
-            <MenuItems
-              transition
-              className="absolute right-0 z-10 mt-3 w-36 origin-top-right divide-y divide-gray-100 overflow-hidden rounded-md bg-gray-200 ring-1 shadow-lg ring-black/5 focus:outline-hidden data-closed:scale-95 data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
-            >
-              <div className="py-1">
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                  >
-                    Go to today
-                  </a>
-                </MenuItem>
-              </div>
-            </MenuItems>
-          </Menu>
+          
+         
         </div>
       </header>
       <div
@@ -382,10 +359,153 @@ export default function MemberWeekCalendar({
               {/* Horizontal lines */}
               <div
                 className="col-start-1 col-end-2 row-start-1 grid divide-y divide-gray-700"
-                style={{ gridTemplateRows: "repeat(17, minmax(3.5rem, 1fr))" }}
+                style={{ gridTemplateRows: 'repeat(48, minmax(3.5rem, 1fr))' }}
               >
                 <div ref={containerOffset} className="row-end-1 h-7"></div>
-                {generateHourLabels()}
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    12AM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    1AM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    2AM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    3AM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    4AM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    5AM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    6AM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    7AM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    8AM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    9AM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    10AM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    11AM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    12PM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    1PM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    2PM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    3PM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    4PM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    5PM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    6PM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    7PM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    8PM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    9PM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    10PM
+                  </div>
+                </div>
+                <div />
+                <div>
+                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
+                    11PM
+                  </div>
+                </div>
+                <div />
               </div>
 
               {/* Vertical lines */}
@@ -402,10 +522,8 @@ export default function MemberWeekCalendar({
 
               {/* Events */}
               <ol
-                className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
-                style={{
-                  gridTemplateRows: "3.5rem repeat(17, minmax(0, 1fr)) auto",
-                }}
+               className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
+               style={{ gridTemplateRows: '1.75rem repeat(288, minmax(0, 1fr)) auto' }}
               >
                 {classes.flatMap((classObject, index) => {
                   // Ensure that we only process classObjects with valid days

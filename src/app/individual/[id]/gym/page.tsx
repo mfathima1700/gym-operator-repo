@@ -60,7 +60,7 @@ export default function GymMemberSchedule() {
             handleClick={onBookClick}
           
             triggerRef={triggerRef}
-            classes={userData.gym.classes ?userData.gym.classes : []}
+            classes={userData.gym?.classes ?? []}
           />
         </div>
       </CNLayout>
