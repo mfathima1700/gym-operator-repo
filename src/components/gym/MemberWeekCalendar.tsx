@@ -104,13 +104,14 @@ export default function MemberWeekCalendar({
   const [endOfWeek, setEndOfWeek] = useState<Date>(() => endOfWeekFirst);
 
   const [weekdays, setWeekdays] = useState<
-    { day: string; 
-      date: number; 
-      name: string; 
+    {
+      day: string;
+      date: number;
+      name: string;
       isHighlighted?: boolean;
       nameDay: string;
       num: number;
-      }[]
+    }[]
   >(() => updateWeekdays(startOfWeekFirst));
 
   function updateWeekdays(newStartOfWeek: Date) {
@@ -293,108 +294,24 @@ export default function MemberWeekCalendar({
             className="sticky top-0 z-30 flex-none  ring-1 shadow-sm ring-black/5 sm:pr-8"
           >
             <div className="grid grid-cols-7 text-sm/6 text-gray-900 sm:hidden">
-              {weekdays.map(({ day, date, name, isHighlighted, nameDay, num  }) => (
-                <div key={`${day}-${date}`}>
-
-                <button
-                  key={date}
-                  type="button"
-                  className="flex flex-col items-center pt-2 pb-3"
-                >
-                  {name}{" "}
-                  <span
-                    className={`mt-1 flex size-8 items-center justify-center font-semibold ${
-                      isHighlighted
-                        ? "rounded-full bg-lime-600 text-gray-200"
-                        : "text-gray-500"
-                    }`}
+              {weekdays.map(({ day, date, name, isHighlighted }) => (
+                <div>
+                  <button
+                    key={date}
+                    type="button"
+                    className="flex flex-col items-center pt-2 pb-3"
                   >
-                    {date}
-                  </span>
-                </button>
-
-
-                <ol
-                className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
-                style={{
-                  gridTemplateRows: "1.75rem repeat(288, minmax(0, 1fr)) auto",
-                }}
-              >
-                {bookings.flatMap((booking, index) => {
-                  // Ensure that we only process classObjects with valid days
-                  if (!booking.class.days || booking.class.days.length === 0) {
-                    return null; // Skip rendering this class if days array is empty or undefined
-                  }
-
-                  const todaysDate = new Date(startOfWeek);
-                        todaysDate.setDate(startOfWeek.getDate() + num);
-
-                        // Ensure the class is within the current week
-                        if (!booking.class.days.includes(nameDay)) {
-                          return null;
-                        }
-
-                        if (
-                          !(
-                            todaysDate >= booking.class.startDate &&
-                            todaysDate <= booking.class.endDate
-                          )
-                        ) {
-                          return null;
-                        }
-
-                  return booking.class.days.map((day) => {
-                    const startRow = timeToGridRow(
-                      formatTime(booking.class.startDate)
-                    );
-                    const durationRows = Math.floor(booking.class.duration / 30); // Convert duration to grid rows
-                    const gridRow = `${startRow} / span ${durationRows}`;
-
-                    return (
-                      <li
-                        key={`${index}-${day}`} // Ensure uniqueness across multiple days
-                        className={cn(
-                          `relative mt-px flex 
-                          sm:col-start-${dayToColumn(day)}  rounded-lg `,
-                          generateColourLI(booking.class.name)
-                        )}
-                        style={{ gridRow }}
-                      >
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <button
-                              className={`group absolute inset-1 flex flex-col  
-                         p-2 text-xs/5`}
-                            >
-                              <p
-                                className={cn(
-                                  `order-1 font-semibold text-lime-400`,
-                                  generateColourP1(booking.class.name)
-                                )}
-                              >
-                                {booking.class.name}
-                              </p>
-                              <p
-                                className={cn(
-                                  `text-lime-100 group-hover:text-lime-300`,
-                                  generateColourP2(booking.class.name)
-                                )}
-                              >
-                                <time
-                                  dateTime={booking.class.startDate.toISOString()}
-                                >
-                                  {formatTime(booking.class.startDate)}
-                                </time>
-                              </p>
-                            </button>
-                          </DialogTrigger>
-                        </Dialog>
-                      </li>
-                    );
-                  });
-                })}
-              </ol>
-
+                    {name}{" "}
+                    <span
+                      className={`mt-1 flex size-8 items-center justify-center font-semibold ${
+                        isHighlighted
+                          ? "rounded-full bg-lime-600 text-gray-200"
+                          : "text-gray-500"
+                      }`}
+                    >
+                      {date}
+                    </span>
+                  </button>
                 </div>
               ))}
             </div>
@@ -591,7 +508,97 @@ export default function MemberWeekCalendar({
               </div>
 
               {/* Events */}
-             
+              <ol
+                className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
+                style={{
+                  gridTemplateRows: "1.75rem repeat(288, minmax(0, 1fr)) auto",
+                }}
+              >
+                {weekdays.map(
+                  ({ day, date, name, isHighlighted, nameDay, num }) => (
+                    <div key={`${day}-${date}}`}>
+                      {bookings.flatMap((booking, index) => {
+                        // Ensure that we only process classObjects with valid days
+                        if (
+                          !booking.class.days ||
+                          booking.class.days.length === 0
+                        ) {
+                          return null; // Skip rendering this class if days array is empty or undefined
+                        }
+
+                        const todaysDate = new Date(startOfWeek);
+                        todaysDate.setDate(startOfWeek.getDate() + num);
+
+                        // Ensure the class is within the current week
+                        if (!booking.class.days.includes(nameDay)) {
+                          return null;
+                        }
+
+                        if (
+                          !(
+                            todaysDate >= booking.class.startDate &&
+                            todaysDate <= booking.class.endDate
+                          )
+                        ) {
+                          return null;
+                        }
+
+                        return booking.class.days.map((day) => {
+                          const startRow = timeToGridRow(
+                            formatTime(booking.class.startDate)
+                          );
+                          const durationRows = Math.floor(
+                            booking.class.duration / 30
+                          ); // Convert duration to grid rows
+                          const gridRow = `${startRow} / span ${durationRows}`;
+
+                          return (
+                            <li
+                              key={`${index}-${day}`} // Ensure uniqueness across multiple days
+                              className={cn(
+                                `relative mt-px flex 
+                          sm:col-start-${dayToColumn(day)}  rounded-lg `,
+                                generateColourLI(booking.class.name)
+                              )}
+                              style={{ gridRow }}
+                            >
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <button
+                                    className={`group absolute inset-1 flex flex-col  
+                         p-2 text-xs/5`}
+                                  >
+                                    <p
+                                      className={cn(
+                                        `order-1 font-semibold text-lime-400`,
+                                        generateColourP1(booking.class.name)
+                                      )}
+                                    >
+                                      {booking.class.name}
+                                    </p>
+                                    <p
+                                      className={cn(
+                                        `text-lime-100 group-hover:text-lime-300`,
+                                        generateColourP2(booking.class.name)
+                                      )}
+                                    >
+                                      <time
+                                        dateTime={booking.class.startDate.toISOString()}
+                                      >
+                                        {formatTime(booking.class.startDate)}
+                                      </time>
+                                    </p>
+                                  </button>
+                                </DialogTrigger>
+                              </Dialog>
+                            </li>
+                          );
+                        });
+                      })}
+                    </div>
+                  )
+                )}
+              </ol>
             </div>
           </div>
         </div>
