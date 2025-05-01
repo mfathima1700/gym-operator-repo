@@ -8,7 +8,7 @@ Trophy,
 ChartColumnIncreasing,
 Dumbbell,
   Apple,
-  UsersRound,
+  UsersRound,ClipboardList
 } from "lucide-react"
 
 import { NavMain } from "@/components/ui/nav-main"
@@ -66,7 +66,7 @@ const data = {
       icon: Dumbbell,
     },
     {
-      name: "My Classes",
+      name: "My Calendar",
       url: `/individual/${id}/schedule`,
       icon: CalendarDays,
     },
@@ -178,6 +178,12 @@ if(user?.gymRole === "OWNER"){
     name: "Members",
     url: `/owner/${id}/members`,
     icon: UsersRound,
+  });
+
+  data.projects.push({
+    name: "Gym Classes",
+    url: `/owner/${id}/classes`,
+    icon: ClipboardList,
   });
 }
 
