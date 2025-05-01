@@ -55,6 +55,7 @@ export default function GoogleSignUp() {
     }));
   }
 
+  /*
   async function handleSubmit(e: React.MouseEvent) {
     e.preventDefault();
     //'a_session_[YOUR_PROJECT_ID]
@@ -62,7 +63,7 @@ export default function GoogleSignUp() {
     if (!cookie) throw new Error("No session found");
 
     dispatch(createGoogleUser(userData, cookie));
-  }
+  }*/
 
   async function handleCallback(e: React.MouseEvent) {
     e.preventDefault();

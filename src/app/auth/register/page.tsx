@@ -116,6 +116,7 @@ export default function Register() {
     }
   }
 
+  /*
   async function handleCreateGoogleUser(e: React.MouseEvent) {
     e.preventDefault();
     setOpen(false);
@@ -139,7 +140,7 @@ export default function Register() {
     if (!cookie) throw new Error("No session found");
 
     dispatch(createGoogleUser(userData, cookie));
-  }
+  }*/
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">

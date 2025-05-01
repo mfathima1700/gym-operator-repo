@@ -321,24 +321,24 @@ export async function signIn(userData: SignInUser) {
   }
 }
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(email: string) {
   try {
-    const success = await createGoogleOAuthSession(true);
+    const user = await getUserByEmail(email);
 
     console.log("LOGIN WITH GOOGLE SUCCESSFUL");
 
-    // unnecessary?
-    // return {
-    //   type: SIGN_IN_SUCCESS,
-    //   payload: user,
-    // };
+   
+    return {
+      type: SIGN_IN_SUCCESS,
+      payload: user,
+    };
   } catch (error) {
     console.log("LOGIN WITH GOOGLE FAILED");
     console.log(error);
-    // return {
-    //   type: SIGN_IN_FAILED,
-    //   payload: error,
-    // };
+    return {
+      type: SIGN_IN_FAILED,
+      payload: error,
+    };
   }
 }
 

@@ -14,6 +14,7 @@ import { RootState } from "@/redux/store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GymRole, UserRole } from "@prisma/client";
 import { useState, useEffect } from "react";
+import { Client, Account, OAuthProvider } from "appwrite";
 
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,6 +23,8 @@ export default function Login() {
   const sessionState = useSelector((state: RootState) => state.getSession);
   const searchParams = useSearchParams();
   const status = searchParams.get("status");
+  const userId = searchParams.get("userId");
+  const secret = searchParams.get("secret");
 
   useEffect(() => {
     if (signInState?.success && signInState?.user != null) {
@@ -52,11 +55,53 @@ export default function Login() {
 
   useEffect(() => {
     if (status === "success") {
-      dispatch(getGoogleData());
+      if (!userId || !secret) {
+        console.error("Missing OAuth credentials");
+         //TODO: Error Handling
+        return;
+      }
+
+      handleOAuthCallback();
+      
+      
     } else if (status === "fail") {
       console.log("FAILED");
+      //TODO: Error Handling
     }
   }, [status]);
+
+  const handleOAuthCallback = async () => {
+    if (status === "success") {
+      const params = new URLSearchParams(window.location.search);
+      const userId = params.get("userId");
+      const secret = params.get("secret");
+
+      if (!userId || !secret) {
+        console.error("Missing OAuth credentials");
+        return;
+      }
+
+      try {
+        const client = new Client()
+          .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT as string)
+          .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT as string);
+
+        const account = new Account(client);
+
+        // Create the session
+        await account.createSession(userId, secret);
+        
+        // Get the current user
+        const user = await account.get();
+        console.log(user)
+        dispatch(signInWithGoogle(user.email));
+
+        
+      } catch (error) {
+         //TODO: Error Handling
+      }
+    } 
+  };
 
   /*
   useEffect(() => {
@@ -93,7 +138,29 @@ export default function Login() {
 
   async function handleGoogle(e: React.MouseEvent) {
     e.preventDefault();
-    dispatch(signInWithGoogle());
+
+    try {
+      const client = new Client()
+        .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT as string)
+        .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT as string);
+      //.setKey(process.env.NEXT_PUBLIC_APPWRITE_KEY as string);
+      const account = new Account(client);
+
+      console.log("GOOGLE AUTH REGISTER TRUE");
+      const baseUrl = window.location.origin;
+
+      const result = await (account as any).createOAuth2Token(
+        "google",
+        `${baseUrl}/auth/login?status=success`, // New callback URL
+        `${baseUrl}/auth/login?status=fail`
+      ); // Failure URL
+      console.log("RESULT");
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+
+   // dispatch(signInWithGoogle());
   }
 
   return (
