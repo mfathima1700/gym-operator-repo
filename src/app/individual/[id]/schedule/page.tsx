@@ -1,5 +1,6 @@
 "use client";
 
+import MemberWeekCalendar from "@/components/gym/MemberWeekCalendar";
 import CNLayout from "@/components/layout/cn-layout";
 import MyCalendar from "@/components/schedule/MyCalendar";
 import { getUserById } from "@/redux/actions/GymActions";
@@ -24,16 +25,8 @@ export default function IndividualSchedule() {
   const userState = useSelector((state: RootState) => state.getUser);
   const [userData, setUserData] = useState(() => ({
     gymRole: "",
-    gym: {
-      id: "",
-      members: [],
-      classes: [],
-    },
-    ownedGym: {
-      id: "",
-      members: [],
-      classes: [],
-    },
+    
+    bookings:[]
   }));
 
   useEffect(() => {
@@ -59,11 +52,8 @@ export default function IndividualSchedule() {
     <>
       <CNLayout user={userData} id={id} name={"My Calendar"}>
         <div>
-          <MyCalendar user={userData}
-          members={userData?.ownedGym?.members ?? userData.gym?.members ?? []}
-            classes={userData?.ownedGym?.classes ?? userData.gym?.classes ?? []}
-            isOwner={false}
-            gymId={userData?.ownedGym?.id ?? userData?.gym?.id} />
+          <MemberWeekCalendar 
+          bookings={userData.bookings ?? []} />
         </div>
       </CNLayout>
     </>

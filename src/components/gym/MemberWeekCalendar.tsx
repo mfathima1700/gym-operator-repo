@@ -11,52 +11,14 @@ import { AddClassDialog } from "@/components/gym/AddClassDialog";
 import { cn } from "@/lib/utils";
 import { BookClassDialog } from "./BookClassDialog";
 
-const events = [
-  {
-    title: "Breakfast",
-    startTime: "06:00",
-    duration: 60, // Duration in minutes
-    colStart: 1,
-    color: "blue",
-  },
-  {
-    title: "Flight to Paris",
-    startTime: "09:30",
-    duration: 90, // Duration in minutes
-    colStart: 3,
-    color: "pink",
-  },
-  {
-    title: "Team Meeting",
-    startTime: "08:00",
-    duration: 45, // Duration in minutes
-    colStart: 6,
-    color: "purple",
-  },
-  {
-    title: "Visit Louvre",
-    startTime: "07:00",
-    duration: 30, // Duration in minutes
-    colStart: 5,
-    color: "sky",
-  },
-  {
-    title: "Gym",
-    startTime: "10:00",
-    duration: 60, // Duration in minutes
-    colStart: 4,
-    color: "rose",
-  },
-];
-
 const daysOfWeek = [
-  { day: "M", name: "Mon" },
-  { day: "T", name: "Tue" },
-  { day: "W", name: "Wed" },
-  { day: "T", name: "Thu" },
-  { day: "F", name: "Fri" },
-  { day: "S", name: "Sat" },
-  { day: "S", name: "Sun" },
+  { day: "M", name: "Mon", nameDay: "monday", num: 0 },
+  { day: "T", name: "Tue", nameDay: "tuesday", num: 1 },
+  { day: "W", name: "Wed", nameDay: "wednesday", num: 2 },
+  { day: "T", name: "Thu", nameDay: "thursday", num: 3 },
+  { day: "F", name: "Fri", nameDay: "friday", num: 4 },
+  { day: "S", name: "Sat", nameDay: "saturday", num: 5 },
+  { day: "S", name: "Sun", nameDay: "sunday", num: 6 },
 ];
 
 type ClassType = {
@@ -79,14 +41,11 @@ type ClassType = {
 };
 
 export default function MemberWeekCalendar({
-
-  handleClick,
-  triggerRef,
-  classes,
+  bookings,
 }: {
-  handleClick: any;
-  triggerRef: any;
-  classes: ClassType[];
+  bookings: {
+    class: ClassType;
+  }[];
 }) {
   const container = useRef<HTMLDivElement | null>(null);
   const containerNav = useRef<HTMLDivElement | null>(null);
@@ -119,7 +78,7 @@ export default function MemberWeekCalendar({
 
   const timeToGridRow = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
-    return hours - 6 + Math.floor(minutes / 60) + 1; // Start from 6 AM
+    return hours * 2 + Math.floor(minutes / 30) + 1;
   };
 
   // get day, month, year, and month name
@@ -145,7 +104,13 @@ export default function MemberWeekCalendar({
   const [endOfWeek, setEndOfWeek] = useState<Date>(() => endOfWeekFirst);
 
   const [weekdays, setWeekdays] = useState<
-    { day: string; date: number; name: string; isHighlighted?: boolean }[]
+    { day: string; 
+      date: number; 
+      name: string; 
+      isHighlighted?: boolean;
+      nameDay: string;
+      num: number;
+      }[]
   >(() => updateWeekdays(startOfWeekFirst));
 
   function updateWeekdays(newStartOfWeek: Date) {
@@ -213,56 +178,77 @@ export default function MemberWeekCalendar({
   };
 
   const generateColourLI = (name: string): string => {
-    const hash = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const colors = ["bg-red-950 hover:bg-red-900", "bg-blue-950 hover:bg-blue-900",
-       "bg-emerald-950 hover:bg-emerald-900", "bg-amber-950 hover:bg-amber-900", 
-      "bg-cyan-950 hover:bg-cyan-900", "bg-violet-950 hover:bg-violet-900", 
-    "bg-fuchsia-950 hover:bg-fuchsia-900", "bg-rose-950 hover:bg-rose-900"];
+    const hash = name
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const colors = [
+      "bg-red-950 hover:bg-red-900",
+      "bg-blue-950 hover:bg-blue-900",
+      "bg-emerald-950 hover:bg-emerald-900",
+      "bg-amber-950 hover:bg-amber-900",
+      "bg-cyan-950 hover:bg-cyan-900",
+      "bg-violet-950 hover:bg-violet-900",
+      "bg-fuchsia-950 hover:bg-fuchsia-900",
+      "bg-rose-950 hover:bg-rose-900",
+    ];
     return colors[hash % colors.length]; // Cycle through the color list based on hash
   };
 
   const generateColourP1 = (name: string): string => {
-    const hash = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const colors = ["text-red-400 ", "text-blue-400 ",
-       "text-emerald-950", "text-amber-400", 
-      "text-cyan-400", "text-violet-400", 
-    "text-fuchsia-400", "text-rose-400"];
+    const hash = name
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const colors = [
+      "text-red-400 ",
+      "text-blue-400 ",
+      "text-emerald-950",
+      "text-amber-400",
+      "text-cyan-400",
+      "text-violet-400",
+      "text-fuchsia-400",
+      "text-rose-400",
+    ];
     return colors[hash % colors.length]; // Cycle through the color list based on hash
   };
 
   //text-lime-100 group-hover:text-lime-300
   const generateColourP2 = (name: string): string => {
-    const hash = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const colors = ["text-red-100 group-hover:text-red-300", "text-blue-100 group-hover:text-blue-300",
-       "text-emerald-100 group-hover:text-emerald-300", "text-amber-100 group-hover:text-amber-300", 
-      "text-cyan-100 group-hover:text-cyan-300", "text-violet-100 group-hover:text-violet-300", 
-    "text-fuchsia-100 group-hover:text-fuchsia-300", "text-rose-100 group-hover:text-rose-300"];
+    const hash = name
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const colors = [
+      "text-red-100 group-hover:text-red-300",
+      "text-blue-100 group-hover:text-blue-300",
+      "text-emerald-100 group-hover:text-emerald-300",
+      "text-amber-100 group-hover:text-amber-300",
+      "text-cyan-100 group-hover:text-cyan-300",
+      "text-violet-100 group-hover:text-violet-300",
+      "text-fuchsia-100 group-hover:text-fuchsia-300",
+      "text-rose-100 group-hover:text-rose-300",
+    ];
     return colors[hash % colors.length]; // Cycle through the color list based on hash
   };
 
-  function endsInWeek(classStartDate:Date, classEndDate:Date):boolean {
-    
-    if(classEndDate <= endOfWeek && classEndDate >= startOfWeek){
+  function endsInWeek(classStartDate: Date, classEndDate: Date): boolean {
+    if (classEndDate <= endOfWeek && classEndDate >= startOfWeek) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
 
-  function startsInWeek(classStartDate:Date, classEndDate:Date):boolean {
-    
-    if(classStartDate >= startOfWeek && classStartDate <= endOfWeek){
+  function startsInWeek(classStartDate: Date, classEndDate: Date): boolean {
+    if (classStartDate >= startOfWeek && classStartDate <= endOfWeek) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
 
-  function runningInWeek(classStartDate:Date, classEndDate:Date):boolean {
-    
-    if(classStartDate <= startOfWeek && classEndDate >= endOfWeek){
+  function runningInWeek(classStartDate: Date, classEndDate: Date): boolean {
+    if (classStartDate <= startOfWeek && classEndDate >= endOfWeek) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
@@ -292,8 +278,6 @@ export default function MemberWeekCalendar({
               <ChevronRight />
             </Button>
           </div>
-          
-         
         </div>
       </header>
       <div
@@ -309,7 +293,9 @@ export default function MemberWeekCalendar({
             className="sticky top-0 z-30 flex-none  ring-1 shadow-sm ring-black/5 sm:pr-8"
           >
             <div className="grid grid-cols-7 text-sm/6 text-gray-900 sm:hidden">
-              {weekdays.map(({ day, date, name, isHighlighted }) => (
+              {weekdays.map(({ day, date, name, isHighlighted, nameDay, num  }) => (
+                <div key={`${day}-${date}`}>
+
                 <button
                   key={date}
                   type="button"
@@ -326,6 +312,90 @@ export default function MemberWeekCalendar({
                     {date}
                   </span>
                 </button>
+
+
+                <ol
+                className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
+                style={{
+                  gridTemplateRows: "1.75rem repeat(288, minmax(0, 1fr)) auto",
+                }}
+              >
+                {bookings.flatMap((booking, index) => {
+                  // Ensure that we only process classObjects with valid days
+                  if (!booking.class.days || booking.class.days.length === 0) {
+                    return null; // Skip rendering this class if days array is empty or undefined
+                  }
+
+                  const todaysDate = new Date(startOfWeek);
+                        todaysDate.setDate(startOfWeek.getDate() + num);
+
+                        // Ensure the class is within the current week
+                        if (!booking.class.days.includes(nameDay)) {
+                          return null;
+                        }
+
+                        if (
+                          !(
+                            todaysDate >= booking.class.startDate &&
+                            todaysDate <= booking.class.endDate
+                          )
+                        ) {
+                          return null;
+                        }
+
+                  return booking.class.days.map((day) => {
+                    const startRow = timeToGridRow(
+                      formatTime(booking.class.startDate)
+                    );
+                    const durationRows = Math.floor(booking.class.duration / 30); // Convert duration to grid rows
+                    const gridRow = `${startRow} / span ${durationRows}`;
+
+                    return (
+                      <li
+                        key={`${index}-${day}`} // Ensure uniqueness across multiple days
+                        className={cn(
+                          `relative mt-px flex 
+                          sm:col-start-${dayToColumn(day)}  rounded-lg `,
+                          generateColourLI(booking.class.name)
+                        )}
+                        style={{ gridRow }}
+                      >
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <button
+                              className={`group absolute inset-1 flex flex-col  
+                         p-2 text-xs/5`}
+                            >
+                              <p
+                                className={cn(
+                                  `order-1 font-semibold text-lime-400`,
+                                  generateColourP1(booking.class.name)
+                                )}
+                              >
+                                {booking.class.name}
+                              </p>
+                              <p
+                                className={cn(
+                                  `text-lime-100 group-hover:text-lime-300`,
+                                  generateColourP2(booking.class.name)
+                                )}
+                              >
+                                <time
+                                  dateTime={booking.class.startDate.toISOString()}
+                                >
+                                  {formatTime(booking.class.startDate)}
+                                </time>
+                              </p>
+                            </button>
+                          </DialogTrigger>
+                        </Dialog>
+                      </li>
+                    );
+                  });
+                })}
+              </ol>
+
+                </div>
               ))}
             </div>
 
@@ -359,7 +429,7 @@ export default function MemberWeekCalendar({
               {/* Horizontal lines */}
               <div
                 className="col-start-1 col-end-2 row-start-1 grid divide-y divide-gray-700"
-                style={{ gridTemplateRows: 'repeat(48, minmax(3.5rem, 1fr))' }}
+                style={{ gridTemplateRows: "repeat(48, minmax(3.5rem, 1fr))" }}
               >
                 <div ref={containerOffset} className="row-end-1 h-7"></div>
                 <div>
@@ -521,76 +591,7 @@ export default function MemberWeekCalendar({
               </div>
 
               {/* Events */}
-              <ol
-               className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
-               style={{ gridTemplateRows: '1.75rem repeat(288, minmax(0, 1fr)) auto' }}
-              >
-                {classes.flatMap((classObject, index) => {
-                  // Ensure that we only process classObjects with valid days
-                  if (!classObject.days || classObject.days.length === 0) {
-                    return null; // Skip rendering this class if days array is empty or undefined
-                  }
-
-                  const classStartDate = new Date(classObject.startDate);
-                  const classEndDate = new Date(classObject.endDate)
-                    
-
-                  // Ensure the class is within the current week
-                  if ((startsInWeek(classStartDate, classEndDate) || runningInWeek(classStartDate, classEndDate) ||
-                   endsInWeek(classStartDate, classEndDate))) {
-                    return null;
-                  }
-
-                  return classObject.days.map((day) => {
-                    const startRow = timeToGridRow(
-                      formatTime(classObject.startDate)
-                    );
-                    const durationRows = Math.floor(classObject.duration / 60); // Convert duration to grid rows
-                    const gridRow = `${startRow} / span ${durationRows}`;
-
-                    return (
-                      <li
-                        key={`${index}-${day}`} // Ensure uniqueness across multiple days
-                        className={cn(`relative mt-px flex 
-                          sm:col-start-${dayToColumn(day)}  rounded-lg `, 
-                          generateColourLI(classObject.name))}
-                        style={{ gridRow }}
-                      >
-                         <Dialog>
-                         <DialogTrigger asChild>
-                        <button
-                          onClick={handleClick}  ref={triggerRef}
-                          className={`group absolute inset-1 flex flex-col  
-                         p-2 text-xs/5`}
-                        >
-                          <p
-                            className={cn(`order-1 font-semibold text-lime-400`, generateColourP1(classObject.name))}
-                          >
-                            {classObject.name}
-                          </p>
-                          <p
-                            className={cn(`text-lime-100 group-hover:text-lime-300`, 
-                              generateColourP2(classObject.name))}
-                          >
-                            <time
-                              dateTime={classObject.startDate.toISOString()}
-                            >
-                              {formatTime(classObject.startDate)}
-                            </time>
-                          </p>
-                        </button>
-
-                        <BookClassDialog  classData={classObject}
-                            bookClassClick={handleClick}
-                            triggerRef={triggerRef}
-                        />
-                        </DialogTrigger>
-                        </Dialog>
-                      </li>
-                    );
-                  });
-                })}
-              </ol>
+             
             </div>
           </div>
         </div>
