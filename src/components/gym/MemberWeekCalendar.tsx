@@ -10,6 +10,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { AddClassDialog } from "@/components/gym/AddClassDialog";
 import { cn } from "@/lib/utils";
 import { BookClassDialog } from "./BookClassDialog";
+import { MyBookingDialog } from "../schedule/MyBookingDialog";
 
 const daysOfWeek = [
   { day: "M", name: "Mon", nameDay: "monday", num: 0 },
@@ -254,6 +255,8 @@ export default function MemberWeekCalendar({
     }
   }
 
+  const bookingRef = useRef<HTMLButtonElement>(null);
+
   return (
     <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-700 px-6 py-4">
@@ -295,7 +298,7 @@ export default function MemberWeekCalendar({
           >
             <div className="grid grid-cols-7 text-sm/6 text-gray-900 sm:hidden">
               {weekdays.map(({ day, date, name, isHighlighted }) => (
-                <div>
+                <div key={`${day}-${date}-${name}`}>
                   <button
                     key={date}
                     type="button"
@@ -507,16 +510,13 @@ export default function MemberWeekCalendar({
                 <div className="col-start-8 row-span-full w-8" />
               </div>
 
-              {/* Events */}
-              <ol
-                className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
-                style={{
+              {/* Events style={{
                   gridTemplateRows: "1.75rem repeat(288, minmax(0, 1fr)) auto",
-                }}
-              >
+                }}*/}
+              <ol className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8">
                 {weekdays.map(
                   ({ day, date, name, isHighlighted, nameDay, num }) => (
-                    <div key={`${day}-${date}}`}>
+                    <div key={`${day}-${date}}`} className="bg-gray-100">
                       {bookings.flatMap((booking, index) => {
                         // Ensure that we only process classObjects with valid days
                         if (
@@ -547,7 +547,8 @@ export default function MemberWeekCalendar({
                           const startRow = timeToGridRow(
                             formatTime(booking.class.startDate)
                           );
-                          const durationRows = Math.floor(
+                          const durationRows = Math.ceil(
+                            // or floor
                             booking.class.duration / 30
                           ); // Convert duration to grid rows
                           const gridRow = `${startRow} / span ${durationRows}`;
@@ -560,7 +561,7 @@ export default function MemberWeekCalendar({
                           sm:col-start-${dayToColumn(day)}  rounded-lg `,
                                 generateColourLI(booking.class.name)
                               )}
-                              style={{ gridRow }}
+                              style={{ gridRow: "250 / span 24" }}
                             >
                               <Dialog>
                                 <DialogTrigger asChild>
@@ -590,6 +591,12 @@ export default function MemberWeekCalendar({
                                     </p>
                                   </button>
                                 </DialogTrigger>
+
+                                <MyBookingDialog
+                                  bookingId={booking.id}
+                                  gymClass={booking.class}
+                                  bookingRef={bookingRef}
+                                />
                               </Dialog>
                             </li>
                           );

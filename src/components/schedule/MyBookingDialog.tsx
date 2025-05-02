@@ -18,98 +18,72 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { SelectInstructor } from "./SelectInstructor";
-import DaySelector from "./DaySelector";
-import { StartDateControl } from "./StartDateControl";
-import { EndDateControl } from "./EndDateControl";
+import { SelectInstructor } from "@/components/gym/SelectInstructor";
+import DaySelector from "@/components/gym/DaySelector";
+import { StartDateControl } from "@/components/gym/StartDateControl";
+import { EndDateControl } from "@/components/gym/EndDateControl";
 import { format, parse } from "date-fns";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { createClass } from "@/redux/actions/ClassActions";
+import {
+  bookClass,
+  cancelClass,
+  deleteClass,
+  updateClass,
+} from "@/redux/actions/ClassActions";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
+import { useState } from "react";
+import { sendDeleteEmail } from "@/redux/actions/EmailActions";
 
-export function AddClassDialog({
-  //classData,
-  //handleChange,
-  //onSaveClick,
-  //toggleDay,
-  triggerRef,
-  gymId,
+interface UserInfo {
+  id: string;
+  email: string;
+  name: string;
+  gym: {
+    name: string;
+  };
+}
+
+type ClassData = {
+  id: string;
+  name: string;
+  description: string;
+  instructorId: string;
+  startDate: Date;
+  endDate: Date;
+  capacity: string;
+  intensity: string;
+  recurrence: string;
+  duration: string;
+  days: string[]; // Explicitly specify the type here
+  room: string;
+  skillLevel: string;
+  time: string;
+  bookings?: any[];
+};
+
+export function MyBookingDialog({
+  bookingId,
+  gymClass,
+  bookingRef,
 }: {
-  //classData: any;
-  //handleChange: any;
-  //onSaveClick: any;
-  //toggleDay: any;
-  triggerRef:any
-  gymId: string;
+  bookingId: string;
+  gymClass: ClassData;
+  bookingRef: any;
 }) {
   const dispatch = useDispatch<AppDispatch>();
-  
-  type ClassData = {
-    name: string;
-    description: string;
-    instructorId: string;
-    startDate: Date;
-    endDate: Date;
-    capacity: string;
-    intensity: string;
-    recurrence: string;
-    duration: string;
-    days: string[]; // Explicitly specify the type here
-    room: string;
-    skillLevel: string;
-    time: string;
-  };
 
-  const initalState = {
-    name: "", // Class name
-    description: "", // Description of the class
-    instructorId: "", // Selected instructor
-    startDate: new Date(), // Start date
-    endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)), // End date
-    capacity: "30", // Max capacity of class
-    intensity: "LOW", // Intensity level: BEGINNER, INTERMEDIATE, ADVANCED
-    recurrence: "WEEKLY", // Recurrence: one-off, weekly, biweekly
-    duration: "60", // Duration in minutes
-    days: [], // Days selected for the class (array of weekdays)    // Any required equipment
-    room: "", // Room in which the class will take place
-    skillLevel: "BEGINNER",
-    time: "08:00"
+  function onCancelClick(e: React.MouseEvent) {
+    e.preventDefault();
+    bookingRef.current?.click();
   }
-  
-const [classData, setClassData] = useState<ClassData>(() => initalState);
-
-  const handleChange = (field: string, value: any) => {
-    setClassData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  function onSaveClick(e: React.MouseEvent) {
-    //e.preventDefault();
-    triggerRef.current?.click();
-    console.log(classData);
-    dispatch(createClass(classData, gymId));
-    setClassData(initalState);
-  }
-
-  const toggleDay = (day: string) => {
-    setClassData((prev) => ({
-      ...prev,
-      days: prev.days.includes(day)
-        ? prev.days.filter((d) => d !== day) // Remove if already selected
-        : [...prev.days, day], // Add if not selected
-    }));
-  };
 
   return (
     <DialogContent className="sm:max-w-[700px] w-full max-w-3xl max-h-[80vh] overflow-y-auto">
       <DialogHeader>
-        <DialogTitle>Add Class</DialogTitle>
+        <DialogTitle>Edit Booking</DialogTitle>
         <DialogDescription>
-          Make changes to your profile here. Click save when you're done.
+          View your booking here.
         </DialogDescription>
       </DialogHeader>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
@@ -118,18 +92,15 @@ const [classData, setClassData] = useState<ClassData>(() => initalState);
           <Input
             id="address"
             className="mt-2"
-            value={classData.name}
+            value={gymClass.name}
             name="name"
             required
-            onChange={(e) => handleChange(e.target.name, e.target.value)}
+            disabled={true}
           />
         </div>
         <div className="sm:col-span-3">
           <Label htmlFor="country">Instructor</Label>
-          <Select
-            value={classData.instructorId}
-            onValueChange={(value) => handleChange("instructorId", value)}
-          >
+          <Select value={gymClass.instructorId} disabled={true}>
             <SelectTrigger className="mt-2">
               <SelectValue placeholder="Select instructor" />
             </SelectTrigger>
@@ -149,46 +120,39 @@ const [classData, setClassData] = useState<ClassData>(() => initalState);
           <Textarea
             id="description"
             rows={2}
+            disabled={true}
             className="mt-2"
-            value={classData.description}
+            value={gymClass.description}
             name="description"
-            onChange={(e) => handleChange(e.target.name, e.target.value)}
           />
           <p className="text-sm text-gray-500 mt-2">
-            Write a few sentences about this class.
+            Write a few sentences about this class. Include requirements here.
           </p>
         </div>
 
         <div className="sm:col-span-3">
           <Label htmlFor="time">Time</Label>
           <Input
-        type="time"
-        name="time"
-        placeholder="HH:MM"
-        value={classData.time}
-        onChange={(e) => handleChange(e.target.name, e.target.value)}
-        maxLength={5}
-        min="08:00"
-        max="20:00"
-        className={cn(
-          " mt-2 w-24 text-center  ",
-         
-        )}
-      />
+            type="time"
+            name="time"
+            placeholder="HH:MM"
+            disabled={true}
+            value={gymClass.time}
+            maxLength={5}
+            min="08:00"
+            max="20:00"
+            className={cn(" mt-2 w-24 text-center  ")}
+          />
 
-{/* className={cn(
+          {/* className={cn(
           "w-24 text-center tracking-widest text-lg font-semibold ",
           !isValid ? "border-red-500 focus:ring-red-500" : ""
         )} */}
-
         </div>
-        
+
         <div className="sm:col-span-3">
           <Label htmlFor="country">Recurrance</Label>
-          <Select
-            value={classData.recurrence}
-            onValueChange={(value) => handleChange("recurrence", value)}
-          >
+          <Select value={gymClass.recurrence} disabled={true}>
             <SelectTrigger className="mt-2">
               <SelectValue placeholder="Select occurance" />
             </SelectTrigger>
@@ -203,9 +167,9 @@ const [classData, setClassData] = useState<ClassData>(() => initalState);
           <Label htmlFor="country">Start Date</Label>
           <div className="mt-2">
             <StartDateControl
-              date={classData.startDate}
-              isOwner={true}
-             handleChange={handleChange}
+              date={gymClass.startDate}
+              isOwner={false}
+              handleChange={(_field: string, _value: any) => {}}
             />
           </div>
         </div>
@@ -213,32 +177,33 @@ const [classData, setClassData] = useState<ClassData>(() => initalState);
           <Label htmlFor="country">End Date</Label>
           <div className="mt-2">
             <EndDateControl
-             isOwner={true}
-              date={classData.endDate}
-              handleChange={handleChange}
+              isOwner={false}
+              date={gymClass.endDate}
+              handleChange={(_field: string, _value: any) => {}}
             />
           </div>
         </div>
         <div className="sm:col-span-4">
-          <DaySelector selectedDays={classData.days} toggleDay={toggleDay}  isOwner={true} />
+          <DaySelector
+            selectedDays={gymClass.days}
+            toggleDay={(_value: any) => {}}
+            isOwner={false}
+          />
         </div>
         <div className="sm:w-[75px]">
           <Label htmlFor="address">Capacity</Label>
           <Input
             id="address"
             className="mt-2"
-            value={classData.capacity}
+            value={gymClass.capacity}
             name="capacity"
+            disabled={true}
             type="number"
-            onChange={(e) => handleChange(e.target.name, e.target.value)}
           />
         </div>
         <div className="sm:col-span-3">
           <Label htmlFor="country">Skill Level</Label>
-          <Select
-            value={classData.skillLevel}
-            onValueChange={(value) => handleChange("skillLevel", value)}
-          >
+          <Select value={gymClass.skillLevel} disabled={true}>
             <SelectTrigger className="mt-2">
               <SelectValue placeholder="Select skill level" />
             </SelectTrigger>
@@ -251,10 +216,7 @@ const [classData, setClassData] = useState<ClassData>(() => initalState);
         </div>
         <div className="sm:col-span-3">
           <Label htmlFor="country">Intensity</Label>
-          <Select
-            value={classData.intensity}
-            onValueChange={(value) => handleChange("intensity", value)}
-          >
+          <Select value={gymClass.intensity} disabled={true}>
             <SelectTrigger className="mt-2">
               <SelectValue placeholder="Select intensity" />
             </SelectTrigger>
@@ -268,10 +230,7 @@ const [classData, setClassData] = useState<ClassData>(() => initalState);
         </div>
         <div className="sm:col-span-3">
           <Label htmlFor="country">Duration</Label>
-          <Select
-            value={classData.duration}
-            onValueChange={(value) => handleChange("duration", value)}
-          >
+          <Select value={gymClass.duration.toString()} disabled={true}>
             <SelectTrigger className="mt-2">
               <SelectValue placeholder="Select duration" />
             </SelectTrigger>
@@ -293,15 +252,19 @@ const [classData, setClassData] = useState<ClassData>(() => initalState);
           <Input
             id="address"
             className="mt-2"
-            value={classData.room}
+            disabled={true}
+            value={gymClass.room}
             name="room"
-            onChange={(e) => handleChange(e.target.name, e.target.value)}
           />
         </div>
       </div>
-      <DialogFooter>
-        <Button type="button" onClick={onSaveClick}>
-          Create
+      <DialogFooter className="flex flex-row space-x-4 gap-x-2">
+        <Button
+          type="button"
+          onClick={onCancelClick}
+          className="bg-lime-600 hover:bg-lime-500 focus-visible:outline-lime-600 text-white"
+        >
+          Cancel Booking
         </Button>
       </DialogFooter>
     </DialogContent>

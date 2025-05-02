@@ -21,7 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { SelectInstructor } from "./SelectInstructor";
 import DaySelector from "./DaySelector";
 import { StartDateControl } from "./StartDateControl";
-import { EndDateControl } from "./EndDateConrol";
+import { EndDateControl } from "./EndDateControl";
 import { format, parse } from "date-fns";
 import { cn } from "@/lib/utils";
 import {
