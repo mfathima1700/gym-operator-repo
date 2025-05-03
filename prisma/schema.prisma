@@ -66,6 +66,9 @@ model Gym {
   state         String?
   description   String?
   logo          String?
+  monthlyPrice  String?
+  stripeProductId String?
+  stripePriceId String?
 }
 
 model Membership {

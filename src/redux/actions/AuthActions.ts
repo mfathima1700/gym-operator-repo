@@ -316,7 +316,7 @@ export async function signIn(userData: SignInUser) {
     console.log(error);
     return {
       type: SIGN_IN_FAILED,
-      payload: error,
+      payload: { error: (error as Error).message || "Unknown error" },
     };
   }
 }
@@ -337,7 +337,7 @@ export async function signInWithGoogle(email: string) {
     console.log(error);
     return {
       type: SIGN_IN_FAILED,
-      payload: error,
+      payload: { error: (error as Error).message || "Unknown error" },
     };
   }
 }
@@ -356,7 +356,7 @@ export async function getGoogleData() {
     console.log(error);
     return {
       type: SIGN_IN_FAILED,
-      payload: error,
+      payload: { error: (error as Error).message || "Unknown error" },
     };
   }
 }
@@ -375,7 +375,7 @@ export async function verifyEmailAddress(secret: string, userId: string) {
     console.log(error);
     return {
       type: VERIFY_FAILED,
-      payload: error,
+      payload: { error: (error as Error).message || "Unknown error" },
     };
   }
 }
@@ -394,7 +394,7 @@ export async function sendPasswordEmail(email: string) {
     console.log(error);
     return {
       type: FORGET_PASSWORD_FAILED,
-      payload: error,
+      payload: { error: (error as Error).message || "Unknown error" },
     };
   }
 }
@@ -416,7 +416,7 @@ export async function resetPassword(
     console.log(error);
     return {
       type: RESET_PASSWORD_FAILED,
-      payload: error,
+      payload: { error: (error as Error).message || "Unknown error" },
     };
   }
 }
