@@ -8,7 +8,8 @@ Trophy,
 ChartColumnIncreasing,
 Dumbbell,
   Apple,
-  UsersRound,ClipboardList
+  UsersRound,ClipboardList,
+  Banknote
 } from "lucide-react"
 
 import { NavMain } from "@/components/ui/nav-main"
@@ -185,6 +186,13 @@ if(user?.gymRole === "OWNER"){
     url: `/owner/${id}/classes`,
     icon: ClipboardList,
   });
+
+  data.projects.push({
+    name: "Pricing",
+    url: `/owner/${id}/pricing`,
+    icon: Banknote,
+  });
+  
 }
 
 

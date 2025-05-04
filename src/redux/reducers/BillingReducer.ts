@@ -103,7 +103,7 @@ const getInvoicesReducer = (state = invoiceState, action: any) => {
       return {
         ...state,
         loading: false,
-        invoices: true,
+        invoices: action.payload,
       };
 
     case GET_INVOICES_FAILURE:
@@ -125,7 +125,7 @@ const getPaymentsReducer = (state = invoiceState, action: any) => {
       return {
         ...state,
         loading: false,
-        invoices: true,
+        invoices: action.payload,
       };
 
     case GET_PAYMENTS_FAILURE:

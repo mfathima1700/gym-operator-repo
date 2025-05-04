@@ -37,7 +37,15 @@ interface DataUser {
   email: string;
   image: string;
 }
-export function NavUser({ dataUser, id, isOwner }: { dataUser: DataUser; id: string; isOwner: boolean }) {
+export function NavUser({
+  dataUser,
+  id,
+  isOwner,
+}: {
+  dataUser: DataUser;
+  id: string;
+  isOwner: boolean;
+}) {
   const { isMobile } = useSidebar();
   const dispatch = useDispatch<AppDispatch>();
   const signOutState = useSelector((state: RootState) => state.signOut);
@@ -89,7 +97,9 @@ export function NavUser({ dataUser, id, isOwner }: { dataUser: DataUser; id: str
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{dataUser.name}</span>
+                  <span className="truncate font-semibold">
+                    {dataUser.name}
+                  </span>
                   <span className="truncate text-xs">{dataUser.email}</span>
                 </div>
               </div>
@@ -116,6 +126,30 @@ export function NavUser({ dataUser, id, isOwner }: { dataUser: DataUser; id: str
                 <CreditCard />
                 Billing
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={(e) =>
+                  router.push(
+                    `/${isOwner ? "owner" : "individual"}/${id}/invoices`
+                  )
+                }
+              >
+                <CreditCard />
+                Invoices
+              </DropdownMenuItem>
+              {
+                isOwner  ?
+                <DropdownMenuItem
+                onClick={(e) =>
+                  router.push(
+                    `/owner/${id}/billing/payments`
+                  )
+                }
+              >
+                <CreditCard />
+                Payments
+              </DropdownMenuItem>
+              : <></>
+              }
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>
