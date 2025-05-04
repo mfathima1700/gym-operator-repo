@@ -133,6 +133,7 @@ export function EditClassDialog({
             : [...prev.days, day], // Add if not selected
         }));
       };
+
     
   return (
     <DialogContent className="sm:max-w-[700px] w-full max-w-3xl max-h-[80vh] overflow-y-auto">
@@ -358,7 +359,6 @@ export function EditClassDialog({
     type="button"
     onClick={onBookClick}
     className="bg-lime-600 hover:bg-lime-500 focus-visible:outline-lime-600 text-white"
-    disabled={classData.bookings?.length >= parseInt(classData.capacity)}
   >
     Book
   </Button>

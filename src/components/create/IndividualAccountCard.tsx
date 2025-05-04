@@ -63,7 +63,7 @@ export function IndividualAccountCard({
           </form>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline">Cancel</Button>
+          {/* <Button variant="outline" onClick={}>Cancel</Button> */}
           <Button onClick={onSaveClick}>Save</Button>
         </CardFooter>
       </Card>

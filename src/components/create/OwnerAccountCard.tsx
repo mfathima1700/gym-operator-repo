@@ -60,7 +60,7 @@ export function OwnerAccountCard({
         </form>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" >Cancel</Button>
+        {/* <Button variant="outline" >Cancel</Button> */}
         <Button onClick={onSaveClick}>Create</Button>
       </CardFooter>
     </Card>

@@ -260,7 +260,7 @@ export default function IndividualForm({
 
       {/* Action Buttons */}
       <div className="mt-6 flex items-center justify-end gap-4">
-        <Button variant="outline">Cancel</Button>
+        {/* <Button variant="outline">Cancel</Button> */}
         {/* className="bg-lime-500 hover:bg-lime-400 text-white" */}
         <Button onClick={onSaveClick}>Save</Button>
       </div>
