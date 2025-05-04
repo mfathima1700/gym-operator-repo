@@ -44,6 +44,7 @@ model User {
   emailNotifications String?         @default("everything")
   pushNotifications  String?         @default("everything")
   classesTaught      Class[]         @relation("InstructorClasses")
+  stripeCustomerId   String?
 
   @@index([gymId])
 }

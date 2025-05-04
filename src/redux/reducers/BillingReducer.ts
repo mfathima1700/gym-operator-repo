@@ -3,11 +3,15 @@ import {
   CREATE_CHECKOUT_SESSION_FAILURE,
   CREATE_CHECKOUT_SESSION_REQUEST,
   CREATE_CHECKOUT_SESSION_SUCCESS,
-  GET_PAYMENT_DATA_FAILURE,
-  GET_PAYMENT_DATA_SUCCESS,
+  GET_INVOICES_FAILURE,
+  GET_INVOICES_SUCCESS,
+  GET_PAYMENTS_FAILURE,
+  GET_PAYMENTS_SUCCESS,
   REDIRECT_TO_CHECKOUT_FAILURE,
   REDIRECT_TO_CHECKOUT_REQUEST,
   REDIRECT_TO_CHECKOUT_SUCCESS,
+  UPDATE_PRICE_FAILURE,
+  UPDATE_PRICE_SUCCESS,
 } from "../constants/BillingConstants";
 
 const initialState = {
@@ -58,17 +62,26 @@ const paymentDataState = {
   error: null,
 };
 
-const paymentDataReducer = (state = paymentDataState, action: any) => {
+const priceState = {
+  loading: false,
+  success: false,
+  error: null,
+};
+
+const updatePriceReducer = (state = priceState, action: any) => {
   switch (action.type) {
-    case GET_PAYMENT_DATA_SUCCESS:
+
+    case UPDATE_PRICE_SUCCESS:
       return {
         ...state,
-        payments: action,
+        loading: false,
+        success: true,
       };
 
-    case GET_PAYMENT_DATA_FAILURE:
+    case UPDATE_PRICE_FAILURE:
       return {
         ...state,
+        loading: false,
         error: action.payload,
       };
 
@@ -77,4 +90,55 @@ const paymentDataReducer = (state = paymentDataState, action: any) => {
   }
 };
 
-export { checkoutReducer, paymentDataReducer };
+const invoiceState = {
+  loading: false,
+  invoices: null,
+  error: null,
+};
+
+const getInvoicesReducer = (state = invoiceState, action: any) => {
+  switch (action.type) {
+
+    case GET_INVOICES_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        invoices: true,
+      };
+
+    case GET_INVOICES_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    default:
+      return state;
+  }
+};
+
+const getPaymentsReducer = (state = invoiceState, action: any) => {
+  switch (action.type) {
+
+    case GET_PAYMENTS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        invoices: true,
+      };
+
+    case GET_PAYMENTS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    default:
+      return state;
+  }
+};
+
+
+export { checkoutReducer, updatePriceReducer, getInvoicesReducer, getPaymentsReducer };

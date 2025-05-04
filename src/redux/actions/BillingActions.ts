@@ -5,10 +5,10 @@ import {
   CREATE_CHECKOUT_SESSION_FAILURE,
   CREATE_CHECKOUT_SESSION_REQUEST,
   CREATE_CHECKOUT_SESSION_SUCCESS,
-  GET_PAYMENT_DATA_FAILURE,
-  GET_PAYMENT_DATA_SUCCESS,
-  GET_REVENUE_DATA_FAILURE,
-  GET_REVENUE_DATA_SUCCESS,
+  GET_INVOICES_FAILURE,
+  GET_INVOICES_SUCCESS,
+  GET_PAYMENTS_FAILURE,
+  GET_PAYMENTS_SUCCESS,
   REDIRECT_TO_CHECKOUT_FAILURE,
   REDIRECT_TO_CHECKOUT_REQUEST,
   REDIRECT_TO_CHECKOUT_SUCCESS,
@@ -37,6 +37,11 @@ export const createCheckoutOwnerSession = async (id: string) => {
       mode: "subscription",
       success_url: `http://localhost:3000/owner/${id}/billing/success`,
       cancel_url: `http://localhost:3000/owner/${id}/billing/failure`,
+    });
+
+    await db.user.update({
+      where: { id: id },
+      data: { stripeCustomerId: session.customer as string },
     });
 
     return {
@@ -94,17 +99,17 @@ export const updateGymPricing = async (gymId: string, newPrice: number) => {
       throw new Error("Gym not found");
     }
 
-    let productId = gym.stripeProductId
+    let productId = gym.stripeProductId;
     if (!productId) {
       const product = await stripe.products.create({
         name: `${gym.name} Membership`,
         metadata: { gym_id: gymId },
       });
 
-      productId = product.id
-    } 
-    
-    if(gym.stripePriceId){
+      productId = product.id;
+    }
+
+    if (gym.stripePriceId) {
       await stripe.prices.update(gym.stripePriceId, { active: false });
     }
 
@@ -160,6 +165,16 @@ export const createMemberCheckout = async (userId: string, gymId: string) => {
       mode: "subscription",
       success_url: `http://localhost:3000/individual/${userId}/billing/success`, // does it need checkout session id?
       cancel_url: `http://localhost:3000/individual/${userId}/billing/failure`,
+      subscription_data: {
+        metadata: {
+          gym_id: gym.id, // 👈 attach your gymId here
+        },
+      },
+    });
+
+    await db.user.update({
+      where: { id: userId },
+      data: { stripeCustomerId: session.customer as string },
     });
 
     return {
@@ -205,67 +220,86 @@ export const createMemberCheckout = async (userId: string, gymId: string) => {
 //     }
 //   };
 
-export const getPaymentData = async (sessionId: string) => {
+// const subscriptions = await stripe.subscriptions.list({
+//   status: "active",
+//   limit: 100,
+//   price: stripePriceId, // Only subscriptions for this gym's price
+// });
+
+// const invoices = await stripe.invoices.list({
+//   limit: 100,
+//   subscription_details: { metadata: { gym_id: gymId } },
+// });
+
+// const invoices = await stripe.invoices.list({
+//   limit: 100,
+//   subscription_items: [{ price: 'price_YOUR_PLATFORM_FEE' }],
+// });
+
+export const getOwnerPayments = async (gymId: string) => {
   try {
-    const payments = await stripe.paymentIntents.list({
-      limit: 10, // Adjust the limit as needed
+    const invoices = await stripe.invoices.list({
+      limit: 100,
+      status: "paid",
+      expand: ["data.customer"],
     });
 
-    return {
-      type: GET_PAYMENT_DATA_SUCCESS,
-      payload: payments,
-    };
-  } catch (error) {
-    return {
-      type: GET_PAYMENT_DATA_FAILURE,
-      payload: { error: (error as Error).message || "Unknown error" },
-    };
-    //throw error;
-  }
-};
-
-export const getGymRevenue = async (gymId: string) => {
-  try {
-    const gym = await db.gym.findUnique({
-      where: { id: gymId },
-    });
-
-    if(!gym){
-      
-    }
-
-    
-    if(gym?.stripePriceId){
-      const subscriptions = await stripe.subscriptions.list({
-        status: "active",
-        limit: 100,
-        price: gym.stripePriceId, // Only subscriptions for this gym's price
-      });
-
-      return {
-        type: GET_REVENUE_DATA_SUCCESS,
-        payload: subscriptions.data,
-      };
-    }
-
-    // Get all subscriptions for this gym's product
-    
-    // Calculate total monthly revenue
-    // const monthlyRevenue = subscriptions?.data?.reduce(
-    //   (sum, sub) => sum + sub.items.data[0].price.unit_amount / 100,
-    //   0
-    // );
-
+    // Filter manually by metadata
+    const filteredInvoices = invoices.data.filter(
+      (invoice) => invoice.metadata?.gym_id === gymId
+    );
 
     return {
-      type: GET_REVENUE_DATA_FAILURE,
-      payload:  "No data found" ,
+      type: GET_PAYMENTS_SUCCESS,
+      payload: filteredInvoices,
     };
-    
   } catch (error) {
     console.log(error);
     return {
-      type: GET_REVENUE_DATA_FAILURE,
+      type: GET_PAYMENTS_FAILURE,
+      payload: { error: (error as Error).message || "Unknown error" },
+    };
+  }
+};
+
+export const getOwnerInvoices = async (stripeCustomerId: string) => {
+  try {
+    const invoices = await stripe.invoices.list({
+      customer: stripeCustomerId,
+      limit: 12, // Last 12 payments
+      //status: 'paid', // Optional: filter only successful payments
+    });
+
+    return {
+      type: GET_INVOICES_SUCCESS,
+      payload: invoices,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      type: GET_INVOICES_FAILURE,
+      payload: { error: (error as Error).message || "Unknown error" },
+    };
+  }
+};
+
+export const getMemberInvoices = async (stripeCustomerId: string) => {
+  try {
+    // valid cusotmer id check?
+
+    const invoices = await stripe.invoices.list({
+      customer: stripeCustomerId,
+      limit: 12,
+    });
+
+    return {
+      type: GET_INVOICES_SUCCESS,
+      payload: invoices,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      type: GET_INVOICES_FAILURE,
       payload: { error: (error as Error).message || "Unknown error" },
     };
   }

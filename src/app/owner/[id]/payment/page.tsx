@@ -1,7 +1,7 @@
 "use client";
 
 import CNLayout from "@/components/layout/cn-layout";
-import { createCheckoutOwnerSession } from "@/redux/actions/BillingActions";
+import { createCheckoutOwnerSession, updateGymPricing } from "@/redux/actions/BillingActions";
 import { getUserById } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useParams, useRouter } from "next/navigation";
@@ -22,17 +22,19 @@ export default function SetPaymentPage() {
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : (params.id ?? "");
   
-  const checkoutState = useSelector((state: RootState) => state.checkout);
-  const stripePromise = loadStripe(
-    process.env.NEXT_PUBLIC_PUBKISHABLE_KEY as string
-  );
+  const updatePriceState = useSelector((state: RootState) => state.updatePrice);
+ 
   const userState = useSelector((state: RootState) => state.getUser);
   const [userData, setUserData] = useState(() => ({
-    gym: {
+    ownedGym: {
+      monthlyPrice: 0,
       id: "",
       classes: [],
     },
+   
   }));
+
+  const [price, setPrice] = useState(30);
 
   useEffect(() => {
     dispatch(getUserById(id));
@@ -46,24 +48,17 @@ export default function SetPaymentPage() {
   }, [userState.user, userState.success, userState.error]);
 
   useEffect(() => {
-    if (checkoutState.sessionId) {
-      getResult(checkoutState.sessionId);
+    if(updatePriceState.success){
+      // TODO: Redirect to dashboard page
     }
-  }, [checkoutState.sessionId, checkoutState.error]);
+   
+  }, [updatePriceState.success, updatePriceState.error]);
 
-  const getResult = async (sessionId: string) => {
-    const stripe = await stripePromise;
-    if (stripe) {
-      const result = await stripe.redirectToCheckout({ sessionId });
-      if (result.error) {
-        console.error(result.error);
-      }
-    }
-  };
+  
 
-  const handleCheckout = async () => {
+  function handleUpdatePricing(e: React.MouseEvent) {
     try {
-      dispatch(createCheckoutOwnerSession(id));
+      dispatch(updateGymPricing( userData.ownedGym.id, price));
       //await dispatch(redirectToCheckout(sessionId));
     } catch (error) {
       console.error(error);
@@ -73,11 +68,10 @@ export default function SetPaymentPage() {
   return (
     <>
       <CNLayout user={userData} id={id} name={"Checkout"}>
-        <div className="flex justify-center">
-        <div className="max-w-xl ">
-         <PaymentCard />
+      <div className="mx-auto py-8 ">
+         <PaymentCard handleUpdatePricing={handleUpdatePricing} price={price} setPrice={setPrice}
+          currentPrice={userData.ownedGym.monthlyPrice} />
          
-        </div>
         </div>
       </CNLayout>
     </>
