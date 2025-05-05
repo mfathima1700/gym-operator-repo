@@ -16,6 +16,8 @@ import {
   RESET_PASSWORD_FAILED,
   FORGET_PASSWORD_SUCCESS,
   FORGET_PASSWORD_FAILED,
+  DELETE_ACCOUNT_SUCCESS,
+  DELETE_ACCOUNT_FAILED,
 } from "../constants/AuthConstants";
 import { CLEAR_ERRORS } from "../constants/ErrorConstants";
 
@@ -238,6 +240,26 @@ const forgetPasswordReducer = (
   }
 };
 
+const deleteAccountReducer = (
+  state = { error: null, success: false },
+  action: any
+): verifyState => {
+  switch (action.type) {
+    case DELETE_ACCOUNT_SUCCESS:
+      return {
+        success: true,
+        error: null,
+      };
+    case DELETE_ACCOUNT_FAILED:
+      return {
+        error: action.payload,
+        success: false,
+      };
+    default:
+      return state;
+  }
+};
+
 export {
   signInReducer,
   testAuthReducer,
@@ -247,4 +269,5 @@ export {
   verifyReducer,
   forgetPasswordReducer,
   resetPasswordReducer,
+  deleteAccountReducer
 };

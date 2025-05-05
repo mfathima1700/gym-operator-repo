@@ -167,3 +167,16 @@ return googleUser;
   }
 }
 
+export async function deleteUser(id) {
+  try {
+
+    const client = await createClient();
+    const result = await users.delete(userId);
+
+    return result
+  }catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+

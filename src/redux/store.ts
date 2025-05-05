@@ -8,6 +8,7 @@ import {
   verifyReducer,
   forgetPasswordReducer,
   resetPasswordReducer,
+  deleteAccountReducer,
 } from "@/redux/reducers/AuthReducer";
 import { create } from "domain";
 import { combineReducers, createStore, applyMiddleware, compose } from "redux";
@@ -52,6 +53,7 @@ const rootReducer = combineReducers({
   updatePrice: updatePriceReducer,
   getInvoices: getInvoicesReducer,
   getPayments: getPaymentsReducer,
+  deleteAccount: deleteAccountReducer
   // Add other reducers here
 });
 

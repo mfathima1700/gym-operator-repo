@@ -20,6 +20,8 @@ import {
   FORGET_PASSWORD_FAILED,
   GOOGLE_SIGN_UP_FAILED,
   GOOGLE_SIGN_UP_SUCCESS,
+  DELETE_ACCOUNT_SUCCESS,
+  DELETE_ACCOUNT_FAILED,
 } from "../constants/AuthConstants";
 import { revalidatePath } from "next/cache";
 import { AppDispatch } from "../store";
@@ -37,10 +39,12 @@ import {
   createGoogleOAuthSession,
   getGoogleOAuthSession,
   verifyAppwriteSession,
+  deleteUser,
 } from "@/lib/server/auth";
 import { getLoggedInUser } from "@/lib/server/appwrite";
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
+import { deleteCustomer, deletePrices, deleteProduct } from "./BillingActions";
 
 interface AuthState {
   user: any | null;
@@ -327,7 +331,6 @@ export async function signInWithGoogle(email: string) {
 
     console.log("LOGIN WITH GOOGLE SUCCESSFUL");
 
-   
     return {
       type: SIGN_IN_SUCCESS,
       payload: user,
@@ -440,5 +443,92 @@ export async function getUserByEmail(email: string) {
   } catch (error) {
     console.log("Error fetching user:", error);
     return error;
+  }
+}
+
+export async function deleteOwner(userId: string, appwriteId:string) {
+  try {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      include: {
+        ownedGym: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (user.ownedGym?.stripeProductId) {
+      const priceResult = await deletePrices(user.ownedGym.stripeProductId);
+      const productResult = await deleteProduct(user.ownedGym.stripeProductId);
+    }
+
+    if (user.stripeCustomerId) {
+      const customerResult = await deleteCustomer(user.stripeCustomerId);
+    }
+
+    if (user.ownedGym) {
+      const gymResut = await db.gym.delete({
+        where: {
+          id: user.ownedGym.id,
+        },
+      });
+    }
+
+    const result = db.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+
+    const appwriteResult = deleteUser(appwriteId);
+    return {
+      type: DELETE_ACCOUNT_SUCCESS,
+     
+    };
+    //await db.instructor.create({ data: { userId, gymId } });
+  } catch (error) {
+    console.log(error)
+    return {
+      type: DELETE_ACCOUNT_FAILED,
+      payload: { error: (error as Error).message || "Unknown error" },
+    };
+  }
+}
+
+export async function deleteMember(userId: string, appwriteId: string) {
+  try {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (user.stripeCustomerId) {
+      const customerResult = await deleteCustomer(user.stripeCustomerId);
+    }
+
+    const result = db.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+
+    const appwriteResult = await deleteUser(appwriteId);
+
+    return {
+      type: DELETE_ACCOUNT_SUCCESS,
+     
+    };
+    //await db.instructor.create({ data: { userId, gymId } });
+  } catch (error) {
+    console.log(error)
+    return {
+      type: DELETE_ACCOUNT_FAILED,
+      payload: { error: (error as Error).message || "Unknown error" },
+    };
   }
 }

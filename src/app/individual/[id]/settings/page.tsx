@@ -19,6 +19,9 @@ import { useDispatch, useSelector } from "react-redux";
   const id = Array.isArray(params.id) ? params.id[0] : params.id ?? "";
   const updateUserSettingsState = useSelector((state: RootState) => state.updateUserSettings);
   const userState = useSelector((state: RootState) => state.getUser);
+  const deleteAccountState = useSelector(
+    (state: RootState) => state.deleteAccount
+  );
   const [gymName, setGymName] = useState("")
   
   const [userData, setUserData] = useState(() => ({
@@ -66,6 +69,12 @@ import { useDispatch, useSelector } from "react-redux";
           console.log(userState.user);
         }
       }, [userState.user]);
+
+      useEffect(() => {
+        if (deleteAccountState.success) {
+          router.push(`/auth/login`);
+        }
+      }, [deleteAccountState.success, deleteAccountState.error]);
   
     function onSaveClick(e: React.MouseEvent) {
       e.preventDefault();

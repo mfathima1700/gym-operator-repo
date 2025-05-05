@@ -17,6 +17,10 @@ import { CheckboxWithText } from "@/components/ui/checkbox-with-text";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import DeleteDialog from "./DeleteDialog";
+import { deleteMember } from "@/redux/actions/AuthActions";
+import { Account, Client } from "appwrite";
+import { AppDispatch } from "@/redux/store";
+import { useDispatch } from "react-redux";
 
 export default function IndividualForm({
   handleChange,
@@ -29,6 +33,25 @@ export default function IndividualForm({
   onSaveClick: any;
   gymName: any;
 }) {
+  const dispatch = useDispatch<AppDispatch>();
+
+  async function handleDelete(e: React.MouseEvent) {
+    e.preventDefault();
+    console.log("delete clicked");
+
+    const client = new Client()
+        .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT as string)
+        .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT as string);
+      //.setKey(process.env.NEXT_PUBLIC_APPWRITE_KEY as string);
+      const account = new Account(client);
+
+    const result = await account.get()
+
+    dispatch(deleteMember(userData.id, result.$id))
+
+  }
+
+
   return (
     <form className="space-y-12">
       <Card>
@@ -249,7 +272,7 @@ export default function IndividualForm({
               {/* <Label htmlFor="first-name">First Name</Label> */}
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="destructive">Delete Account</Button>
+                  <Button variant="destructive" onClick={handleDelete}>Delete Account</Button>
                 </DialogTrigger>
                 <DeleteDialog />
               </Dialog>

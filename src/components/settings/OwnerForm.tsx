@@ -18,6 +18,10 @@ import { UserCircle, ImageIcon, ChevronDown } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import DeleteDialog from "./DeleteDialog";
+import { Account, Client } from "appwrite";
+import { AppDispatch } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import { deleteOwner } from "@/redux/actions/AuthActions";
 
 export default function OwnerForm({
   handleChange,
@@ -34,6 +38,8 @@ export default function OwnerForm({
   handleGymChange: any;
   setGymData: any;
 }) {
+  const dispatch = useDispatch<AppDispatch>();
+  
   function generateGymCode(e: React.MouseEvent): void {
     e.preventDefault();
     /*const num = Array.from({ length: 16 }, () =>
@@ -60,6 +66,23 @@ export default function OwnerForm({
     const buffer = new Uint8Array(arrayBuffer);
     setGymData((prevState: any) => ({ ...prevState, logo: buffer }));
   };
+
+  async function handleDelete(e: React.MouseEvent) {
+    e.preventDefault();
+    console.log("delete clicked");
+
+    const client = new Client()
+        .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT as string)
+        .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT as string);
+      //.setKey(process.env.NEXT_PUBLIC_APPWRITE_KEY as string);
+      const account = new Account(client);
+
+    const result = await account.get()
+
+    dispatch(deleteOwner(ownerData.id, result.$id))
+
+  }
+
 
   return (
     <form className="space-y-12">
@@ -387,7 +410,7 @@ export default function OwnerForm({
               {/* <Label htmlFor="first-name">First Name</Label> */}
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="destructive">Delete Account</Button>
+                  <Button variant="destructive" onClick={handleDelete}>Delete Account</Button>
                 </DialogTrigger>
                 <DeleteDialog />
               </Dialog>

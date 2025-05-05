@@ -440,33 +440,7 @@ export async function convertToMember(userId: string, gymId: string) {
   }
 }
 
-export async function deleteOwner(userId: string) {
-  try {
-    const user = await db.user.findUnique({
-      where: { id: userId },
-    });
 
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    //await db.instructor.create({ data: { userId, gymId } });
-  } catch (error) {}
-}
-
-export async function deleteMember(userId: string) {
-  try {
-    const user = await db.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    //await db.instructor.create({ data: { userId, gymId } });
-  } catch (error) {}
-}
 
 export async function deleteGym(gymId: string) {
   try {

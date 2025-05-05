@@ -304,3 +304,36 @@ export const getMemberInvoices = async (stripeCustomerId: string) => {
     };
   }
 };
+
+export const deletePrices = async (priceId: string) => {
+  try {
+    const result = await stripe.prices.update(priceId, { active: false });
+
+   return result
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const deleteProduct = async (productId: string) => {
+  try {
+    const result = await stripe.products.del(productId);
+
+   return result
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const deleteCustomer = async (customerId: string) => {
+  try {
+    const result = await stripe.customers.del(customerId);
+
+   return result
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
