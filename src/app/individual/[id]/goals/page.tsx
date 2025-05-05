@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { MailOpen, PlusCircle, PlusIcon } from "lucide-react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import AddGoalDialog from "@/components/goals/AddGoalDialog";
+import { clearGoalState } from "@/redux/actions/GoalActions";
 
 interface Goal {
   id: string;
@@ -42,6 +43,11 @@ export default function Goals() {
 
   useEffect(() => {
     dispatch(getUserById(id));
+
+
+    if (createGoalState.success || editGoalState.success || deleteGoalState.success) {      // Refresh user data
+      dispatch(clearGoalState());       // Reset flags for next time
+    }
   }, [
     id,
     createGoalState.success,

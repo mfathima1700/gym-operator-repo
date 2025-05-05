@@ -2,6 +2,7 @@
 
 import { db } from "@/db";
 import {
+  CLEAR_GOAL_STATE,
   CREATE_GOAL_FAILED,
   CREATE_GOAL_SUCCESS,
   DELETE_GOAL_FAILED,
@@ -178,3 +179,7 @@ export async function updateGoalIncomplete(goalId: string) {
     };
   }
 }
+
+export const clearGoalState = () => ({
+  type: CLEAR_GOAL_STATE,
+});

@@ -1,4 +1,5 @@
-import { CREATE_GOAL_FAILED, CREATE_GOAL_SUCCESS, DELETE_GOAL_FAILED, DELETE_GOAL_SUCCESS, EDIT_GOAL_FAILED, EDIT_GOAL_SUCCESS } from "../constants/GoalConstants";
+import { CLEAR_ERRORS } from "../constants/ErrorConstants";
+import { CLEAR_GOAL_STATE, CREATE_GOAL_FAILED, CREATE_GOAL_SUCCESS, DELETE_GOAL_FAILED, DELETE_GOAL_SUCCESS, EDIT_GOAL_FAILED, EDIT_GOAL_SUCCESS } from "../constants/GoalConstants";
 
 
 const deleteGoalReducer = (
@@ -20,6 +21,8 @@ const deleteGoalReducer = (
         error: action.payload,
         success: false,
       };
+      case CLEAR_GOAL_STATE:
+      return initialGoalState
     default:
       return state;
   }
@@ -44,6 +47,8 @@ const editGoalReducer = (
         error: action.payload,
         success: false,
       };
+      case CLEAR_GOAL_STATE:
+        return initialGoalState
     default:
       return state;
   }
@@ -54,6 +59,12 @@ interface goalDataState {
   success: boolean;
   goal: any | null // classes? user.gym.class = true?
 }
+
+const initialGoalState: goalDataState = {
+  error: null,
+  success: false,
+  goal: null,
+};
 
 const createGoalReducer = (
   state = { error: null, success: false, goal:null },
@@ -74,6 +85,8 @@ const createGoalReducer = (
         error: action.payload,
         success: false,
       };
+      case CLEAR_GOAL_STATE:
+        return initialGoalState
     default:
       return state;
   }
