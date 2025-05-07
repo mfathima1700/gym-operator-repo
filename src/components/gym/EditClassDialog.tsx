@@ -45,7 +45,7 @@ interface UserInfo {
  }
 }
 
-export function EditClassDialog({
+export default function EditClassDialog({
   bookings,
   gymClass,
   editTriggerRef,

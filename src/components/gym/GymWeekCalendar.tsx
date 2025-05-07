@@ -11,7 +11,7 @@ import  AddClassDialog from "@/components/gym/AddClassDialog";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { start } from "repl";
-import { EditClassDialog } from "./EditClassDialog";
+import  EditClassDialog from "./EditClassDialog";
 
 const daysOfWeek = [
   { day: "M", name: "Mon", nameDay: "monday", num: 0 },

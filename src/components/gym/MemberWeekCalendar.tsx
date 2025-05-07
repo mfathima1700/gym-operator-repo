@@ -7,7 +7,7 @@ import { ChevronRight, ChevronLeft, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { AddClassDialog } from "@/components/gym/AddClassDialog";
+import  AddClassDialog  from "@/components/gym/AddClassDialog";
 import { cn } from "@/lib/utils";
 import { BookClassDialog } from "./BookClassDialog";
 import { MyBookingDialog } from "../schedule/MyBookingDialog";

@@ -7,11 +7,11 @@ import { ChevronRight, ChevronLeft, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { AddClassDialog } from "@/components/gym/AddClassDialog";
+import  AddClassDialog  from "@/components/gym/AddClassDialog";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { start } from "repl";
-import { EditClassDialog } from "@/components/gym/EditClassDialog";
+import  EditClassDialog from "@/components/gym/EditClassDialog";
 
 const daysOfWeek = [
   { day: "M", name: "Mon", nameDay: "monday", num: 0 },

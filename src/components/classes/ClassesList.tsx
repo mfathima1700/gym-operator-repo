@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { Button } from "../ui/button";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import { cn } from "@/lib/utils";
-import { EditClassDialog } from "../gym/EditClassDialog";
+import  EditClassDialog  from "../gym/EditClassDialog";
 
 type ClassType = {
   id: string;
