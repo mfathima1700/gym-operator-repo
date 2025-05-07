@@ -305,7 +305,7 @@ export const getMemberInvoices = async (stripeCustomerId: string) => {
   }
 };
 
-export const deletePrices = async (priceId: string) => {
+export const deletePrices:any = async (priceId: string) => {
   try {
     const result = await stripe.prices.update(priceId, { active: false });
 
@@ -316,7 +316,7 @@ export const deletePrices = async (priceId: string) => {
   }
 };
 
-export const deleteProduct = async (productId: string) => {
+export const deleteProduct:any = async (productId: string) => {
   try {
     const result = await stripe.products.del(productId);
 
@@ -327,7 +327,7 @@ export const deleteProduct = async (productId: string) => {
   }
 };
 
-export const deleteCustomer = async (customerId: string) => {
+export const deleteCustomer:any = async (customerId: string) => {
   try {
     const result = await stripe.customers.del(customerId);
 
