@@ -12,6 +12,7 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   
+  
 }
 
 module.exports = createJestConfig(customJestConfig)
