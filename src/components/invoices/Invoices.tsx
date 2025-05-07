@@ -12,19 +12,20 @@ import {
 import { Button } from 'react-day-picker'
 
 
-  interface Invoice {
-    id: string,
-    amount_due:	number,
-    amount_paid: number,
-    created: number,
-    invoice_pdf: string,
-    status: string,
-    lines: {
-        data: [{
-          description: string
-        }]
-      }
-  }
+interface Invoice {
+  id: string;
+  amount_due: number;
+  amount_paid: number;
+  created: number;
+  invoice_pdf: string;
+  status: string;
+  lines: {
+    data: {
+      description: string;
+    }[]; // <-- Use a regular array, not a tuple
+  };
+}
+
   export default function Invoices({invoices, isPayments}: {invoices: Invoice[], isPayments?: boolean}) {
 
     const totalRevenue = invoices.reduce((sum, invoice) => sum + (invoice.amount_paid / 100), 0);
@@ -48,7 +49,7 @@ import { Button } from 'react-day-picker'
           <TableRow key={invoice.id}>
             <TableCell className="font-medium">{invoice.id}</TableCell>
             <TableCell>{invoice.created}</TableCell>
-            <TableCell>{invoice.lines.data[0].description}</TableCell>
+            <TableCell>{invoice.lines.data[0]?.description}</TableCell>
             <TableCell>{invoice.status}</TableCell>
             <TableCell>{invoice.amount_paid}</TableCell>
             <TableCell className="text-right">

@@ -177,7 +177,7 @@ export default function OwnerForm({
                 value={gymData.country}
                 onValueChange={(value) => handleGymChange("country", value)}
               >
-                <SelectTrigger className="mt-2">
+                <SelectTrigger className="mt-2" id="country">
                   <SelectValue placeholder="Select country" />
                 </SelectTrigger>
                 <SelectContent>
@@ -233,9 +233,9 @@ export default function OwnerForm({
               </Select>
             </div>
             <div className="sm:col-span-3">
-              <Label htmlFor="first-name">City</Label>
+              <Label htmlFor="city">City</Label>
               <Input
-                id="first-name"
+                id="city"
                 className="mt-2"
                 value={ownerData.city}
                 name="city"
@@ -243,9 +243,9 @@ export default function OwnerForm({
               />
             </div>
             <div className="sm:col-span-3">
-              <Label htmlFor="address">State / Province / Region</Label>
+              <Label htmlFor="state">State / Province / Region</Label>
               <Input
-                id="address"
+                id="state"
                 className="mt-2"
                 value={gymData.state}
                 name="state"
@@ -253,9 +253,9 @@ export default function OwnerForm({
               />
             </div>
             <div className="sm:col-span-3">
-              <Label htmlFor="address">Street Address</Label>
+              <Label htmlFor="streetAddress">Street Address</Label>
               <Input
-                id="address"
+                id="streetAddress"
                 className="mt-2"
                 value={gymData.streetAddress}
                 name="streetAddress"
@@ -263,9 +263,9 @@ export default function OwnerForm({
               />
             </div>
             <div className="sm:col-span-3">
-              <Label htmlFor="first-name">Postcode</Label>
+              <Label htmlFor="postcode">Postcode</Label>
               <Input
-                id="first-name"
+                id="postcode"
                 className="mt-2"
                 value={ownerData.postcode}
                 name="postcode"
@@ -293,9 +293,9 @@ export default function OwnerForm({
               />
             </div>
             <div className="sm:col-span-3">
-              <Label htmlFor="first-name">First Name</Label>
+              <Label htmlFor="name"> Name</Label>
               <Input
-                id="first-name"
+                id="name"
                 className="mt-2"
                 value={ownerData.name}
                 name="name"
@@ -303,9 +303,9 @@ export default function OwnerForm({
               />
             </div>
             <div className="sm:col-span-3">
-              <Label htmlFor="last-name">Phone Number</Label>
+              <Label htmlFor="phoneNumber">Phone Number</Label>
               <Input
-                id="last-name"
+                id="phoneNumber"
                 className="mt-2"
                 value={ownerData.phoneNumber}
                 name="phoneNumber"
