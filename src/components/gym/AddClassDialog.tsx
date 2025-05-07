@@ -29,7 +29,7 @@ import { createClass } from "@/redux/actions/ClassActions";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 
-export function AddClassDialog({
+export default function AddClassDialog({
   //classData,
   //handleChange,
   //onSaveClick,
@@ -89,7 +89,9 @@ const [classData, setClassData] = useState<ClassData>(() => initalState);
 
   function onSaveClick(e: React.MouseEvent) {
     //e.preventDefault();
-    triggerRef.current?.click();
+    if (triggerRef.current) {
+      triggerRef.current.click();
+    }
     console.log(classData);
     dispatch(createClass(classData, gymId));
     setClassData(initalState);
@@ -125,12 +127,12 @@ const [classData, setClassData] = useState<ClassData>(() => initalState);
           />
         </div>
         <div className="sm:col-span-3">
-          <Label htmlFor="country">Instructor</Label>
+          <Label  htmlFor="instructor-select">Instructor</Label>
           <Select
-            value={classData.instructorId}
+            value={classData.instructorId} 
             onValueChange={(value) => handleChange("instructorId", value)}
           >
-            <SelectTrigger className="mt-2">
+            <SelectTrigger className="mt-2" id="instructor-select">
               <SelectValue placeholder="Select instructor" />
             </SelectTrigger>
             <SelectContent>

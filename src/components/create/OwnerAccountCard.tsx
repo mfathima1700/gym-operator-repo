@@ -26,33 +26,33 @@ export function OwnerAccountCard({
   return (
     <Card className="w-[350px]">
       <CardHeader>
-        <CardTitle>Create Gym</CardTitle>
+        <CardTitle>Gym Set Up</CardTitle>
         <CardDescription>Deploy your new project in one-click.</CardDescription>
       </CardHeader>
       <CardContent>
         <form>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Gym Name</Label>
-              <Input id="name" placeholder="Name of your gym"  name="gymName"
+              <Label htmlFor="gymName">Gym Name</Label>
+              <Input id="gymName" placeholder="Name of your gym"  name="gymName"
               value={createData.gymName}
               onChange={handleChange} />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">First Name</Label>
-              <Input id="name" placeholder="Jane" name="firstName"
+              <Label htmlFor="firstName">First Name</Label>
+              <Input id="firstName" placeholder="Jane" name="firstName"
               value={createData.firstName}
               onChange={handleChange}  />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Last Name</Label>
-              <Input id="name" placeholder="Doe" name="lastName"
+              <Label htmlFor="lastName">Last Name</Label>
+              <Input id="lastName" placeholder="Doe" name="lastName"
               value={createData.lastName}
               onChange={handleChange}  />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="framework">Gym Description</Label>
-              <Textarea name="description" placeholder="A gym description that encourages customers to join"
+              <Label htmlFor="description">Gym Description</Label>
+              <Textarea name="description" id="description" placeholder="A gym description that encourages customers to join"
               value={createData.description}
               onChange={handleChange} />
             </div>

@@ -107,7 +107,7 @@ export default function IndividualForm({
                 value={userData.country}
                 onValueChange={(value) => handleChange("country", value)}
               >
-                <SelectTrigger className="mt-2">
+                <SelectTrigger className="mt-2" id="country">
                   <SelectValue placeholder="Select country" />
                 </SelectTrigger>
                 <SelectContent>
