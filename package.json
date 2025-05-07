@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+     "e2e": "cypress open",
+    "e2e:headless": "cypress run"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.7.4",
@@ -67,8 +69,9 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/cypress": "^1.1.6",
     "@types/jest": "^29.5.14",
-    "@types/node": "^20.17.6",
+    "@types/node": "^20.17.44",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/redux-mock-store": "^1.5.0",
@@ -85,7 +88,7 @@
     "tailwindcss": "^3.4.1",
     "ts-jest": "^29.3.2",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3",
+    "typescript": "^5.8.3",
     "whatwg-fetch": "^3.6.20"
   }
 }

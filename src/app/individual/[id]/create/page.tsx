@@ -12,7 +12,7 @@ function classNames(...classes: (string | false | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function CreateAccountOwner() {
+export default function CreateIndividual() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const params = useParams();
