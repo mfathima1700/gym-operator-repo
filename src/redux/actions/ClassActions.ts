@@ -147,6 +147,7 @@ export async function updateClass(data: classData, classId: string) {
 }
 
 import { addDays, addWeeks, isBefore, parseISO } from "date-fns";
+import { sendCancelEmail, sendDeleteEmail } from "./EmailActions";
 
 /**
  * Given a class, generates an array of all individual sessions as date ranges
@@ -298,22 +299,56 @@ export async function cancelBooking(classId: string, userId: string) {
   }
 }
 
-// cancel all bookings for that particular class
-export async function cancelClass(classId: string) {
+// cancel the bookings for that particular class for this day
+export async function cancelClass(classId: string, date: Date) {
   try {
-    // instead send out email to every boked person that this class is cancelled
     // add this date to cancelledDates[] for this class
-    // const deletedGymClass = await db.booking.deleteMany({
-    //   where: {
-    //     classId: classId, // your class's id
-    //   },
-    // });
+    const classToUpdate = await db.class.update({
+      where: { id: classId },
+      data: {
+        cancelledDates: {
+          push: date,
+        },
+      },
+      include: {
+        instructor: true,
+        bookings: {
+          include: {
+            user: true,
+          },
+        },
+        gym: true,
+      },
+    });
+    // Send email to gym member who booked the class
+    for (const booking of classToUpdate.bookings) {
+      const user = booking.user;
+
+      await sendCancelEmail({
+        email: user.email,
+        name: user.name || "gym member",
+        gymName: classToUpdate.gym.name,
+        className: classToUpdate.name,
+      }, date);
+    }
+
+    if (classToUpdate.instructor) {
+      await sendCancelEmail({
+        email: classToUpdate.instructor.email,
+        name: classToUpdate.instructor.name || "Instructor",
+        gymName: classToUpdate.gym.name,
+        className: classToUpdate.name,
+      }, date);
+    }
+
+    
+    console.log("CANCEL CLASS SUCCESS");
 
     console.log("CANCEL CLASS SUCCESS");
 
     return {
       type: CANCEL_CLASS_SUCCESS,
-      payload: {},
+      payload: classToUpdate,
     };
   } catch (error) {
     console.log("CANCEL CLASS FAILED");
@@ -327,6 +362,52 @@ export async function cancelClass(classId: string) {
 
 export async function deleteClass(classId: string) {
   try {
+
+    const gymClassToDelete = await db.class.findUnique({
+      where: {
+        id: classId,
+      },
+      include: {
+        bookings: {
+          include: {
+            user: true, // Include the user who booked the class
+          },
+        },
+        gym: true, // Include the gym where the class is held
+        instructor: true, // Include the instructor of the class
+      },
+    });
+
+    if (!gymClassToDelete) {
+      throw new Error("Class not found.");
+    }
+
+    const emailPromises = [];
+
+    // Send email to the instructor
+    if (gymClassToDelete.instructor) {
+      const instructorEmailData = {
+        email: gymClassToDelete.instructor.email,
+        name: gymClassToDelete.instructor.name || "Instructor",
+        gymName: gymClassToDelete.gym.name,
+        className: gymClassToDelete.name,
+      };
+      emailPromises.push(sendDeleteEmail(instructorEmailData));
+    }
+
+    // send email to gym member who booked the class
+    for (const booking of gymClassToDelete.bookings) {
+      const userEmailData = {
+        email: booking.user.email,
+        name: booking.user.name || "Member",
+        gymName: gymClassToDelete.gym.name,
+        className: gymClassToDelete.name,
+      };
+      emailPromises.push(sendDeleteEmail(userEmailData));
+    }
+
+    await Promise.all(emailPromises);
+
     const deletedGymClass = await db.class.delete({
       where: {
         id: classId,

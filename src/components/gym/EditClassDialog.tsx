@@ -33,7 +33,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
-import { sendDeleteEmail } from "@/redux/actions/EmailActions";
+import { sendCancelEmail, sendDeleteEmail } from "@/redux/actions/EmailActions";
 import { getInstructors } from "@/redux/actions/GymActions";
 import { get } from "node_modules/cypress/types/lodash";
 
@@ -45,6 +45,33 @@ interface UserInfo {
     name: string;
   };
 }
+
+type ClassData = {
+  id: string;
+  name: string;
+  description: string;
+  instructorId: string;
+  startDate: Date;
+  endDate: Date;
+  capacity: string;
+  intensity: string;
+  recurrence: string;
+  duration: string;
+  days: string[]; // Explicitly specify the type here
+  room: string;
+  skillLevel: string;
+  time: string;
+  bookings: any[];
+};
+
+type Instructor = {
+  id: string;
+  name: string;
+  email: string;
+  gymId: string;
+  isInstructor: boolean;
+  classesTaught: ClassData[];
+};
 
 export default function EditClassDialog({
   bookings,
@@ -70,8 +97,16 @@ export default function EditClassDialog({
 
   function onCancelClick(e: React.MouseEvent) {
     e.preventDefault();
-    //dispatch(cancelClass(classData.id)); send email to user to cancel for today
-    dispatch(cancelClass(classData.id));
+    //send email to user to cancel for today
+    const emailData = {
+      email: user.email,
+      name: user.name,
+      gymName: user?.gym?.name,
+      className: gymClass.name,
+    };
+
+    //dispatch(sendCancelEmail(emailData, today)); 
+    dispatch(cancelClass(classData.id, today));
   }
 
   function onDeleteClick(e: React.MouseEvent) {
@@ -83,7 +118,7 @@ export default function EditClassDialog({
       gymName: user?.gym?.name,
       className: gymClass.name,
     };
-    dispatch(sendDeleteEmail(emailData));
+   // dispatch(sendDeleteEmail(emailData));
     dispatch(deleteClass(classData.id));
   }
 
@@ -101,32 +136,7 @@ export default function EditClassDialog({
     dispatch(updateClass(classData, classData.id));
   }
 
-  type ClassData = {
-    id: string;
-    name: string;
-    description: string;
-    instructorId: string;
-    startDate: Date;
-    endDate: Date;
-    capacity: string;
-    intensity: string;
-    recurrence: string;
-    duration: string;
-    days: string[]; // Explicitly specify the type here
-    room: string;
-    skillLevel: string;
-    time: string;
-    bookings: any[];
-  };
-
-  type Instructor = {
-    id: string;
-    name: string;
-    email: string;
-    gymId: string;
-    isInstructor: boolean;
-    classesTaught: ClassData[];
-  };
+  
 
   const [classData, setClassData] = useState<ClassData>(() => gymClass);
 
