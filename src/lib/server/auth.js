@@ -56,7 +56,7 @@ export async function signOut() {
   }
 }
 
-// the SignUpPage component ...
+
 
 export async function signInWithEmail(user) {
   const { email, password } = user;
@@ -79,7 +79,6 @@ export async function signInWithEmail(user) {
   } catch (error) {
     console.log(error);
     throw error;
-    //throw new Error("Invalid credentials or other error");
   }
 }
 

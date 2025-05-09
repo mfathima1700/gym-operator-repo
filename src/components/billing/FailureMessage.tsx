@@ -16,7 +16,7 @@ function FailureMessage({id, owner}: {id: string, owner: boolean}) {
                       Payment failed
                     </h3>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-400">
                       {`Unfortunately, your payment for the Gym ${owner ? "Owner" : "Member"} Subscription was not successful.
                        Please check your payment details and try again. 
                        If the issue persists, contact your bank or try a different payment method.

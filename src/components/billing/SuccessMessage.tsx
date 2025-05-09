@@ -17,7 +17,7 @@ function SuccessMessage({id, owner}: {id: string, owner: boolean}) {
                   Payment successful
                 </h3>
                 <div className="mt-2">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-400">
                   {`Thank you for your purchase! Your payment for the Gym ${owner ? "Owner" : "Member"} Subscription has been successfully processed.
                    It is now active. A confirmation email has been sent to your inbox.`}
                   </p>

@@ -54,6 +54,7 @@ export default function OwnerForm({
 
     setGymData((prevState: any) => ({ ...prevState, gymCode: uuid }));
   }
+  
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;

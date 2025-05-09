@@ -22,11 +22,18 @@ import { db } from "@/db";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_TEST_KEY as string);
 
-export const createCheckoutOwnerSession = async (id: string) => {
+export const createCheckoutOwnerSession = async (id: string, email: string, name: string) => {
   //dispatch({ type: CREATE_CHECKOUT_SESSION_REQUEST });
 
   try {
+    const customer = await stripe.customers.create({
+      email: email,
+      name: name,
+      metadata: { userId: id },
+    });
+
     const session = await stripe.checkout.sessions.create({
+      customer: customer.id, 
       payment_method_types: ["card"],
       line_items: [
         {
@@ -106,6 +113,8 @@ export const updateGymPricing = async (gymId: string, newPrice: number) => {
         metadata: { gym_id: gymId },
       });
 
+      console.log("PRODUCT CREATED");
+
       productId = product.id;
     }
 
@@ -120,6 +129,8 @@ export const updateGymPricing = async (gymId: string, newPrice: number) => {
       recurring: { interval: "month" }, // Monthly subscription
     });
 
+    console.log("PRICE CREATED");
+
     const updatedGym = await db.gym.update({
       where: { id: gym.id },
       data: {
@@ -132,7 +143,6 @@ export const updateGymPricing = async (gymId: string, newPrice: number) => {
 
     return {
       type: UPDATE_PRICE_SUCCESS,
-      payload: price,
     };
     //return session.id;
   } catch (error) {
@@ -143,7 +153,7 @@ export const updateGymPricing = async (gymId: string, newPrice: number) => {
   }
 };
 
-export const createMemberCheckout = async (userId: string, gymId: string) => {
+export const createMemberCheckout = async (userId: string, gymId: string, email: string, name: string) => {
   //dispatch({ type: CREATE_CHECKOUT_SESSION_REQUEST });
   try {
     const gym = await db.gym.findUnique({
@@ -154,7 +164,15 @@ export const createMemberCheckout = async (userId: string, gymId: string) => {
       throw new Error("Gym/gym pricing not found");
     }
 
+  
+    const customer = await stripe.customers.create({
+      email: email,
+      name: name,
+      metadata: { userId: userId },
+    });
+
     const session = await stripe.checkout.sessions.create({
+      customer: customer.id, 
       payment_method_types: ["card"],
       line_items: [
         {
@@ -244,14 +262,27 @@ export const getOwnerPayments = async (gymId: string) => {
       expand: ["data.customer"],
     });
 
+    
+
     // Filter manually by metadata
     const filteredInvoices = invoices.data.filter(
       (invoice) => invoice.metadata?.gym_id === gymId
     );
+    const plainInvoices = filteredInvoices.map((invoice) => ({
+      id: invoice.id,
+      amount_paid: invoice.amount_paid,
+      created: invoice.created,
+      status: invoice.status,
+      hosted_invoice_url: invoice.hosted_invoice_url,
+      invoice_pdf: invoice.invoice_pdf,
+      subscription: invoice.subscription,
+      customer_email: invoice.customer_email,
+      currency: invoice.currency,
+    }));
 
     return {
       type: GET_PAYMENTS_SUCCESS,
-      payload: filteredInvoices,
+      payload: plainInvoices,
     };
   } catch (error) {
     console.log(error);
@@ -269,10 +300,25 @@ export const getOwnerInvoices = async (stripeCustomerId: string) => {
       limit: 12, // Last 12 payments
       //status: 'paid', // Optional: filter only successful payments
     });
+    console.log("GOT INVOICES")
+
+    const plainInvoices = invoices.data.map((invoice) => ({
+      id: invoice.id,
+      amount_paid: invoice.amount_paid,
+      created: invoice.created,
+      status: invoice.status,
+      hosted_invoice_url: invoice.hosted_invoice_url,
+      invoice_pdf: invoice.invoice_pdf,
+      subscription: invoice.subscription,
+      customer_email: invoice.customer_email,
+      currency: invoice.currency,
+    }));
+
+    console.log(plainInvoices)
 
     return {
       type: GET_INVOICES_SUCCESS,
-      payload: invoices,
+      payload: plainInvoices,
     };
   } catch (error) {
     console.log(error);
@@ -292,9 +338,21 @@ export const getMemberInvoices = async (stripeCustomerId: string) => {
       limit: 12,
     });
 
+    const plainInvoices = invoices.data.map((invoice) => ({
+      id: invoice.id,
+      amount_paid: invoice.amount_paid,
+      created: invoice.created,
+      status: invoice.status,
+      hosted_invoice_url: invoice.hosted_invoice_url,
+      invoice_pdf: invoice.invoice_pdf,
+      subscription: invoice.subscription,
+      customer_email: invoice.customer_email,
+      currency: invoice.currency,
+    }));
+
     return {
       type: GET_INVOICES_SUCCESS,
-      payload: invoices,
+      payload: plainInvoices,
     };
   } catch (error) {
     console.log(error);

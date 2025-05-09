@@ -33,10 +33,10 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
                           {owner ? "Gym Ownership Subscription" :  "Gym Membership Subscription" }
                         </a>
                       </h4>
-                      <p className="mt-1 text-sm text-gray-600">
+                      <p className="mt-1 text-sm text-gray-400">
                        {owner ? "Member management" : "Booking classes" }
                       </p>
-                      <p className="mt-1 text-sm text-gray-600">
+                      <p className="mt-1 text-sm text-gray-400">
                       {owner ? "Payment processing" : "Payment management" }
                       </p>
                     </div>

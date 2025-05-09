@@ -68,7 +68,7 @@ export function BookingsChart({classes}: {classes: any[]}) {
             cursor={false}
             content={<ChartTooltipContent hideLabel />}
           />
-          <Bar dataKey="value" fill="var(--chart-1)" radius={8}>
+          <Bar dataKey="value" fill="hsl(var(--chart-1))"  radius={8}>
             <LabelList
               position="top"
               offset={12}

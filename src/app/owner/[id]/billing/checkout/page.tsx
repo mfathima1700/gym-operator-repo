@@ -30,6 +30,8 @@ export default function OwnerCheckoutPage() {
   );
   const userState = useSelector((state: RootState) => state.getUser);
   const [userData, setUserData] = useState(() => ({
+    email: "",
+    name: "",
     gym: {
       id: "",
       classes: [],
@@ -65,7 +67,7 @@ export default function OwnerCheckoutPage() {
 
   const handleCheckout = async () => {
     try {
-      dispatch(createCheckoutOwnerSession(id));
+      dispatch(createCheckoutOwnerSession(id, userData.email, userData.name));
       //await dispatch(redirectToCheckout(sessionId));
     } catch (error) {
       console.error(error);

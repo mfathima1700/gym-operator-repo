@@ -43,6 +43,7 @@ export default function OwnerDashboard() {
       name:"",
       classes: [],
       members: [] as GymMember[],
+      monthlyPrice:0
     },
   }));
 
@@ -70,7 +71,7 @@ export default function OwnerDashboard() {
 
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-              <SectionCards members={userData.ownedGym?.members ?? []} />
+              <SectionCards members={userData.ownedGym?.members ?? []} price={userData.ownedGym?.monthlyPrice ?? 0}/>
               <div className="*:data-[slot=card]:shadow-xs grid grid-cols-2 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
               <MemberGraph members={userData.ownedGym?.members ?? []}/>
               <BookingsChart classes={userData.ownedGym?.classes ?? []}/>

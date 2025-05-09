@@ -151,8 +151,6 @@ export async function createGym(data: createOwnerData, id: string) {
         name: data.gymName,
         description: data.description,
         ownerId: user.id,
-        //address: data.address,
-        //ownerId: updatedUser.id, // Link gym to the owner
       },
     });
 

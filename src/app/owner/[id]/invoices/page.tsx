@@ -49,16 +49,27 @@ export default function OwnerInvoicesPage() {
     if (userState.user) {
       setUserData(userState.user);
 
-      dispatch(getOwnerInvoices(userData.stripeCustomerId));
+      console.log(userData.stripeCustomerId)
+
+     if(userState.user.stripeCustomerId){
+        dispatch(getOwnerInvoices(userState.user.stripeCustomerId));
+      }
+      
     }
   }, [userState.user, userState.success, userState.error]);
 
-  useEffect(() => {}, [invoicesState.invoices, invoicesState.error]);
+  useEffect(() => {
+
+    if(invoicesState.invoices){
+      console.log("INVOICES FETCHED")
+      console.log(invoicesState.invoices)
+    }
+  }, [invoicesState.invoices, invoicesState.error]);
 
   return (
     <>
       <CNLayout user={userData} id={id} name={"Invoices"}>
-        <div className="mx-auto py-8 ">
+        <div className="py-8 ">
           {invoicesState.invoices?.length > 0 ? (
             <Invoices invoices={invoicesState.invoices} />
           ) : (

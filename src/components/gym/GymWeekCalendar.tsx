@@ -357,6 +357,8 @@ user:any
                           return null;
                         }
 
+                        // cancelledDates thing
+
                         return (
                           <li
                             key={`${index}-${day}`} // Ensure uniqueness across multiple days

@@ -103,8 +103,6 @@ const signOutReducer = (
         loading: false,
         error: action.payload,
       };
-      //  case CLEAR_ERRORS:
-      //         return  { loading: false, error: null, success: false }
     default:
       return state;
   }

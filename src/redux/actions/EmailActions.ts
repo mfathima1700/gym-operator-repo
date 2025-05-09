@@ -91,7 +91,8 @@ export async function sendCancelEmail(userInfo: UserInfo, date: Date) {
       from_name: `Gym ${userInfo.gymName} team`,
       gym_name: userInfo.gymName,
       subject: "GYM Class Cancellation",
-      message: `The class ${userInfo.className} has been cancelled for ${date.toDateString()}. We apologise for any inconvenience this may cause.`,
+      message: `The class ${userInfo.className} has been cancelled for ${date.toDateString()}.
+       We apologise for any inconvenience this may cause.`,
     };
 
   const result = await emailjs.send(

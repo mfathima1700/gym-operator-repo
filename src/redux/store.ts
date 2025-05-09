@@ -11,8 +11,7 @@ import {
   deleteAccountReducer,
 } from "@/redux/reducers/AuthReducer";
 import { create } from "domain";
-import { combineReducers, createStore, applyMiddleware, compose } from "redux";
-import promiseMiddleware from "redux-promise";
+
 import { createGymReducer, setUserDataReducer, updateUserSettingsReducer, updateOwnerSettingsReducer, getUserReducer, alterMemberReducer, getInstructorsReducer } from "./reducers/GymReducer";
 import { sendCancelReducer } from "./reducers/EmailReducer";
 import { bookClassReducer, cancelBookingReducer, cancelClassReducer, createClassReducer, deleteClassReducer, getBookingsReducer, updateClassReducer } from "./reducers/ClassReducer";
@@ -20,6 +19,8 @@ import { checkoutReducer, getInvoicesReducer, getPaymentsReducer, updatePriceRed
 import { createGoalReducer, deleteGoalReducer, editGoalReducer } from "./reducers/GoalReducer";
 import { exerciseReducer, nutritionReducer } from "./reducers/NutritionReducer";
 //import { composeWithDevTools } from "redux-devtools-extension";
+import { combineReducers, createStore, applyMiddleware, compose } from "redux";
+import promiseMiddleware from "redux-promise";
 
 const rootReducer = combineReducers({
   signIn: signInReducer,
