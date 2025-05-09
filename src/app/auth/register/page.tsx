@@ -34,6 +34,7 @@ export default function Register() {
     if ( signUpState?.user != null) {
       console.log(signUpState);
       // TODO: Redirect to check if email is verified or alert for email being registered
+      window.location.href = `/auth/login`;
     }
   }, [signUpState.user, signUpState.error]);
 
