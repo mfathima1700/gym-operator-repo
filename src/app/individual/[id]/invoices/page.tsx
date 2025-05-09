@@ -47,7 +47,9 @@ export default function MemberInvoicesPage() {
     if (userState.user) {
       setUserData(userState.user);
 
-      dispatch(getMemberInvoices(userData.stripeCustomerId));
+      if(userState.user.stripeCustomerId){
+      dispatch(getMemberInvoices(userState.user.stripeCustomerId));
+      }
     }
   }, [userState.user, userState.success, userState.error]);
 
@@ -63,7 +65,7 @@ export default function MemberInvoicesPage() {
   return (
     <>
       <CNLayout user={userData} id={id} name={"Invoices"}>
-      <div className="mx-auto py-8 ">
+      <div className="py-8 ">
         {
             invoicesState.invoices?.length > 0 ?
             <Invoices invoices={invoicesState.invoices} /> :
