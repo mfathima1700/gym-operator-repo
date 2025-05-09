@@ -7,11 +7,11 @@ import { ChevronRight, ChevronLeft, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import  AddClassDialog from "@/components/gym/AddClassDialog";
+import AddClassDialog from "@/components/gym/AddClassDialog";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { start } from "repl";
-import  EditClassDialog from "./EditClassDialog";
+import EditClassDialog from "./EditClassDialog";
 
 const daysOfWeek = [
   { day: "M", name: "Mon", nameDay: "monday", num: 0 },
@@ -40,7 +40,8 @@ type ClassType = {
   endDate: Date;
   time: string; // e.g., "10:00"
   colour: string;
-  bookings?:[]
+  bookings?: [];
+  cancelledDates: string[];
 };
 
 type UserType = {
@@ -50,15 +51,14 @@ type UserType = {
 };
 
 export default function GymWeekCalendar({
-user,
- members,
+  user,
+  members,
   classes,
   isOwner,
   gymId,
-  
 }: {
-user:any
- members: UserType[];
+  user: any;
+  members: UserType[];
   classes: ClassType[];
   isOwner: boolean;
   gymId: string;
@@ -147,7 +147,7 @@ user:any
 
   const handleNextWeek = (e: React.MouseEvent) => {
     const newStartOfWeek = new Date(startOfWeek);
-    newStartOfWeek.setDate(startOfWeek.getDate() + 7); 
+    newStartOfWeek.setDate(startOfWeek.getDate() + 7);
     // Move 7 days forward to get the next week
     setStartOfWeek(newStartOfWeek);
 
@@ -258,10 +258,7 @@ user:any
                   </button>
                 </DialogTrigger>
 
-                <AddClassDialog
-                triggerRef={triggerRef}
-                gymId={gymId}
-                />
+                <AddClassDialog triggerRef={triggerRef} gymId={gymId} />
               </Dialog>
             </div>
           ) : (
@@ -290,10 +287,7 @@ user:any
                       </button>
                     </DialogTrigger>
 
-                    <AddClassDialog
-                    triggerRef={triggerRef}
-                       gymId={gymId}
-                    />
+                    <AddClassDialog triggerRef={triggerRef} gymId={gymId} />
                   </Dialog>
                 </MenuItem>
               </div>
@@ -358,6 +352,13 @@ user:any
                         }
 
                         // cancelledDates thing
+                        if (
+                          classObject.cancelledDates?.includes(
+                            todaysDate.toISOString().split("T")[0]
+                          )
+                        ) {
+                          return null;
+                        }
 
                         return (
                           <li
@@ -366,7 +367,7 @@ user:any
                             <Dialog modal={false}>
                               <DialogTrigger asChild>
                                 <button
-                                 ref={editTriggerRef}
+                                  ref={editTriggerRef}
                                   className={cn(
                                     `flex flex-col gap-x-4 py-5 rounded-lg w-full`, // Use w-full to match width
                                     generateColourLI(classObject.name)
@@ -376,11 +377,13 @@ user:any
                                     className={`flex-row p-2 gap-x-4 text-xs/5 flex-grow`}
                                   >
                                     <p
-                                      className={cn("text-left",
+                                      className={cn(
+                                        "text-left",
                                         generateColourP2(classObject.name)
                                       )}
                                     >
-                                      <time className="text-left"
+                                      <time
+                                        className="text-left"
                                         dateTime={classObject.startDate.toISOString()}
                                       >
                                         {formatTime(classObject.startDate)}

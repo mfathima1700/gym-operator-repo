@@ -3,14 +3,14 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
 import { useEffect, useRef, useState } from "react";
-import { ChevronRight, ChevronLeft, Book } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import  AddClassDialog  from "@/components/gym/AddClassDialog";
+import AddClassDialog from "@/components/gym/AddClassDialog";
 import { cn } from "@/lib/utils";
-import { BookClassDialog } from "./BookClassDialog";
-import { MyBookingDialog } from "../schedule/MyBookingDialog";
+import EditClassDialog from "./EditClassDialog";
+import BookingDialog from "./BookingDialog";
 
 const daysOfWeek = [
   { day: "M", name: "Mon", nameDay: "monday", num: 0 },
@@ -39,18 +39,22 @@ type ClassType = {
   endDate: Date;
   time: string; // e.g., "10:00"
   colour: string;
+  cancelledDates: string[];
 };
 
 export default function MemberWeekCalendar({
   bookings,
+  user,
+  gymId
 }: {
   bookings: {
     class: ClassType;
-  }[];
+  }[]; user: any; gymId: string;
 }) {
   const container = useRef<HTMLDivElement | null>(null);
   const containerNav = useRef<HTMLDivElement | null>(null);
   const containerOffset = useRef<HTMLDivElement | null>(null);
+  const editTriggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (container.current && containerNav.current && containerOffset.current) {
@@ -79,7 +83,7 @@ export default function MemberWeekCalendar({
 
   const timeToGridRow = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
-    return hours * 2 + Math.floor(minutes / 30) + 1;
+    return hours - 6 + Math.floor(minutes / 60) + 1; // Start from 6 AM
   };
 
   // get day, month, year, and month name
@@ -144,10 +148,10 @@ export default function MemberWeekCalendar({
     console.log(newEndOfWeek);
   };
 
-  // Function to go to the next week
   const handleNextWeek = (e: React.MouseEvent) => {
     const newStartOfWeek = new Date(startOfWeek);
-    newStartOfWeek.setDate(startOfWeek.getDate() + 7); // Move 7 days forward to get the next week
+    newStartOfWeek.setDate(startOfWeek.getDate() + 7);
+    // Move 7 days forward to get the next week
     setStartOfWeek(newStartOfWeek);
 
     setWeekdays(updateWeekdays(newStartOfWeek));
@@ -231,32 +235,6 @@ export default function MemberWeekCalendar({
     return colors[hash % colors.length]; // Cycle through the color list based on hash
   };
 
-  function endsInWeek(classStartDate: Date, classEndDate: Date): boolean {
-    if (classEndDate <= endOfWeek && classEndDate >= startOfWeek) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  function startsInWeek(classStartDate: Date, classEndDate: Date): boolean {
-    if (classStartDate >= startOfWeek && classStartDate <= endOfWeek) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  function runningInWeek(classStartDate: Date, classEndDate: Date): boolean {
-    if (classStartDate <= startOfWeek && classEndDate >= endOfWeek) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  const bookingRef = useRef<HTMLButtonElement>(null);
-
   return (
     <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-700 px-6 py-4">
@@ -282,6 +260,36 @@ export default function MemberWeekCalendar({
               <ChevronRight />
             </Button>
           </div>
+          <div className="hidden md:ml-4 md:flex md:items-center">
+            <div className="ml-6 h-6 w-px bg-gray-700" />
+            {
+              <Button  >
+                Sync
+              </Button>
+            }
+          </div>
+          <Menu as="div" className="relative ml-6 md:hidden">
+            <MenuButton className="-mx-2 flex items-center rounded-full border border-transparent p-2 text-gray-400 hover:text-gray-500">
+              <span className="sr-only">Open menu</span>
+              <EllipsisHorizontalIcon className="size-5" aria-hidden="true" />
+            </MenuButton>
+
+            <MenuItems
+              transition
+              className="absolute right-0 z-10 mt-3 w-36 origin-top-right divide-y divide-gray-100 overflow-hidden rounded-md bg-gray-200 ring-1 shadow-lg ring-black/5 focus:outline-hidden data-closed:scale-95 data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+            >
+              <div className="py-1">
+                <MenuItem>
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                  >
+                    Sync
+                  </a>
+                </MenuItem>
+              </div>
+            </MenuItems>
+          </Menu>
         </div>
       </header>
       <div
@@ -298,24 +306,22 @@ export default function MemberWeekCalendar({
           >
             <div className="grid grid-cols-7 text-sm/6 text-gray-900 sm:hidden">
               {weekdays.map(({ day, date, name, isHighlighted }) => (
-                <div key={`${day}-${date}-${name}`}>
-                  <button
-                    key={date}
-                    type="button"
-                    className="flex flex-col items-center pt-2 pb-3"
+                <button
+                  key={date}
+                  type="button"
+                  className="flex flex-col items-center pt-2 pb-3"
+                >
+                  {name}{" "}
+                  <span
+                    className={`mt-1 flex size-8 items-center justify-center font-semibold ${
+                      isHighlighted
+                        ? "rounded-full bg-lime-600 text-gray-200"
+                        : "text-gray-500"
+                    }`}
                   >
-                    {name}{" "}
-                    <span
-                      className={`mt-1 flex size-8 items-center justify-center font-semibold ${
-                        isHighlighted
-                          ? "rounded-full bg-lime-600 text-gray-200"
-                          : "text-gray-500"
-                      }`}
-                    >
-                      {date}
-                    </span>
-                  </button>
-                </div>
+                    {date}
+                  </span>
+                </button>
               ))}
             </div>
 
@@ -349,153 +355,10 @@ export default function MemberWeekCalendar({
               {/* Horizontal lines */}
               <div
                 className="col-start-1 col-end-2 row-start-1 grid divide-y divide-gray-700"
-                style={{ gridTemplateRows: "repeat(48, minmax(3.5rem, 1fr))" }}
+                style={{ gridTemplateRows: "repeat(17, minmax(3.5rem, 1fr))" }}
               >
                 <div ref={containerOffset} className="row-end-1 h-7"></div>
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    12AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    1AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    2AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    3AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    4AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    5AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    6AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    7AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    8AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    9AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    10AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    11AM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    12PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    1PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    2PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    3PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    4PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    5PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    6PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    7PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    8PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    9PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    10PM
-                  </div>
-                </div>
-                <div />
-                <div>
-                  <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs/5 text-gray-400">
-                    11PM
-                  </div>
-                </div>
-                <div />
+                {generateHourLabels()}
               </div>
 
               {/* Vertical lines */}
@@ -510,101 +373,108 @@ export default function MemberWeekCalendar({
                 <div className="col-start-8 row-span-full w-8" />
               </div>
 
-              {/* Events style={{
-                  gridTemplateRows: "1.75rem repeat(288, minmax(0, 1fr)) auto",
-                }}*/}
-              <ol className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8">
-                {weekdays.map(
-                  ({ day, date, name, isHighlighted, nameDay, num }) => (
-                    <div key={`${day}-${date}}`} className="bg-gray-100">
-                      {bookings.flatMap((booking, index) => {
-                        // Ensure that we only process classObjects with valid days
-                        if (
-                          !booking.class.days ||
-                          booking.class.days.length === 0
-                        ) {
-                          return null; // Skip rendering this class if days array is empty or undefined
-                        }
+              {/* "3.5rem repeat(14, minmax(0, 1fr)) auto", */}
 
-                        const todaysDate = new Date(startOfWeek);
-                        todaysDate.setDate(startOfWeek.getDate() + num);
+              {/* Events */}
+              <ol
+                className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
+                style={{
+                  gridTemplateRows: "3.5rem repeat(14, minmax(0, 1fr)) auto",
+                }}
+              >
+                {bookings.flatMap((booking, index) => {
+                  return daysOfWeek.map((dayObject, dayIndex) => {
+                    // Only process if the class occurs on this day
+                    if (!booking.class.days.includes(dayObject.nameDay)) {
+                      return null;
+                    }
 
-                        // Ensure the class is within the current week
-                        if (!booking.class.days.includes(nameDay)) {
-                          return null;
-                        }
+                    // Calculate the actual calendar date of this `day` in the current week
+                    const todaysDate = new Date(startOfWeek);
+                    todaysDate.setDate(startOfWeek.getDate() + dayIndex);
 
-                        if (
-                          !(
-                            todaysDate >= booking.class.startDate &&
-                            todaysDate <= booking.class.endDate
-                          )
-                        ) {
-                          return null;
-                        }
+                    // Ensure booking date is within the class active range
+                    const startDate = new Date(booking.class.startDate);
+                    const endDate = new Date(booking.class.endDate);
+                    if (
+                      !(
+                        todaysDate >= startDate &&
+                        todaysDate <= endDate
+                      )
+                    ) {
+                      return null;
+                    }
 
-                        return booking.class.days.map((day) => {
-                          const startRow = timeToGridRow(
-                            formatTime(booking.class.startDate)
-                          );
-                          const durationRows = Math.ceil(
-                            // or floor
-                            booking.class.duration / 30
-                          ); // Convert duration to grid rows
-                          const gridRow = `${startRow} / span ${durationRows}`;
+                    // if(dayObject.nameDay !== ) {
+                    //   return null;
+                    // }
 
-                          return (
-                            <li
-                              key={`${index}-${day}`} // Ensure uniqueness across multiple days
-                              className={cn(
-                                `relative mt-px flex 
-                          sm:col-start-${dayToColumn(day)}  rounded-lg `,
-                                generateColourLI(booking.class.name)
-                              )}
-                              style={{ gridRow: "250 / span 24" }}
+                    // Optional: also skip cancelled dates, if applicable
+                    if (
+                      booking.class.cancelledDates?.includes(
+                        todaysDate.toISOString().split("T")[0]
+                      )
+                    ) {
+                      return null;
+                    }
+
+                    const startRow = timeToGridRow(
+                      formatTime(booking.class.startDate)
+                    );
+                    const durationRows = Math.floor(
+                      booking.class.duration / 60
+                    ); // Consider using Math.ceil
+                    const gridRow = `${startRow} / span ${durationRows}`;
+
+                    return (
+                      <li
+                        key={`${index}-${dayObject.num}`}
+                        className={cn(
+                          `relative mt-px flex sm:col-start-${dayIndex + 1} rounded-lg`,
+                          generateColourLI(booking.class.name)
+                        )}
+                        style={{ gridRow }}
+                      >
+                        <Dialog modal={false}>
+                        <DialogTrigger asChild>
+                        <button
+                          
+                          className="group absolute inset-1 flex flex-col p-2 text-xs/5"
+                        >
+                          <p
+                            className={cn(
+                              "order-1 font-semibold",
+                              generateColourP1(booking.class.name)
+                            )}
+                          >
+                            {booking.class.name}
+                          </p>
+                          <p
+                            className={cn(
+                              "group-hover:text-opacity-80",
+                              generateColourP2(booking.class.name)
+                            )}
+                          >
+                            <time
+                              dateTime={booking.class.startDate.toISOString()}
                             >
-                              <Dialog>
-                                <DialogTrigger asChild>
-                                  <button
-                                    className={`group absolute inset-1 flex flex-col  
-                         p-2 text-xs/5`}
-                                  >
-                                    <p
-                                      className={cn(
-                                        `order-1 font-semibold text-lime-400`,
-                                        generateColourP1(booking.class.name)
-                                      )}
-                                    >
-                                      {booking.class.name}
-                                    </p>
-                                    <p
-                                      className={cn(
-                                        `text-lime-100 group-hover:text-lime-300`,
-                                        generateColourP2(booking.class.name)
-                                      )}
-                                    >
-                                      <time
-                                        dateTime={booking.class.startDate.toISOString()}
-                                      >
-                                        {formatTime(booking.class.startDate)}
-                                      </time>
-                                    </p>
-                                  </button>
-                                </DialogTrigger>
-
-                                <MyBookingDialog
-                                  bookingId={booking.id}
-                                  gymClass={booking.class}
-                                  bookingRef={bookingRef}
-                                />
-                              </Dialog>
-                            </li>
-                          );
-                        });
-                      })}
-                    </div>
-                  )
-                )}
+                              {formatTime(booking.class.startDate)}
+                            </time>
+                          </p>
+                        </button>
+                        </DialogTrigger>
+                                                      <BookingDialog
+                                                        gymClass={booking.class}
+                                                        gymId={gymId}
+                                                        editTriggerRef={editTriggerRef}
+                                                        user={user}
+                                                        
+                                                      />
+                                                    </Dialog>
+                      </li>
+                    );
+                  });
+                })}
               </ol>
             </div>
           </div>

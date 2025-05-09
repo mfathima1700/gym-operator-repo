@@ -25,7 +25,14 @@ export default function IndividualSchedule() {
   const userState = useSelector((state: RootState) => state.getUser);
   const [userData, setUserData] = useState(() => ({
     gymRole: "",
-    
+    gym: {
+      id: "",
+
+    },
+    ownedGym: {
+      id: "",
+     
+    },
     bookings:[]
   }));
 
@@ -53,7 +60,7 @@ export default function IndividualSchedule() {
       <CNLayout user={userData} id={id} name={"My Calendar"}>
         <div>
           <MemberWeekCalendar 
-          bookings={userData.bookings ?? []} />
+          bookings={userData.bookings ?? []} user={userData} gymId={userData?.gym?.id ?? userData?.ownedGym?.id ?? ""} />
         </div>
       </CNLayout>
     </>
