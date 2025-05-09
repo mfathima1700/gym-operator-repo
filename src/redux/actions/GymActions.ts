@@ -8,6 +8,8 @@ import {
   CREATE_GYM_SUCCESS,
   GET_GYM_DATA_FAILED,
   GET_GYM_DATA_SUCCESS,
+  GET_INSTRUCTORS_FAILED,
+  GET_INSTRUCTORS_SUCCESS,
   GET_USER_DATA_FAILED,
   GET_USER_DATA_SUCCESS,
   SET_USER_FAILED,
@@ -513,6 +515,35 @@ export async function getUserAndInstructors(id: string) {
     console.log(error);
     return {
       type: GET_USER_DATA_FAILED,
+      payload: error,
+    };
+  }
+}
+
+export async function getInstructors( gymId: string) {
+  try {
+
+    const instructors = await db.user.findMany({
+      where: { gymId:gymId, isInstructor: true },
+      include: {
+        classesTaught: true,
+      },
+    });
+
+    if (!instructors) {
+      throw new Error("instructors not found");
+    }
+
+    console.log("GET INSTRUCTORS SUCCESS");
+    return {
+      type: GET_INSTRUCTORS_SUCCESS,
+      payload: instructors,
+    };
+  } catch (error) {
+    console.log("GET INSTRUCTORS FAILED");
+    console.log(error);
+    return {
+      type: GET_INSTRUCTORS_FAILED,
       payload: error,
     };
   }

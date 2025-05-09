@@ -24,10 +24,11 @@ import { StartDateControl } from "./StartDateControl";
 import { EndDateControl } from "./EndDateControl";
 import { format, parse } from "date-fns";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClass } from "@/redux/actions/ClassActions";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { getInstructors } from "@/redux/actions/GymActions";
 
 export default function AddClassDialog({
   //classData,
@@ -45,6 +46,9 @@ export default function AddClassDialog({
   gymId: string;
 }) {
   const dispatch = useDispatch<AppDispatch>();
+  const instructorState = useSelector(
+    (state: RootState) => state.getInstructors
+  );
   
   type ClassData = {
     name: string;
@@ -60,6 +64,15 @@ export default function AddClassDialog({
     room: string;
     skillLevel: string;
     time: string;
+  };
+
+  type Instructor = {
+    id: string;
+    name: string;
+    email: string;
+    gymId: string;
+    isInstructor: boolean;
+    classesTaught: ClassData[];
   };
 
   const initalState = {
@@ -106,6 +119,12 @@ const [classData, setClassData] = useState<ClassData>(() => initalState);
     }));
   };
 
+    useEffect(() => {
+      dispatch(getInstructors(gymId));
+    }, []);
+  
+    useEffect(() => {}, [instructorState.instructors, instructorState.error]);
+
   return (
     <DialogContent className="sm:max-w-[700px] w-full max-w-3xl max-h-[80vh] overflow-y-auto">
       <DialogHeader>
@@ -136,13 +155,11 @@ const [classData, setClassData] = useState<ClassData>(() => initalState);
               <SelectValue placeholder="Select instructor" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="us">United States</SelectItem>
-              <SelectItem value="ca">Canada</SelectItem>
-              <SelectItem value="mx">Mexico</SelectItem>
-              <SelectItem value="uk">United Kingdom</SelectItem>
-              <SelectItem value="fa">France</SelectItem>
-              <SelectItem value="de">Germany</SelectItem>
-              <SelectItem value="au">Australia</SelectItem>
+            {instructorState.instructors?.map((instructor: Instructor) => (
+                <SelectItem key={instructor.id} value={instructor.id}>
+                  {instructor.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

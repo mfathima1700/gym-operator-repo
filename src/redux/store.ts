@@ -13,7 +13,7 @@ import {
 import { create } from "domain";
 import { combineReducers, createStore, applyMiddleware, compose } from "redux";
 import promiseMiddleware from "redux-promise";
-import { createGymReducer, setUserDataReducer, updateUserSettingsReducer, updateOwnerSettingsReducer, getUserReducer, alterMemberReducer } from "./reducers/GymReducer";
+import { createGymReducer, setUserDataReducer, updateUserSettingsReducer, updateOwnerSettingsReducer, getUserReducer, alterMemberReducer, getInstructorsReducer } from "./reducers/GymReducer";
 import { sendCancelReducer } from "./reducers/EmailReducer";
 import { bookClassReducer, cancelBookingReducer, cancelClassReducer, createClassReducer, deleteClassReducer, getBookingsReducer, updateClassReducer } from "./reducers/ClassReducer";
 import { checkoutReducer, getInvoicesReducer, getPaymentsReducer, updatePriceReducer } from "./reducers/BillingReducer";
@@ -53,7 +53,8 @@ const rootReducer = combineReducers({
   updatePrice: updatePriceReducer,
   getInvoices: getInvoicesReducer,
   getPayments: getPaymentsReducer,
-  deleteAccount: deleteAccountReducer
+  deleteAccount: deleteAccountReducer,
+  getInstructors:getInstructorsReducer
   // Add other reducers here
 });
 

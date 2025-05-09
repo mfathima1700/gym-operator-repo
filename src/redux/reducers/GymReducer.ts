@@ -147,6 +147,34 @@ const alterMemberReducer = (
   }
 };
 
+interface instructorDataState {
+  error: any;
+  instructors: any;
+}
+
+const getInstructorsReducer = (
+  state = { error: null,  instructors:[] },
+  action: any
+): instructorDataState => {
+  switch (action.type) {
+    case CREATE_GYM_SUCCESS:
+      return {
+        instructors:action.payload,
+
+        error: null,
+      };
+    case CREATE_GYM_FAILED:
+      return {
+        instructors:[],
+        error: action.payload,
+       
+      };
+    default:
+      return state;
+  }
+};
+
+
 export {
-    createGymReducer,setUserDataReducer, updateUserSettingsReducer, updateOwnerSettingsReducer, getUserReducer, alterMemberReducer
+    createGymReducer,setUserDataReducer, updateUserSettingsReducer, updateOwnerSettingsReducer, getUserReducer, alterMemberReducer, getInstructorsReducer
 };

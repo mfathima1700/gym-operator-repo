@@ -30,19 +30,20 @@ import {
   deleteClass,
   updateClass,
 } from "@/redux/actions/ClassActions";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { useEffect, useState } from "react";
 import { sendDeleteEmail } from "@/redux/actions/EmailActions";
-
+import { getInstructors } from "@/redux/actions/GymActions";
+import { get } from "node_modules/cypress/types/lodash";
 
 interface UserInfo {
   id: string;
   email: string;
   name: string;
- gym:{
-  name: string;
- }
+  gym: {
+    name: string;
+  };
 }
 
 export default function EditClassDialog({
@@ -52,17 +53,20 @@ export default function EditClassDialog({
   gymId,
   today,
   isOwner,
-  user
+  user,
 }: {
   bookings: any;
   gymClass: any;
-  editTriggerRef:any
+  editTriggerRef: any;
   gymId: string;
   isOwner: boolean;
   today: Date;
-  user:UserInfo
+  user: UserInfo;
 }) {
   const dispatch = useDispatch<AppDispatch>();
+  const instructorState = useSelector(
+    (state: RootState) => state.getInstructors
+  );
 
   function onCancelClick(e: React.MouseEvent) {
     e.preventDefault();
@@ -87,7 +91,7 @@ export default function EditClassDialog({
     e.preventDefault();
     editTriggerRef.current?.click();
 
-    console.log("user id " + user.id)
+    console.log("user id " + user.id);
     dispatch(bookClass(classData.id, user.id));
   }
 
@@ -115,26 +119,39 @@ export default function EditClassDialog({
     bookings: any[];
   };
 
+  type Instructor = {
+    id: string;
+    name: string;
+    email: string;
+    gymId: string;
+    isInstructor: boolean;
+    classesTaught: ClassData[];
+  };
+
   const [classData, setClassData] = useState<ClassData>(() => gymClass);
-  
-    const handleChange = (field: string, value: any) => {
-      setClassData((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
-    };
 
+  const handleChange = (field: string, value: any) => {
+    setClassData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
-    const toggleDay = (day: string) => {
-        setClassData((prev) => ({
-          ...prev,
-          days: prev.days.includes(day)
-            ? prev.days.filter((d) => d !== day) // Remove if already selected
-            : [...prev.days, day], // Add if not selected
-        }));
-      };
+  const toggleDay = (day: string) => {
+    setClassData((prev) => ({
+      ...prev,
+      days: prev.days.includes(day)
+        ? prev.days.filter((d) => d !== day) // Remove if already selected
+        : [...prev.days, day], // Add if not selected
+    }));
+  };
 
-    
+  useEffect(() => {
+    dispatch(getInstructors(gymId));
+  }, []);
+
+  useEffect(() => {}, [instructorState.instructors, instructorState.error]);
+
   return (
     <DialogContent className="sm:max-w-[700px] w-full max-w-3xl max-h-[80vh] overflow-y-auto">
       <DialogHeader>
@@ -167,13 +184,11 @@ export default function EditClassDialog({
               <SelectValue placeholder="Select instructor" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="us">United States</SelectItem>
-              <SelectItem value="ca">Canada</SelectItem>
-              <SelectItem value="mx">Mexico</SelectItem>
-              <SelectItem value="uk">United Kingdom</SelectItem>
-              <SelectItem value="fa">France</SelectItem>
-              <SelectItem value="de">Germany</SelectItem>
-              <SelectItem value="au">Australia</SelectItem>
+              {instructorState.instructors?.map((instructor: Instructor) => (
+                <SelectItem key={instructor.id} value={instructor.id}>
+                  {instructor.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -189,7 +204,7 @@ export default function EditClassDialog({
             onChange={(e) => handleChange(e.target.name, e.target.value)}
           />
           <p className="text-sm text-gray-500 mt-2">
-            Write a few sentences about this class. Include requirements here. 
+            Write a few sentences about this class. Include requirements here.
           </p>
         </div>
 
@@ -197,7 +212,7 @@ export default function EditClassDialog({
           <Label htmlFor="time">Time</Label>
           <Input
             type="time"
-             name="time"
+            name="time"
             placeholder="HH:MM"
             disabled={!isOwner}
             value={classData.time}
@@ -341,28 +356,28 @@ export default function EditClassDialog({
         </div>
       </div>
       <DialogFooter className="flex flex-row space-x-4 gap-x-2">
-  {isOwner ? (
-    <>
-      <Button variant="secondary" onClick={onCancelClick}>
-        Cancel
-      </Button>
-      <Button variant="destructive" onClick={onDeleteClick}>
-        Delete
-      </Button>
-      <Button type="button" onClick={onUpdateClick}>
-        Update
-      </Button>
-    </>
-  ) : null}
+        {isOwner ? (
+          <>
+            <Button variant="secondary" onClick={onCancelClick}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={onDeleteClick}>
+              Delete
+            </Button>
+            <Button type="button" onClick={onUpdateClick}>
+              Update
+            </Button>
+          </>
+        ) : null}
 
-  <Button
-    type="button"
-    onClick={onBookClick}
-    className="bg-lime-600 hover:bg-lime-500 focus-visible:outline-lime-600 text-white"
-  >
-    Book
-  </Button>
-</DialogFooter>
+        <Button
+          type="button"
+          onClick={onBookClick}
+          className="bg-lime-600 hover:bg-lime-500 focus-visible:outline-lime-600 text-white"
+        >
+          Book
+        </Button>
+      </DialogFooter>
     </DialogContent>
   );
 }
