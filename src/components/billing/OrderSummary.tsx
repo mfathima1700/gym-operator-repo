@@ -4,7 +4,7 @@ import { CheckCircleIcon, TrashIcon } from "@heroicons/react/20/solid";
 
 
 
-function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, message: string, owner: boolean}) {
+function OrderSummary({handleCheckout, message, owner, price}: {handleCheckout: any, message: string, owner: boolean, price?: number}) {
   return (
     <>
       <div className="mt-10 lg:mt-0">
@@ -46,7 +46,7 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
 
                   <div className="flex flex-1 items-end justify-between pt-2">
                     <p className="mt-1 text-sm font-medium text-gray-200">
-                    { owner ? `£50.00` : `£25.00`} 
+                    { owner ? `£50.00` : `£${price ?? 0}`} 
                     
                     
                     </p>
@@ -78,7 +78,7 @@ function OrderSummary({handleCheckout, message, owner}: {handleCheckout: any, me
           
             <div className="flex items-center justify-between">
               <dt className="text-base font-medium">Total</dt>
-              <dd className="text-base font-medium text-gray-200">{ owner ? `£50.00` : `£25.00`}{" "}
+              <dd className="text-base font-medium text-gray-200">{ owner ? `£50.00` : `£${price ?? 0}`} {" "}
                 <span className="font-normal text-gray-600">
                     /month
                     </span></dd>

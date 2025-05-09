@@ -141,7 +141,7 @@ export function NavUser({
                 <DropdownMenuItem
                 onClick={(e) =>
                   router.push(
-                    `/owner/${id}/billing/payments`
+                    `/owner/${id}/payments`
                   )
                 }
               >

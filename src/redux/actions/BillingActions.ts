@@ -125,7 +125,7 @@ export const updateGymPricing = async (gymId: string, newPrice: number) => {
     const price = await stripe.prices.create({
       product: productId,
       unit_amount: newPrice * 100, // Convert to cents
-      currency: "usd",
+      currency: "gbp",
       recurring: { interval: "month" }, // Monthly subscription
     });
 
@@ -262,7 +262,7 @@ export const getOwnerPayments = async (gymId: string) => {
       expand: ["data.customer"],
     });
 
-    
+    console.log("GOT PAYMENTS")
 
     // Filter manually by metadata
     const filteredInvoices = invoices.data.filter(
@@ -279,6 +279,8 @@ export const getOwnerPayments = async (gymId: string) => {
       customer_email: invoice.customer_email,
       currency: invoice.currency,
     }));
+
+    console.log(plainInvoices)
 
     return {
       type: GET_PAYMENTS_SUCCESS,

@@ -2,7 +2,7 @@
 
 import OrderSummary from "@/components/billing/OrderSummary";
 import CNLayout from "@/components/layout/cn-layout";
-import { createCheckoutIndividualSession } from "@/redux/actions/BillingActions";
+import { createCheckoutIndividualSession, createMemberCheckout } from "@/redux/actions/BillingActions";
 import { getUserById } from "@/redux/actions/GymActions";
 import { AppDispatch, RootState } from "@/redux/store";
 import { loadStripe } from "@stripe/stripe-js";
@@ -29,9 +29,12 @@ export default function IndividualCheckoutPage() {
     );
     const stripePromise = loadStripe(process.env.NEXT_PUBLIC_PUBKISHABLE_KEY as string);
   const [userData, setUserData] = useState(() => ({
+    email: "",
+    name: "",
     gym: {
       id: "",
       classes:[],
+      monthlyPrice:0
     },
   }));
 
@@ -64,7 +67,7 @@ export default function IndividualCheckoutPage() {
   
     const handleCheckout = async () => {
       try {
-        dispatch(createCheckoutIndividualSession( id));
+        dispatch(createMemberCheckout(id, userData.gym.id, userData.email, userData.name));
         //await dispatch(redirectToCheckout(sessionId));
         
       
@@ -79,7 +82,8 @@ export default function IndividualCheckoutPage() {
       <CNLayout user={userData} id={id} name={"Checkout"}>
         <div className="flex justify-center">
         <div className="max-w-xl ">
-          <OrderSummary  handleCheckout={handleCheckout} message={checkoutState.error?.message}   owner={false}/>
+          <OrderSummary  handleCheckout={handleCheckout} message={checkoutState.error?.message}  
+           owner={false} price={userData.gym.monthlyPrice}/>
          
         </div>
         </div>
