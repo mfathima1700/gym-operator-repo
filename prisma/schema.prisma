@@ -27,7 +27,7 @@ model User {
   gymId          String?       @db.ObjectId
   gym            Gym?          @relation("GymMembers", fields: [gymId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  ownedGym           Gym?            @relation("GymOwner")
+  ownedGym           Gym?               @relation("GymOwner")
   memberships        Membership[]
   dateOfBirth        DateTime?
   goals              Goal[]
@@ -36,15 +36,16 @@ model User {
   accounts           Account[]
   sessions           Session[]
   Authenticator      Authenticator[]
-  updatedAt          DateTime        @updatedAt
+  updatedAt          DateTime           @updatedAt
   userRole           UserRole
-  isInstructor       Boolean?        @default(false)
+  isInstructor       Boolean?           @default(false)
   phoneNumber        String?
   country            String?
-  emailNotifications String?         @default("everything")
-  pushNotifications  String?         @default("everything")
-  classesTaught      Class[]         @relation("InstructorClasses")
+  emailNotifications String?            @default("everything")
+  pushNotifications  String?            @default("everything")
+  classesTaught      Class[]            @relation("InstructorClasses")
   stripeCustomerId   String?
+  waitingFor         ClassWaitingList[]
 
   @@index([gymId])
 }
@@ -85,17 +86,17 @@ model Membership {
 }
 
 model Class {
-  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  id             String             @id @default(auto()) @map("_id") @db.ObjectId
   name           String
   description    String?
-  gymId          String           @db.ObjectId
-  gym            Gym              @relation(fields: [gymId], references: [id])
+  gymId          String             @db.ObjectId
+  gym            Gym                @relation(fields: [gymId], references: [id])
   bookings       Booking[]
   capacity       Int?
   intensity      IntensityRating?
   skillLevel     SkillLevel?
-  instructorId   String?          @db.ObjectId
-  instructor     User?            @relation("InstructorClasses", fields: [instructorId], references: [id]) // ✅ Fix the relation name
+  instructorId   String?            @db.ObjectId
+  instructor     User?              @relation("InstructorClasses", fields: [instructorId], references: [id]) // ✅ Fix the relation name
   recurrence     Occurance? // e.g., "one-off", "weekly", "biweekly"
   duration       Int? // Duration in minutes
   days           String[] // Array of selected weekdays
@@ -104,6 +105,7 @@ model Class {
   endDate        DateTime?
   time           String?
   cancelledDates DateTime[]
+  waitingList    ClassWaitingList[]
 }
 
 model Booking {
@@ -115,6 +117,18 @@ model Booking {
   bookingDate DateTime @default(now())
 
   @@unique([userId, classId]) // ✅ Ensures one booking per user per class
+}
+
+model ClassWaitingList {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  classId String @db.ObjectId
+  userId  String @db.ObjectId
+  class   Class  @relation(fields: [classId], references: [id])
+  user    User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([classId, userId]) // prevent duplicate entries
 }
 
 enum GymRole {

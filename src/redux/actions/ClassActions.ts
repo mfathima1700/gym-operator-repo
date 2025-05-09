@@ -147,7 +147,7 @@ export async function updateClass(data: classData, classId: string) {
 }
 
 import { addDays, addWeeks, isBefore, parseISO } from "date-fns";
-import { sendCancelEmail, sendDeleteEmail } from "./EmailActions";
+import { sendBookedEmail, sendCancelEmail, sendDeleteEmail } from "./EmailActions";
 
 /**
  * Given a class, generates an array of all individual sessions as date ranges
@@ -229,6 +229,13 @@ export async function bookClass(classId: string, userId: string) {
     }
 
     if (gymClass.bookings.length >= (gymClass.capacity ?? 0)) {
+      await db.classWaitingList.create({
+        data: {
+          classId: classId,
+          userId: userId,
+        },
+      });
+      
       throw new Error("capacity reached");
     }
 
@@ -276,12 +283,58 @@ export async function bookClass(classId: string, userId: string) {
 
 export async function cancelBooking(classId: string, userId: string) {
   try {
+    // delete the booking
     const booking = await db.booking.deleteMany({
       where: {
         userId: userId,
         classId: classId,
       },
     });
+
+    // get user first in line on waiting list
+    const firstInLine = await db.classWaitingList.findFirst({
+      where: { classId },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    if (firstInLine) {
+      // book the first in line
+      await db.booking.create({
+        data: {
+          userId: firstInLine.userId,
+          classId,
+        },
+      });
+    
+      // delete the first in line from waiting list
+      await db.classWaitingList.delete({
+        where: {
+          id: firstInLine.id,
+        },
+      });
+
+      const user = await db.user.findUnique({
+        where: { id: firstInLine.userId },
+      });
+
+      const gymClass = await db.class.findUnique({
+        where: { id: classId },
+        include: {
+          gym: true,
+        },
+      });
+      
+      if(user && gymClass) {
+        await sendBookedEmail({
+          email: user.email,
+          name: user.name || "gym member",
+          gymName: gymClass.gym.name,
+          className: gymClass.name,
+        }, gymClass.startDate ?? new Date());
+      }
+
+      
+    }
 
     console.log("BOOK CLASS SUCCESS");
 
