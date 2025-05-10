@@ -413,6 +413,29 @@ export async function cancelClass(classId: string, date: Date) {
   }
 }
 
+export async function getDeleteInfo(classId: string) {
+  try {
+  const gymClassToDelete = await db.class.findUnique({
+    where: {
+      id: classId,
+    },
+    include: {
+      bookings: {
+        include: {
+          user: true, // Include the user who booked the class
+        },
+      },
+      gym: true, // Include the gym where the class is held
+      instructor: true, // Include the instructor of the class
+    },
+  });
+
+  return gymClassToDelete;
+}catch (error) {
+  console.log(error);
+}
+}
+
 export async function deleteClass(classId: string) {
   try {
 
@@ -420,47 +443,11 @@ export async function deleteClass(classId: string) {
       where: {
         id: classId,
       },
-      include: {
-        bookings: {
-          include: {
-            user: true, // Include the user who booked the class
-          },
-        },
-        gym: true, // Include the gym where the class is held
-        instructor: true, // Include the instructor of the class
-      },
     });
 
     if (!gymClassToDelete) {
       throw new Error("Class not found.");
     }
-
-    const emailPromises = [];
-
-    // Send email to the instructor
-    if (gymClassToDelete.instructor) {
-      const instructorEmailData = {
-        email: gymClassToDelete.instructor.email,
-        name: gymClassToDelete.instructor.name || "Instructor",
-        gymName: gymClassToDelete.gym.name,
-        className: gymClassToDelete.name,
-      };
-      emailPromises.push(sendDeleteEmail(instructorEmailData));
-    }
-
-    // send email to gym member who booked the class
-    for (const booking of gymClassToDelete.bookings) {
-      const userEmailData = {
-        email: booking.user.email,
-        name: booking.user.name || "Member",
-        gymName: gymClassToDelete.gym.name,
-        className: gymClassToDelete.name,
-      };
-      emailPromises.push(sendDeleteEmail(userEmailData));
-    }
-
-    await Promise.all(emailPromises);
-
     const deletedGymClass = await db.class.delete({
       where: {
         id: classId,

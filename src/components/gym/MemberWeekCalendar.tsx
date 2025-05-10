@@ -11,6 +11,9 @@ import AddClassDialog from "@/components/gym/AddClassDialog";
 import { cn } from "@/lib/utils";
 import EditClassDialog from "./EditClassDialog";
 import BookingDialog from "./BookingDialog";
+import { AppDispatch } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import { addClasses, syncClasses } from "@/redux/actions/CalendarActions";
 
 const daysOfWeek = [
   { day: "M", name: "Mon", nameDay: "monday", num: 0 },
@@ -42,19 +45,29 @@ type ClassType = {
   cancelledDates: string[];
 };
 
+type Lesson = ClassType & {
+  classId: string;
+  lessonStartDate: Date;
+  lessonEndDate: Date;
+  gymClass: ClassType;
+};
+
 export default function MemberWeekCalendar({
   bookings,
   user,
-  gymId
+  gymId,
 }: {
   bookings: {
     class: ClassType;
-  }[]; user: any; gymId: string;
+  }[];
+  user: any;
+  gymId: string;
 }) {
   const container = useRef<HTMLDivElement | null>(null);
   const containerNav = useRef<HTMLDivElement | null>(null);
   const containerOffset = useRef<HTMLDivElement | null>(null);
   const editTriggerRef = useRef<HTMLButtonElement>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (container.current && containerNav.current && containerOffset.current) {
@@ -235,6 +248,83 @@ export default function MemberWeekCalendar({
     return colors[hash % colors.length]; // Cycle through the color list based on hash
   };
 
+  const lessons: Lesson[] = [];
+
+  function generateLessonsFromClasses(gymClass: ClassType): void {
+    const weekdayMap: Record<string, number> = {
+      sunday: 0,
+      monday: 1,
+      tuesday: 2,
+      wednesday: 3,
+      thursday: 4,
+      friday: 5,
+      saturday: 6,
+    };
+
+    const classStart = new Date(gymClass.startDate);
+    const classEnd = new Date(gymClass.endDate);
+    const durationMinutes = gymClass.duration;
+    const [startHour, startMinute] = gymClass.time.split(":").map(Number);
+
+    for (
+      let date = new Date(classStart);
+      date <= classEnd;
+      date.setDate(date.getDate() + 1)
+    ) {
+      const dayOfWeek = date.getDay();
+
+      // Check if this day matches one of the class days
+      const matching = gymClass.days.some(
+        (day) => weekdayMap[day.toLowerCase()] === dayOfWeek
+      );
+      if (!matching) continue;
+
+      const isoDate = date.toISOString().split("T")[0];
+
+      // Skip if this date is cancelled
+      if (gymClass.cancelledDates?.includes(isoDate)) {
+        continue;
+      }
+
+      // Create lesson start and end
+      const lessonStart = new Date(date);
+      lessonStart.setHours(startHour, startMinute, 0, 0);
+
+      const lessonEnd = new Date(lessonStart);
+      lessonEnd.setMinutes(lessonStart.getMinutes() + durationMinutes);
+
+      const lesson: Lesson = {
+        classId: gymClass.id,
+        name: gymClass.name,
+        lessonStartDate: new Date(lessonStart),
+        lessonEndDate: new Date(lessonEnd),
+        id: "",
+        gymId: "",
+        duration: 0,
+        days: [],
+        startDate: new Date(gymClass.startDate),
+        endDate: new Date(gymClass.endDate),
+        time: "",
+        colour: "",
+        cancelledDates: [],
+        gymClass: gymClass,
+      };
+
+      lessons.push(lesson);
+    }
+  }
+
+  for (let i = 0; i < bookings.length; i++) {
+    if (bookings[i].class.days.length > 0) {
+      generateLessonsFromClasses(bookings[i].class);
+    }
+  }
+
+  function syncWithGoogle(e: React.MouseEvent) {
+   e.preventDefault();
+    dispatch(syncClasses(lessons)); 
+  }
+
   return (
     <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-700 px-6 py-4">
@@ -262,11 +352,7 @@ export default function MemberWeekCalendar({
           </div>
           <div className="hidden md:ml-4 md:flex md:items-center">
             <div className="ml-6 h-6 w-px bg-gray-700" />
-            {
-              <Button  >
-                Sync
-              </Button>
-            }
+            {user.email.includes("gmail") ? <Button onClick={syncWithGoogle}>Sync</Button> : <></>}
           </div>
           <Menu as="div" className="relative ml-6 md:hidden">
             <MenuButton className="-mx-2 flex items-center rounded-full border border-transparent p-2 text-gray-400 hover:text-gray-500">
@@ -280,18 +366,18 @@ export default function MemberWeekCalendar({
             >
               <div className="py-1">
                 <MenuItem>
-                  <a
-                    href="#"
+                  <Button onClick={syncWithGoogle}
+                   
                     className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
                   >
                     Sync
-                  </a>
+                  </Button>
                 </MenuItem>
               </div>
             </MenuItems>
           </Menu>
         </div>
-      </header>
+      </header> 
       <div
         ref={container}
         className="isolate flex flex-auto flex-col overflow-auto  "
@@ -382,48 +468,34 @@ export default function MemberWeekCalendar({
                   gridTemplateRows: "3.5rem repeat(14, minmax(0, 1fr)) auto",
                 }}
               >
-                {bookings.flatMap((booking, index) => {
-                  return daysOfWeek.map((dayObject, dayIndex) => {
-                    // Only process if the class occurs on this day
-                    if (!booking.class.days.includes(dayObject.nameDay)) {
-                      return null;
-                    }
-
+                {lessons.flatMap((lesson, index) => {
+                  return weekdays.map((dayObject, dayIndex) => {
                     // Calculate the actual calendar date of this `day` in the current week
                     const todaysDate = new Date(startOfWeek);
                     todaysDate.setDate(startOfWeek.getDate() + dayIndex);
+                    const todaysDateStr = todaysDate
+                      .toISOString()
+                      .split("T")[0];
 
-                    // Ensure booking date is within the class active range
-                    const startDate = new Date(booking.class.startDate);
-                    const endDate = new Date(booking.class.endDate);
-                    if (
-                      !(
-                        todaysDate >= startDate &&
-                        todaysDate <= endDate
-                      )
-                    ) {
-                      return null;
-                    }
+                    const lessonDateStr = new Date(lesson.lessonStartDate)
+                      .toISOString()
+                      .split("T")[0];
+                    const lessonDay = new Date(lesson.lessonStartDate).getDay();
 
-                    // if(dayObject.nameDay !== ) {
-                    //   return null;
-                    // }
-
-                    // Optional: also skip cancelled dates, if applicable
-                    if (
-                      booking.class.cancelledDates?.includes(
-                        todaysDate.toISOString().split("T")[0]
-                      )
-                    ) {
+                    // Skip if this lesson doesn't happen on this day
+                    if (lessonDateStr !== todaysDateStr) {
                       return null;
                     }
 
                     const startRow = timeToGridRow(
-                      formatTime(booking.class.startDate)
+                      formatTime(lesson.lessonStartDate)
                     );
-                    const durationRows = Math.floor(
-                      booking.class.duration / 60
-                    ); // Consider using Math.ceil
+                    const durationMinutes =
+                      (new Date(lesson.lessonEndDate).getTime() -
+                        new Date(lesson.lessonStartDate).getTime()) /
+                      1000 /
+                      60;
+                    const durationRows = Math.floor(durationMinutes / 60);
                     const gridRow = `${startRow} / span ${durationRows}`;
 
                     return (
@@ -431,46 +503,42 @@ export default function MemberWeekCalendar({
                         key={`${index}-${dayObject.num}`}
                         className={cn(
                           `relative mt-px flex sm:col-start-${dayIndex + 1} rounded-lg`,
-                          generateColourLI(booking.class.name)
+                          generateColourLI(lesson.name)
                         )}
                         style={{ gridRow }}
                       >
                         <Dialog modal={false}>
-                        <DialogTrigger asChild>
-                        <button
-                          
-                          className="group absolute inset-1 flex flex-col p-2 text-xs/5"
-                        >
-                          <p
-                            className={cn(
-                              "order-1 font-semibold",
-                              generateColourP1(booking.class.name)
-                            )}
-                          >
-                            {booking.class.name}
-                          </p>
-                          <p
-                            className={cn(
-                              "group-hover:text-opacity-80",
-                              generateColourP2(booking.class.name)
-                            )}
-                          >
-                            <time
-                              dateTime={booking.class.startDate.toISOString()}
-                            >
-                              {formatTime(booking.class.startDate)}
-                            </time>
-                          </p>
-                        </button>
-                        </DialogTrigger>
-                                                      <BookingDialog
-                                                        gymClass={booking.class}
-                                                        gymId={gymId}
-                                                        editTriggerRef={editTriggerRef}
-                                                        user={user}
-                                                        
-                                                      />
-                                                    </Dialog>
+                          <DialogTrigger asChild>
+                            <button className="group absolute inset-1 flex flex-col p-2 text-xs/5">
+                              <p
+                                className={cn(
+                                  "order-1 font-semibold",
+                                  generateColourP1(lesson.name)
+                                )}
+                              >
+                                {lesson.name}
+                              </p>
+                              <p
+                                className={cn(
+                                  "group-hover:text-opacity-80",
+                                  generateColourP2(lesson.name)
+                                )}
+                              >
+                                <time
+                                  dateTime={lesson.lessonStartDate.toISOString()}
+                                >
+                                  {formatTime(lesson.lessonStartDate)}
+                                </time>
+                              </p>
+                            </button>
+                          </DialogTrigger>
+                          <BookingDialog
+                            gymClass={lesson.gymClass}
+                            gymId={gymId}
+                            editTriggerRef={editTriggerRef}
+                            user={user}
+                          />
+                        </Dialog>
                       </li>
                     );
                   });

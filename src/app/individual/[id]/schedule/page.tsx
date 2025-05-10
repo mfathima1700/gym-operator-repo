@@ -22,9 +22,14 @@ export default function IndividualSchedule() {
   const createClassState = useSelector((state: RootState) => state.createClass);
   const updateClassState = useSelector((state: RootState) => state.updateClass);
   const deleteClassState = useSelector((state: RootState) => state.deleteClass);
+  const addEventState = useSelector((state: RootState) => state.addEvent);
+  const updateEventState = useSelector((state: RootState) => state.updateEvent);
+  const deleteEventState = useSelector((state: RootState) => state.deleteEvent);
+  const syncEventState = useSelector((state: RootState) => state.syncEvent);
   const userState = useSelector((state: RootState) => state.getUser);
   const [userData, setUserData] = useState(() => ({
     gymRole: "",
+    email: "",
     gym: {
       id: "",
 
@@ -54,6 +59,50 @@ export default function IndividualSchedule() {
       setUserData(userState.user);
     }
   }, [userState.user, userState.success, userState.error]);
+
+  useEffect(() => {
+    // if (addEventState.success) {
+    //   console.log(addEventState.success);
+    // }
+    // if (addEventState.error) {
+    //   console.log(addEventState.error);
+    // }
+    // if (deleteEventState.success) {
+    //   console.log(deleteEventState.success);
+    // }
+    // if (deleteEventState.error) {
+    //   console.log(deleteEventState.error);
+    // }
+    // if (updateEventState.success) {
+    //   console.log(updateEventState.success);
+    // }
+    // if (updateEventState.error) {
+    //   console.log(updateEventState.error);
+    // }
+    // if (syncEventState.success) {
+    //   console.log(syncEventState.success);  
+    // }
+    // if (syncEventState.error) {
+    //   console.log(syncEventState.error);  
+    // } 
+    
+   
+    
+    
+    
+   
+    
+    
+  }, [
+    addEventState.success,
+    addEventState.error,
+    deleteEventState.success,
+    deleteEventState.error,
+    updateEventState.success,
+    updateEventState.error,
+    syncEventState.success, 
+    syncEventState.error
+  ]);
 
   return (
     <>

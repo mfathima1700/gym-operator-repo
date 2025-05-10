@@ -28,6 +28,7 @@ import {
   bookClass,
   cancelClass,
   deleteClass,
+  getDeleteInfo,
   updateClass,
 } from "@/redux/actions/ClassActions";
 import { useDispatch, useSelector } from "react-redux";
@@ -105,12 +106,14 @@ export default function EditClassDialog({
       className: gymClass.name,
     };
 
-    //dispatch(sendCancelEmail(emailData, today)); 
+    //dispatch(sendCancelEmail(emailData, today));
     dispatch(cancelClass(classData.id, today));
   }
 
-  function onDeleteClick(e: React.MouseEvent) {
+  async function onDeleteClick(e: React.MouseEvent) {
     e.preventDefault();
+
+    console.log("delete class clicked");
     editTriggerRef.current?.click();
     const emailData = {
       email: user.email,
@@ -118,8 +121,43 @@ export default function EditClassDialog({
       gymName: user?.gym?.name,
       className: gymClass.name,
     };
-   // dispatch(sendDeleteEmail(emailData));
-    dispatch(deleteClass(classData.id));
+    // dispatch(sendDeleteEmail(emailData));
+
+    const result = await getDeleteInfo(classData.id);
+    handleDelete(result);
+  }
+
+  async function handleDelete(gymClassToDelete: any) {
+    try {
+      const emailPromises = [];
+
+      if (gymClassToDelete.instructor) {
+        const instructorEmailData = {
+          email: gymClassToDelete.instructor.email,
+          name: gymClassToDelete.instructor.name || "Instructor",
+          gymName: gymClassToDelete.gym.name,
+          className: gymClassToDelete.name,
+        };
+        emailPromises.push(sendDeleteEmail(instructorEmailData));
+      }
+
+      // send email to gym member who booked the class
+      for (const booking of gymClassToDelete.bookings) {
+        const userEmailData = {
+          email: booking.user.email,
+          name: booking.user.name || "Member",
+          gymName: gymClassToDelete.gym.name,
+          className: gymClassToDelete.name,
+        };
+        emailPromises.push(sendDeleteEmail(userEmailData));
+      }
+
+      const done = await Promise.all(emailPromises);
+
+      dispatch(deleteClass(classData.id));
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function onBookClick(e: React.MouseEvent) {
@@ -135,8 +173,6 @@ export default function EditClassDialog({
     editTriggerRef.current?.click();
     dispatch(updateClass(classData, classData.id));
   }
-
-  
 
   const [classData, setClassData] = useState<ClassData>(() => gymClass);
 

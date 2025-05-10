@@ -21,6 +21,7 @@ import { exerciseReducer, nutritionReducer } from "./reducers/NutritionReducer";
 //import { composeWithDevTools } from "redux-devtools-extension";
 import { combineReducers, createStore, applyMiddleware, compose } from "redux";
 import promiseMiddleware from "redux-promise";
+import { addEventReducer, deleteEventReducer, syncEventReducer, updateEventReducer } from "./reducers/CalendarReducer";
 
 const rootReducer = combineReducers({
   signIn: signInReducer,
@@ -55,7 +56,12 @@ const rootReducer = combineReducers({
   getInvoices: getInvoicesReducer,
   getPayments: getPaymentsReducer,
   deleteAccount: deleteAccountReducer,
-  getInstructors:getInstructorsReducer
+  getInstructors:getInstructorsReducer,
+  syncEvent:syncEventReducer,
+  deleteEvent:deleteEventReducer,
+  addEvent:addEventReducer,
+  updateEvent:updateEventReducer,
+ 
   // Add other reducers here
 });
 
